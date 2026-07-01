@@ -1,0 +1,8196 @@
+{
+  "stats": {
+    "line_count": 761,
+    "word_count": 7363,
+    "unique_words": 2229,
+    "content_words": 4061,
+    "sections": 31,
+    "section_markers": 31,
+    "median_syllables": 14.0,
+    "avg_syllables": 14.3,
+    "median_words": 10.0,
+    "avg_words": 9.7,
+    "rhyme_families": 409,
+    "unique_end_words": 576,
+    "top_rhyme_key": "ence",
+    "top_signature_word": "sentence"
+  },
+  "section_counts": {
+    "chorus": 19,
+    "verse": 12
+  },
+  "signature_words": [
+    {
+      "word": "sentence",
+      "count": 30
+    },
+    {
+      "word": "never",
+      "count": 25
+    },
+    {
+      "word": "present",
+      "count": 21
+    },
+    {
+      "word": "see",
+      "count": 19
+    },
+    {
+      "word": "listen",
+      "count": 18
+    },
+    {
+      "word": "men",
+      "count": 18
+    },
+    {
+      "word": "rhythm",
+      "count": 18
+    },
+    {
+      "word": "system",
+      "count": 18
+    },
+    {
+      "word": "verse",
+      "count": 17
+    },
+    {
+      "word": "lyric",
+      "count": 16
+    },
+    {
+      "word": "music",
+      "count": 16
+    },
+    {
+      "word": "method",
+      "count": 15
+    },
+    {
+      "word": "hence",
+      "count": 14
+    },
+    {
+      "word": "lyrics",
+      "count": 13
+    },
+    {
+      "word": "purpose",
+      "count": 13
+    },
+    {
+      "word": "better",
+      "count": 13
+    },
+    {
+      "word": "made",
+      "count": 13
+    },
+    {
+      "word": "written",
+      "count": 13
+    },
+    {
+      "word": "presence",
+      "count": 13
+    },
+    {
+      "word": "man",
+      "count": 12
+    },
+    {
+      "word": "service",
+      "count": 12
+    },
+    {
+      "word": "full",
+      "count": 12
+    },
+    {
+      "word": "given",
+      "count": 12
+    },
+    {
+      "word": "notes",
+      "count": 11
+    },
+    {
+      "word": "essence",
+      "count": 11
+    },
+    {
+      "word": "way",
+      "count": 11
+    },
+    {
+      "word": "get",
+      "count": 11
+    },
+    {
+      "word": "might",
+      "count": 11
+    },
+    {
+      "word": "infinite",
+      "count": 11
+    },
+    {
+      "word": "minute",
+      "count": 10
+    },
+    {
+      "word": "distance",
+      "count": 10
+    },
+    {
+      "word": "surface",
+      "count": 10
+    },
+    {
+      "word": "hidden",
+      "count": 10
+    },
+    {
+      "word": "rap",
+      "count": 10
+    },
+    {
+      "word": "game",
+      "count": 10
+    },
+    {
+      "word": "keep",
+      "count": 10
+    },
+    {
+      "word": "guess",
+      "count": 9
+    },
+    {
+      "word": "credit",
+      "count": 9
+    },
+    {
+      "word": "next",
+      "count": 9
+    },
+    {
+      "word": "let",
+      "count": 9
+    },
+    {
+      "word": "since",
+      "count": 9
+    },
+    {
+      "word": "tricks",
+      "count": 9
+    },
+    {
+      "word": "mind",
+      "count": 9
+    },
+    {
+      "word": "quite",
+      "count": 8
+    },
+    {
+      "word": "rhythmic",
+      "count": 8
+    },
+    {
+      "word": "best",
+      "count": 8
+    },
+    {
+      "word": "words",
+      "count": 8
+    },
+    {
+      "word": "minutes",
+      "count": 8
+    },
+    {
+      "word": "like",
+      "count": 8
+    },
+    {
+      "word": "vision",
+      "count": 8
+    },
+    {
+      "word": "art",
+      "count": 8
+    },
+    {
+      "word": "investor",
+      "count": 8
+    },
+    {
+      "word": "investment",
+      "count": 8
+    },
+    {
+      "word": "deals",
+      "count": 8
+    },
+    {
+      "word": "rhyming",
+      "count": 8
+    },
+    {
+      "word": "medicine",
+      "count": 7
+    },
+    {
+      "word": "got",
+      "count": 7
+    },
+    {
+      "word": "limits",
+      "count": 7
+    },
+    {
+      "word": "bits",
+      "count": 7
+    },
+    {
+      "word": "takes",
+      "count": 7
+    },
+    {
+      "word": "use",
+      "count": 7
+    },
+    {
+      "word": "first",
+      "count": 7
+    },
+    {
+      "word": "spread",
+      "count": 7
+    },
+    {
+      "word": "make",
+      "count": 7
+    },
+    {
+      "word": "universe",
+      "count": 7
+    },
+    {
+      "word": "pen",
+      "count": 7
+    },
+    {
+      "word": "evidence",
+      "count": 7
+    },
+    {
+      "word": "rhyme",
+      "count": 7
+    },
+    {
+      "word": "letters",
+      "count": 7
+    },
+    {
+      "word": "intimate",
+      "count": 7
+    },
+    {
+      "word": "digital",
+      "count": 7
+    },
+    {
+      "word": "core",
+      "count": 7
+    },
+    {
+      "word": "while",
+      "count": 7
+    },
+    {
+      "word": "skeleton",
+      "count": 6
+    },
+    {
+      "word": "genuine",
+      "count": 6
+    },
+    {
+      "word": "write",
+      "count": 6
+    },
+    {
+      "word": "enough",
+      "count": 6
+    },
+    {
+      "word": "stay",
+      "count": 6
+    },
+    {
+      "word": "heavenly",
+      "count": 6
+    },
+    {
+      "word": "steadily",
+      "count": 6
+    }
+  ],
+  "top_rhymes": [
+    {
+      "key": "ence",
+      "count": 52,
+      "words": [
+        "resonance",
+        "sentence",
+        "entrance",
+        "patience",
+        "presence",
+        "confidence",
+        "nuisance",
+        "distance",
+        "instance",
+        "evidence",
+        "dominance",
+        "consonance"
+      ]
+    },
+    {
+      "key": "shun",
+      "count": 40,
+      "words": [
+        "action",
+        "attention",
+        "visions",
+        "captions",
+        "definitions",
+        "persuasion",
+        "inflation",
+        "expression",
+        "decisions",
+        "precision",
+        "reflection",
+        "emotion"
+      ]
+    },
+    {
+      "key": "ment",
+      "count": 16,
+      "words": [
+        "monuments",
+        "equipment",
+        "improvement",
+        "pigment",
+        "statement",
+        "payment",
+        "impairment",
+        "excrement",
+        "entertainment",
+        "argument",
+        "condiments",
+        "parliament"
+      ]
+    },
+    {
+      "key": "it",
+      "count": 10,
+      "words": [
+        "it",
+        "shit",
+        "writing",
+        "fit",
+        "knit"
+      ]
+    },
+    {
+      "key": "yric",
+      "count": 8,
+      "words": [
+        "lyrics",
+        "lyric"
+      ]
+    },
+    {
+      "key": "esent",
+      "count": 8,
+      "words": [
+        "present",
+        "represents"
+      ]
+    },
+    {
+      "key": "ick",
+      "count": 8,
+      "words": [
+        "tricks",
+        "nick",
+        "ticking"
+      ]
+    },
+    {
+      "key": "eals",
+      "count": 8,
+      "words": [
+        "deals"
+      ]
+    },
+    {
+      "key": "erse",
+      "count": 7,
+      "words": [
+        "verse"
+      ]
+    },
+    {
+      "key": "ipt",
+      "count": 7,
+      "words": [
+        "script",
+        "scripts"
+      ]
+    },
+    {
+      "key": "usic",
+      "count": 7,
+      "words": [
+        "music"
+      ]
+    },
+    {
+      "key": "in",
+      "count": 6,
+      "words": [
+        "in",
+        "lining",
+        "shrines"
+      ]
+    },
+    {
+      "key": "isten",
+      "count": 6,
+      "words": [
+        "listen",
+        "glistening",
+        "glisten",
+        "listeners",
+        "christening"
+      ]
+    },
+    {
+      "key": "imate",
+      "count": 6,
+      "words": [
+        "intimate",
+        "legitimate"
+      ]
+    },
+    {
+      "key": "verse",
+      "count": 6,
+      "words": [
+        "universe"
+      ]
+    },
+    {
+      "key": "an",
+      "count": 5,
+      "words": [
+        "man"
+      ]
+    },
+    {
+      "key": "edit",
+      "count": 5,
+      "words": [
+        "credit",
+        "edited"
+      ]
+    },
+    {
+      "key": "icket",
+      "count": 5,
+      "words": [
+        "ticket",
+        "tickets",
+        "ticketed"
+      ]
+    },
+    {
+      "key": "rpose",
+      "count": 5,
+      "words": [
+        "purpose"
+      ]
+    },
+    {
+      "key": "ead",
+      "count": 5,
+      "words": [
+        "spread",
+        "threaded",
+        "read",
+        "thread"
+      ]
+    },
+    {
+      "key": "ift",
+      "count": 5,
+      "words": [
+        "drift",
+        "shifts"
+      ]
+    },
+    {
+      "key": "erest",
+      "count": 5,
+      "words": [
+        "interested",
+        "interesting"
+      ]
+    },
+    {
+      "key": "em",
+      "count": 5,
+      "words": [
+        "them",
+        "schemes",
+        "gem",
+        "schemer"
+      ]
+    },
+    {
+      "key": "end",
+      "count": 5,
+      "words": [
+        "trend",
+        "trends",
+        "end"
+      ]
+    }
+  ],
+  "motif_clusters": [
+    {
+      "name": "language craft",
+      "count": 221,
+      "score": 27,
+      "words": [
+        "sentence",
+        "sentences",
+        "lyric",
+        "lyrics",
+        "verse",
+        "rhyme",
+        "rhymes",
+        "rhythm",
+        "rhythmic",
+        "cadence",
+        "bar",
+        "bars"
+      ]
+    },
+    {
+      "name": "finance / power",
+      "count": 72,
+      "score": 9,
+      "words": [
+        "fed",
+        "debt",
+        "credit",
+        "invest",
+        "investment",
+        "investor",
+        "stock",
+        "bond",
+        "assets",
+        "yield",
+        "spread",
+        "market"
+      ]
+    },
+    {
+      "name": "systems / code",
+      "count": 64,
+      "score": 8,
+      "words": [
+        "system",
+        "data",
+        "vector",
+        "vectors",
+        "matrix",
+        "digital",
+        "code",
+        "bits",
+        "digits",
+        "python",
+        "transformers",
+        "markov"
+      ]
+    },
+    {
+      "name": "performance / confidence",
+      "count": 59,
+      "score": 7,
+      "words": [
+        "rap",
+        "rapper",
+        "beat",
+        "bass",
+        "stage",
+        "record",
+        "track",
+        "flow",
+        "consonants",
+        "consonance",
+        "dominance",
+        "confidence"
+      ]
+    },
+    {
+      "name": "science / math",
+      "count": 36,
+      "score": 4,
+      "words": [
+        "atoms",
+        "radians",
+        "calculus",
+        "distribution",
+        "dependence",
+        "entropy",
+        "logical",
+        "mathematics",
+        "integrals",
+        "physics",
+        "decibels",
+        "hexadecimals"
+      ]
+    },
+    {
+      "name": "spiritual / myth",
+      "count": 34,
+      "score": 4,
+      "words": [
+        "heaven",
+        "heavenly",
+        "satan",
+        "devil",
+        "christian",
+        "jesus",
+        "egyptian",
+        "scripture",
+        "church",
+        "religion",
+        "faith",
+        "prayer"
+      ]
+    },
+    {
+      "name": "struggle / reflection",
+      "count": 24,
+      "score": 3,
+      "words": [
+        "pain",
+        "anger",
+        "fear",
+        "dream",
+        "dreams",
+        "forgive",
+        "courage",
+        "frontier",
+        "torment",
+        "lament",
+        "worries",
+        "cruelty"
+      ]
+    }
+  ],
+  "phrases": [
+    {
+      "phrase": "core surface",
+      "count": 7
+    },
+    {
+      "phrase": "full hidden",
+      "count": 5
+    },
+    {
+      "phrase": "minute full",
+      "count": 5
+    },
+    {
+      "phrase": "verse curse",
+      "count": 5
+    },
+    {
+      "phrase": "convert verse",
+      "count": 5
+    },
+    {
+      "phrase": "curse purpose",
+      "count": 5
+    },
+    {
+      "phrase": "hidden tricks",
+      "count": 5
+    },
+    {
+      "phrase": "covers service",
+      "count": 5
+    },
+    {
+      "phrase": "surface convert",
+      "count": 5
+    },
+    {
+      "phrase": "universe covers",
+      "count": 5
+    },
+    {
+      "phrase": "purpose reversed",
+      "count": 5
+    },
+    {
+      "phrase": "reversed universe",
+      "count": 5
+    },
+    {
+      "phrase": "full hidden tricks",
+      "count": 5
+    },
+    {
+      "phrase": "minute full hidden",
+      "count": 5
+    },
+    {
+      "phrase": "convert verse curse",
+      "count": 5
+    },
+    {
+      "phrase": "verse curse purpose",
+      "count": 5
+    },
+    {
+      "phrase": "core surface convert",
+      "count": 5
+    },
+    {
+      "phrase": "surface convert verse",
+      "count": 5
+    },
+    {
+      "phrase": "curse purpose reversed",
+      "count": 5
+    },
+    {
+      "phrase": "universe covers service",
+      "count": 5
+    },
+    {
+      "phrase": "reversed universe covers",
+      "count": 5
+    },
+    {
+      "phrase": "purpose reversed universe",
+      "count": 5
+    },
+    {
+      "phrase": "deals failure",
+      "count": 4
+    },
+    {
+      "phrase": "genuine quite",
+      "count": 4
+    }
+  ],
+  "sample_lines": [
+    {
+      "line": "Intelligent, listen to the lyric medicine",
+      "cluster": "language craft",
+      "rhyme_key": "icine",
+      "syllables": 13
+    },
+    {
+      "line": "The Mexicans are delegates who never have enough credit",
+      "cluster": "finance / power",
+      "rhyme_key": "edit",
+      "syllables": 16
+    },
+    {
+      "line": "It led to a local sickness, an encrypted mixture of bits",
+      "cluster": "systems / code",
+      "rhyme_key": "its",
+      "syllables": 15
+    },
+    {
+      "line": "The entire stage was looking for the main player; he was fired",
+      "cluster": "performance / confidence",
+      "rhyme_key": "ired",
+      "syllables": 14
+    },
+    {
+      "line": "Atoms are inanimate, yet the person is an animal",
+      "cluster": "science / math",
+      "rhyme_key": "nimal",
+      "syllables": 16
+    },
+    {
+      "line": "Can you understand the votes, Egyptian scripture",
+      "cluster": "spiritual / myth",
+      "rhyme_key": "pture",
+      "syllables": 12
+    },
+    {
+      "line": "Every sentence I’m inventin’ got a resonance",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "ence",
+      "syllables": 14
+    },
+    {
+      "line": "They led the men to the exit of the setting, through the entrance",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "ence",
+      "syllables": 16
+    },
+    {
+      "line": "The purpose of the commercials is to pass the inertial distance",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "ence",
+      "syllables": 17
+    },
+    {
+      "line": "I witnessed the system being built: the quickness of lyrics",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "yric",
+      "syllables": 14
+    },
+    {
+      "line": "The notes and cadence are real: they steal the goat's patience",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "ence",
+      "syllables": 13
+    },
+    {
+      "line": "Hence, I have to build a sentence with plenty of heavenly essence",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "ence",
+      "syllables": 17
+    },
+    {
+      "line": "It's a layered cake of your favorite flavors, steadily paced penance",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "ence",
+      "syllables": 17
+    },
+    {
+      "line": "The sentiment of the jingle is present",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "esent",
+      "syllables": 10
+    },
+    {
+      "line": "He said that he spent his cash on definitions",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "shun",
+      "syllables": 12
+    },
+    {
+      "line": "On the surface of the earth, there are presidents, driven by purpose and action",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "shun",
+      "syllables": 20
+    },
+    {
+      "line": "The man known as Satan stays shaping persuasion",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "shun",
+      "syllables": 12
+    },
+    {
+      "line": "Turning faith into trades—now belief is inflation",
+      "cluster": "rhyme DNA",
+      "rhyme_key": "shun",
+      "syllables": 13
+    }
+  ],
+  "rhyme_bank": {
+    "an": [
+      "man"
+    ],
+    "icine": [
+      "medicine"
+    ],
+    "ence": [
+      "resonance",
+      "sentence",
+      "entrance",
+      "patience",
+      "presence",
+      "confidence",
+      "nuisance",
+      "distance",
+      "instance",
+      "evidence",
+      "dominance",
+      "consonance",
+      "essence",
+      "penance",
+      "vengeance",
+      "balance",
+      "assistance",
+      "efficience",
+      "existence",
+      "vigilance",
+      "difference",
+      "substance",
+      "eminence",
+      "repentance",
+      "cadence",
+      "ordinance",
+      "seance",
+      "surveillance",
+      "coherence",
+      "annoyance"
+    ],
+    "in": [
+      "in",
+      "lining",
+      "shrines"
+    ],
+    "ficit": [
+      "deficit"
+    ],
+    "edit": [
+      "credit",
+      "edited"
+    ],
+    "uest": [
+      "quest"
+    ],
+    "esh": [
+      "mesh",
+      "fresh"
+    ],
+    "ist": [
+      "list"
+    ],
+    "o": [
+      "to"
+    ],
+    "etch": [
+      "stretches",
+      "stretch",
+      "sketches"
+    ],
+    "edg": [
+      "wedges"
+    ],
+    "icket": [
+      "ticket",
+      "tickets",
+      "ticketed"
+    ],
+    "cture": [
+      "picture"
+    ],
+    "pture": [
+      "scripture"
+    ],
+    "its": [
+      "bits"
+    ],
+    "yric": [
+      "lyrics",
+      "lyric"
+    ],
+    "issue": [
+      "tissue"
+    ],
+    "est": [
+      "tested",
+      "jester",
+      "test"
+    ],
+    "isten": [
+      "listen",
+      "glistening",
+      "glisten",
+      "listeners",
+      "christening"
+    ],
+    "ythm": [
+      "rhythm",
+      "rhythms"
+    ],
+    "agent": [
+      "agents"
+    ],
+    "yield": [
+      "yield",
+      "yields"
+    ],
+    "stanc": [
+      "distances"
+    ],
+    "ates": [
+      "mates"
+    ],
+    "ired": [
+      "fired",
+      "tired",
+      "wired"
+    ],
+    "ctice": [
+      "practice"
+    ],
+    "alien": [
+      "aliens"
+    ],
+    "ire": [
+      "fire"
+    ],
+    "spire": [
+      "inspire"
+    ],
+    "y": [
+      "why",
+      "cry"
+    ],
+    "rpose": [
+      "purpose"
+    ],
+    "rtain": [
+      "curtains"
+    ],
+    "tress": [
+      "distressed"
+    ],
+    "ssess": [
+      "assessed"
+    ],
+    "erse": [
+      "verse"
+    ],
+    "irst": [
+      "first"
+    ],
+    "hears": [
+      "rehearsed"
+    ],
+    "rvice": [
+      "service"
+    ],
+    "nimal": [
+      "animal"
+    ],
+    "nibal": [
+      "cannibals"
+    ],
+    "ethod": [
+      "method"
+    ],
+    "ead": [
+      "spread",
+      "threaded",
+      "read",
+      "thread"
+    ],
+    "ingle": [
+      "single",
+      "mingle",
+      "jingle"
+    ],
+    "imple": [
+      "simple"
+    ],
+    "esent": [
+      "present",
+      "represents"
+    ],
+    "ident": [
+      "president"
+    ],
+    "shun": [
+      "action",
+      "attention",
+      "visions",
+      "captions",
+      "definitions",
+      "persuasion",
+      "inflation",
+      "expression",
+      "decisions",
+      "precision",
+      "reflection",
+      "emotion",
+      "conclusion",
+      "solutions",
+      "description",
+      "dimension",
+      "deception",
+      "assertion",
+      "revision",
+      "restriction",
+      "version",
+      "options",
+      "mentions",
+      "mansions",
+      "regression",
+      "dimensions",
+      "confusion",
+      "vision",
+      "submission",
+      "question"
+    ],
+    "ext": [
+      "next",
+      "text"
+    ],
+    "ffort": [
+      "effort"
+    ],
+    "ick": [
+      "tricks",
+      "nick",
+      "ticking"
+    ],
+    "ix": [
+      "mix"
+    ],
+    "ift": [
+      "drift",
+      "shifts"
+    ],
+    "ipt": [
+      "script",
+      "scripts"
+    ],
+    "erest": [
+      "interested",
+      "interesting"
+    ],
+    "igit": [
+      "digits",
+      "digit"
+    ],
+    "itten": [
+      "written"
+    ],
+    "ism": [
+      "schisms",
+      "prism"
+    ],
+    "em": [
+      "them",
+      "schemes",
+      "gem",
+      "schemer"
+    ],
+    "eapon": [
+      "weapons"
+    ],
+    "ngine": [
+      "engine"
+    ],
+    "ctive": [
+      "attractive",
+      "active",
+      "directive"
+    ],
+    "evers": [
+      "reversed"
+    ],
+    "stice": [
+      "justice"
+    ],
+    "ep": [
+      "step"
+    ],
+    "is": [
+      "is"
+    ],
+    "ic": [
+      "mic"
+    ],
+    "ork": [
+      "work"
+    ],
+    "ass": [
+      "bass",
+      "class"
+    ],
+    "aken": [
+      "taken"
+    ],
+    "ecord": [
+      "records",
+      "record"
+    ],
+    "ntenc": [
+      "sentences"
+    ],
+    "adian": [
+      "radians"
+    ],
+    "eriou": [
+      "serious"
+    ],
+    "oriou": [
+      "notorious"
+    ],
+    "uriou": [
+      "furious",
+      "spurious"
+    ],
+    "rsist": [
+      "persist"
+    ],
+    "it": [
+      "it",
+      "shit",
+      "writing",
+      "fit",
+      "knit"
+    ],
+    "easur": [
+      "treasured",
+      "measured"
+    ],
+    "ssure": [
+      "pressure"
+    ],
+    "ain": [
+      "brains",
+      "strain",
+      "pain"
+    ],
+    "ame": [
+      "game"
+    ],
+    "end": [
+      "trend",
+      "trends",
+      "end"
+    ],
+    "ent": [
+      "spent"
+    ],
+    "uin": [
+      "ruined"
+    ],
+    "amus": [
+      "amusing",
+      "amuses"
+    ],
+    "usic": [
+      "music"
+    ],
+    "ov": [
+      "moving"
+    ],
+    "ew": [
+      "screws"
+    ],
+    "eview": [
+      "reviewed",
+      "reviews"
+    ],
+    "art": [
+      "art",
+      "start"
+    ],
+    "ath": [
+      "father"
+    ],
+    "elli": [
+      "bellies"
+    ],
+    "ails": [
+      "fails"
+    ],
+    "eals": [
+      "deals"
+    ],
+    "irit": [
+      "spirits",
+      "spirit"
+    ],
+    "mmick": [
+      "gimmicks",
+      "gimmick"
+    ],
+    "omles": [
+      "bottomless"
+    ],
+    "ature": [
+      "signature"
+    ],
+    "ister": [
+      "registered",
+      "administered"
+    ],
+    "stand": [
+      "understands"
+    ],
+    "egist": [
+      "register"
+    ],
+    "ast": [
+      "past"
+    ],
+    "inent": [
+      "imminent",
+      "prominent"
+    ],
+    "ackl": [
+      "shackles"
+    ],
+    "guage": [
+      "language"
+    ],
+    "avern": [
+      "cavern"
+    ],
+    "answ": [
+      "answers"
+    ],
+    "astic": [
+      "fantastic"
+    ],
+    "xture": [
+      "texture",
+      "mixture"
+    ],
+    "nnect": [
+      "connect"
+    ],
+    "event": [
+      "events"
+    ],
+    "ntent": [
+      "intent"
+    ],
+    "are": [
+      "care"
+    ],
+    "x": [
+      "x"
+    ],
+    "ett": [
+      "letters",
+      "vetted"
+    ],
+    "ddres": [
+      "address"
+    ],
+    "lculu": [
+      "calculus"
+    ],
+    "edent": [
+      "precedent"
+    ],
+    "igh": [
+      "high"
+    ],
+    "eed": [
+      "speed"
+    ],
+    "hasiz": [
+      "emphasized"
+    ],
+    "ices": [
+      "vices"
+    ],
+    "dding": [
+      "embeddings"
+    ],
+    "ueri": [
+      "queries"
+    ],
+    "sform": [
+      "transformers"
+    ],
+    "matic": [
+      "schematics"
+    ],
+    "ind": [
+      "mind"
+    ],
+    "inite": [
+      "infinite"
+    ],
+    "erate": [
+      "deliberate"
+    ],
+    "imate": [
+      "intimate",
+      "legitimate"
+    ],
+    "icant": [
+      "significant"
+    ],
+    "ept": [
+      "kept"
+    ],
+    "order": [
+      "order"
+    ],
+    "orn": [
+      "corners"
+    ],
+    "chase": [
+      "purchase"
+    ],
+    "llent": [
+      "excellent"
+    ],
+    "ow": [
+      "flow",
+      "show",
+      "know"
+    ],
+    "eat": [
+      "sweater",
+      "sweaters",
+      "threat",
+      "treat"
+    ],
+    "orse": [
+      "horse"
+    ],
+    "expos": [
+      "exposed"
+    ],
+    "inds": [
+      "minds"
+    ],
+    "ignit": [
+      "reignited"
+    ],
+    "cquir": [
+      "acquired"
+    ],
+    "htnes": [
+      "tightness"
+    ],
+    "icacy": [
+      "intricacy"
+    ],
+    "ypsi": [
+      "gypsies"
+    ],
+    "erv": [
+      "served"
+    ],
+    "uette": [
+      "etiquette"
+    ],
+    "ocal": [
+      "vocals"
+    ],
+    "icate": [
+      "syndicate",
+      "intricate"
+    ],
+    "emitt": [
+      "emitted"
+    ],
+    "gical": [
+      "logical"
+    ],
+    "verse": [
+      "universe"
+    ],
+    "ums": [
+      "sums"
+    ],
+    "irt": [
+      "dirt"
+    ],
+    "urse": [
+      "nurse"
+    ],
+    "earch": [
+      "search"
+    ],
+    "omis": [
+      "promises"
+    ],
+    "pherd": [
+      "shepherd"
+    ],
+    "ovel": [
+      "novel"
+    ],
+    "olemn": [
+      "solemn"
+    ],
+    "oblem": [
+      "problem"
+    ],
+    "ician": [
+      "musicians"
+    ],
+    "istic": [
+      "linguistics"
+    ],
+    "cient": [
+      "efficient"
+    ],
+    "im": [
+      "crimes"
+    ],
+    "orks": [
+      "works"
+    ],
+    "ment": [
+      "monuments",
+      "equipment",
+      "improvement",
+      "pigment",
+      "statement",
+      "payment",
+      "impairment",
+      "excrement",
+      "entertainment",
+      "argument",
+      "condiments",
+      "parliament",
+      "engagement",
+      "lament",
+      "augment"
+    ],
+    "ime": [
+      "crime",
+      "time"
+    ],
+    "adise": [
+      "paradise"
+    ],
+    "usnes": [
+      "righteousness"
+    ],
+    "en": [
+      "men"
+    ],
+    "ide": [
+      "side",
+      "tide"
+    ],
+    "ight": [
+      "sight",
+      "fight",
+      "light"
+    ],
+    "ike": [
+      "spike"
+    ],
+    "ilot": [
+      "pilot"
+    ],
+    "ggest": [
+      "suggest"
+    ],
+    "rrest": [
+      "arrested"
+    ],
+    "ebtor": [
+      "debtors"
+    ],
+    "asts": [
+      "lasts"
+    ],
+    "ask": [
+      "asking"
+    ],
+    "ack": [
+      "hacking",
+      "track"
+    ],
+    "ield": [
+      "field"
+    ],
+    "aunch": [
+      "launches"
+    ],
+    "ogic": [
+      "logic"
+    ],
+    "alias": [
+      "alias"
+    ],
+    "ewn": [
+      "sewn"
+    ],
+    "osen": [
+      "chosen"
+    ],
+    "shion": [
+      "fashion"
+    ],
+    "actor": [
+      "reactor"
+    ],
+    "ip": [
+      "ship"
+    ],
+    "eam": [
+      "dreaming",
+      "streamed",
+      "dream",
+      "dreams",
+      "stream"
+    ],
+    "eats": [
+      "beats"
+    ],
+    "age": [
+      "rage"
+    ],
+    "geles": [
+      "ageless"
+    ],
+    "ay": [
+      "play",
+      "layers",
+      "prayer",
+      "players"
+    ],
+    "istma": [
+      "christmas"
+    ],
+    "otism": [
+      "hypnotism"
+    ],
+    "isdom": [
+      "wisdom"
+    ],
+    "tanyl": [
+      "fentanyl"
+    ],
+    "ynic": [
+      "cynic"
+    ],
+    "ostag": [
+      "hostages"
+    ],
+    "opoli": [
+      "metropolis"
+    ],
+    "nding": [
+      "surroundings"
+    ],
+    "owd": [
+      "crowds"
+    ],
+    "acces": [
+      "access"
+    ],
+    "stnes": [
+      "vastness"
+    ],
+    "aft": [
+      "craft"
+    ],
+    "app": [
+      "rapper"
+    ],
+    "ann": [
+      "manners"
+    ],
+    "ange": [
+      "range"
+    ],
+    "adnes": [
+      "sadness"
+    ],
+    "icent": [
+      "reticent"
+    ],
+    "exit": [
+      "exit"
+    ],
+    "minem": [
+      "eminem"
+    ],
+    "ompas": [
+      "compass"
+    ],
+    "nenes": [
+      "oneness"
+    ],
+    "erson": [
+      "person"
+    ],
+    "ipp": [
+      "dripping"
+    ],
+    "rface": [
+      "surface"
+    ],
+    "ircu": [
+      "circus"
+    ],
+    "ash": [
+      "trash"
+    ],
+    "ecent": [
+      "decent"
+    ],
+    "isco": [
+      "disco"
+    ],
+    "cibel": [
+      "decibels"
+    ],
+    "inish": [
+      "finish"
+    ],
+    "ingl": [
+      "pringles",
+      "singles"
+    ],
+    "utant": [
+      "mutants"
+    ],
+    "ews": [
+      "news"
+    ],
+    "easy": [
+      "easy"
+    ],
+    "mc": [
+      "mc"
+    ],
+    "eeply": [
+      "deeply"
+    ],
+    "hibit": [
+      "exhibited"
+    ],
+    "acent": [
+      "adjacent"
+    ],
+    "spair": [
+      "despairing"
+    ],
+    "erbs": [
+      "verbs"
+    ],
+    "erds": [
+      "nerds"
+    ],
+    "amate": [
+      "testamate"
+    ],
+    "esson": [
+      "lesson",
+      "lessons"
+    ],
+    "align": [
+      "aligned"
+    ],
+    "esign": [
+      "resigned"
+    ],
+    "ace": [
+      "place"
+    ],
+    "ecipe": [
+      "recipe"
+    ],
+    "igree": [
+      "pedigree"
+    ],
+    "e": [
+      "be"
+    ],
+    "akery": [
+      "bakery"
+    ],
+    "avery": [
+      "bravery"
+    ],
+    "avory": [
+      "savory"
+    ],
+    "lican": [
+      "pelicans"
+    ],
+    "eason": [
+      "reasons",
+      "season"
+    ],
+    "emon": [
+      "demons"
+    ],
+    "nuine": [
+      "genuine"
+    ],
+    "enac": [
+      "menacing"
+    ],
+    "erapy": [
+      "therapy"
+    ],
+    "quent": [
+      "eloquent",
+      "consequent"
+    ],
+    "and": [
+      "land"
+    ],
+    "erick": [
+      "limerick"
+    ],
+    "ad": [
+      "traded",
+      "shades"
+    ],
+    "orite": [
+      "favorite"
+    ],
+    "abi": [
+      "rabies"
+    ],
+    "actic": [
+      "tactics"
+    ],
+    "ength": [
+      "length"
+    ],
+    "eadth": [
+      "breadth"
+    ],
+    "eathe": [
+      "breathe"
+    ],
+    "everb": [
+      "reverb"
+    ],
+    "ttern": [
+      "patterns",
+      "pattern"
+    ],
+    "oron": [
+      "moron"
+    ],
+    "luenc": [
+      "influences"
+    ],
+    "usive": [
+      "intrusive"
+    ],
+    "tenes": [
+      "astuteness"
+    ],
+    "onfus": [
+      "confusing"
+    ],
+    "use": [
+      "use"
+    ],
+    "uth": [
+      "truth"
+    ],
+    "tizen": [
+      "citizens"
+    ],
+    "mptom": [
+      "symptoms"
+    ],
+    "ice": [
+      "dice"
+    ],
+    "nspir": [
+      "inspiring"
+    ],
+    "ies": [
+      "skies"
+    ],
+    "inn": [
+      "inning"
+    ],
+    "nning": [
+      "winnings"
+    ],
+    "imit": [
+      "limits"
+    ],
+    "ess": [
+      "blessing",
+      "mess"
+    ],
+    "inen": [
+      "linen"
+    ],
+    "inut": [
+      "minutes"
+    ],
+    "aith": [
+      "faith"
+    ],
+    "ays": [
+      "days",
+      "plays",
+      "ways"
+    ],
+    "raint": [
+      "restraint"
+    ],
+    "ake": [
+      "make"
+    ],
+    "asily": [
+      "easily"
+    ],
+    "tally": [
+      "mentally"
+    ],
+    "ees": [
+      "fees"
+    ],
+    "mpani": [
+      "companies"
+    ],
+    "nergy": [
+      "energy"
+    ],
+    "fully": [
+      "carefully"
+    ],
+    "nthem": [
+      "anthem"
+    ],
+    "ality": [
+      "reality"
+    ],
+    "steem": [
+      "esteem"
+    ],
+    "chine": [
+      "machine"
+    ],
+    "egime": [
+      "regime"
+    ],
+    "ean": [
+      "clean"
+    ],
+    "otine": [
+      "nicotine"
+    ],
+    "tream": [
+      "bloodstream"
+    ],
+    "ene": [
+      "scene"
+    ],
+    "utine": [
+      "routine"
+    ],
+    "xteen": [
+      "sixteen"
+    ],
+    "anine": [
+      "mezzanine"
+    ],
+    "eys": [
+      "keys"
+    ],
+    "atise": [
+      "treatise"
+    ],
+    "iggie": [
+      "biggie"
+    ],
+    "ickly": [
+      "sickly"
+    ],
+    "ctori": [
+      "victories"
+    ],
+    "egree": [
+      "degree"
+    ],
+    "minal": [
+      "criminal"
+    ],
+    "teral": [
+      "literal"
+    ],
+    "erenc": [
+      "differences",
+      "inferences"
+    ],
+    "itles": [
+      "limitless"
+    ],
+    "ysic": [
+      "physics"
+    ],
+    "llabu": [
+      "syllabus"
+    ],
+    "famou": [
+      "infamous"
+    ],
+    "ictim": [
+      "victims"
+    ],
+    "ink": [
+      "thinking"
+    ],
+    "inch": [
+      "inch"
+    ],
+    "ine": [
+      "mine"
+    ],
+    "gular": [
+      "singular"
+    ],
+    "erit": [
+      "merit"
+    ],
+    "asic": [
+      "basics"
+    ],
+    "ssing": [
+      "blessings"
+    ],
+    "rtnes": [
+      "shortness"
+    ],
+    "excus": [
+      "excuses"
+    ],
+    "infus": [
+      "infused"
+    ],
+    "nwash": [
+      "brainwash"
+    ],
+    "kshak": [
+      "milkshakes"
+    ],
+    "ade": [
+      "trade",
+      "grade"
+    ],
+    "ticon": [
+      "emoticon"
+    ],
+    "cimal": [
+      "hexadecimals"
+    ],
+    "itic": [
+      "critics"
+    ],
+    "isit": [
+      "visited"
+    ],
+    "iven": [
+      "given"
+    ],
+    "ark": [
+      "spark",
+      "dark"
+    ],
+    "ealt": [
+      "dealt"
+    ],
+    "ealth": [
+      "wealth"
+    ],
+    "ebit": [
+      "debits"
+    ],
+    "egun": [
+      "begun"
+    ],
+    "on": [
+      "won"
+    ],
+    "ones": [
+      "ones"
+    ],
+    "eb": [
+      "thebes"
+    ],
+    "iec": [
+      "pieces"
+    ],
+    "chles": [
+      "speechless"
+    ],
+    "otest": [
+      "protested"
+    ],
+    "ulent": [
+      "opulent"
+    ],
+    "nnair": [
+      "questionnaires"
+    ],
+    "ater": [
+      "later"
+    ],
+    "aded": [
+      "faded"
+    ],
+    "dvice": [
+      "advice"
+    ],
+    "auge": [
+      "gauge"
+    ],
+    "ane": [
+      "plane"
+    ],
+    "emain": [
+      "remains"
+    ],
+    "yme": [
+      "rhyme"
+    ],
+    "nsity": [
+      "intensity"
+    ],
+    "grity": [
+      "integrity"
+    ],
+    "antee": [
+      "guarantee"
+    ],
+    "arity": [
+      "clarity"
+    ],
+    "ighty": [
+      "mighty"
+    ],
+    "nxiou": [
+      "anxious"
+    ],
+    "anva": [
+      "canvas"
+    ],
+    "alent": [
+      "talented"
+    ],
+    "assic": [
+      "classic"
+    ],
+    "agon": [
+      "dragons"
+    ],
+    "athen": [
+      "athens"
+    ],
+    "agic": [
+      "tragic"
+    ],
+    "aphic": [
+      "graphic"
+    ],
+    "alad": [
+      "salad"
+    ],
+    "act": [
+      "fact"
+    ],
+    "ntext": [
+      "context"
+    ],
+    "mnize": [
+      "womnize"
+    ],
+    "alize": [
+      "realize"
+    ],
+    "ppily": [
+      "happily"
+    ],
+    "id": [
+      "did"
+    ],
+    "iss": [
+      "missed"
+    ],
+    "oic": [
+      "voices"
+    ],
+    "anoia": [
+      "paranoia"
+    ],
+    "ndeur": [
+      "grandeur"
+    ],
+    "scend": [
+      "transcend"
+    ],
+    "ends": [
+      "ends"
+    ],
+    "anc": [
+      "cancer"
+    ],
+    "ear": [
+      "fear"
+    ],
+    "ar": [
+      "scared"
+    ],
+    "ppeal": [
+      "appeal"
+    ],
+    "eer": [
+      "jeer"
+    ],
+    "onti": [
+      "frontier"
+    ],
+    "clear": [
+      "unclear"
+    ],
+    "rmant": [
+      "dormant"
+    ],
+    "orri": [
+      "worries"
+    ],
+    "ory": [
+      "story"
+    ],
+    "ell": [
+      "dwelling"
+    ],
+    "eddy": [
+      "freddy"
+    ],
+    "ought": [
+      "thoughts"
+    ],
+    "oss": [
+      "cross"
+    ],
+    "aunt": [
+      "taunts"
+    ],
+    "ecs": [
+      "specs"
+    ],
+    "old": [
+      "gold"
+    ],
+    "oject": [
+      "projects"
+    ],
+    "etext": [
+      "pretext"
+    ],
+    "uti": [
+      "duties"
+    ],
+    "ulli": [
+      "bullies"
+    ],
+    "ife": [
+      "life"
+    ],
+    "nside": [
+      "inside"
+    ],
+    "atch": [
+      "watch"
+    ]
+  },
+  "echo_bank": {
+    "leton": [
+      "skeleton"
+    ],
+    "nuine": [
+      "genuine"
+    ],
+    "uite": [
+      "quite"
+    ],
+    "cimen": [
+      "specimen"
+    ],
+    "an": [
+      "man",
+      "plan"
+    ],
+    "igent": [
+      "intelligent",
+      "diligent"
+    ],
+    "isten": [
+      "listen",
+      "glistening",
+      "listened",
+      "christening",
+      "glisten",
+      "glistens",
+      "christen",
+      "listeners",
+      "christens",
+      "listening"
+    ],
+    "yric": [
+      "lyric",
+      "lyrics"
+    ],
+    "icine": [
+      "medicine"
+    ],
+    "ence": [
+      "sentence",
+      "hence",
+      "presence",
+      "essence",
+      "distance",
+      "evidence",
+      "resonance",
+      "entrance",
+      "cadence",
+      "patience",
+      "difference",
+      "brilliance",
+      "reticence",
+      "persistence",
+      "confidence",
+      "nuisance",
+      "assistance",
+      "experience",
+      "vengeance",
+      "instance",
+      "relevance",
+      "balance",
+      "substance",
+      "residence",
+      "chance",
+      "dominance",
+      "consonance",
+      "absence",
+      "penance",
+      "variance",
+      "affluence",
+      "providence",
+      "dependence",
+      "efficience",
+      "existence",
+      "vigilance",
+      "salience",
+      "existance",
+      "semblance",
+      "eminence"
+    ],
+    "entin": [
+      "inventin"
+    ],
+    "ot": [
+      "got"
+    ],
+    "uess": [
+      "guess",
+      "guessed"
+    ],
+    "metim": [
+      "sometimes"
+    ],
+    "ite": [
+      "write"
+    ],
+    "enom": [
+      "venom"
+    ],
+    "icate": [
+      "intricate",
+      "delicate",
+      "syndicate",
+      "certificate"
+    ],
+    "orget": [
+      "forget"
+    ],
+    "erage": [
+      "leverage",
+      "average"
+    ],
+    "ficit": [
+      "deficit"
+    ],
+    "xican": [
+      "mexicans",
+      "mexican"
+    ],
+    "legat": [
+      "delegates"
+    ],
+    "ever": [
+      "never",
+      "ever"
+    ],
+    "nough": [
+      "enough"
+    ],
+    "edit": [
+      "credit",
+      "edit",
+      "edited"
+    ],
+    "ed": [
+      "fed",
+      "led",
+      "bed"
+    ],
+    "en": [
+      "men",
+      "pen"
+    ],
+    "exit": [
+      "exit"
+    ],
+    "ett": [
+      "better",
+      "letters",
+      "letter",
+      "setting",
+      "vetted",
+      "getting"
+    ],
+    "erate": [
+      "desperate",
+      "deliberate"
+    ],
+    "ggest": [
+      "suggest",
+      "suggested"
+    ],
+    "ep": [
+      "step"
+    ],
+    "est": [
+      "best",
+      "test",
+      "tested",
+      "rest",
+      "resting",
+      "west",
+      "rested",
+      "jester",
+      "lester"
+    ],
+    "uest": [
+      "quest"
+    ],
+    "ssage": [
+      "passage",
+      "message"
+    ],
+    "itch": [
+      "stitching",
+      "switching",
+      "stitched",
+      "switch",
+      "stitches"
+    ],
+    "eck": [
+      "check"
+    ],
+    "guage": [
+      "language"
+    ],
+    "esh": [
+      "mesh",
+      "fresh"
+    ],
+    "inute": [
+      "minute"
+    ],
+    "thmic": [
+      "rhythmic",
+      "rhythmics"
+    ],
+    "ist": [
+      "list",
+      "mist",
+      "a-list"
+    ],
+    "ess": [
+      "less",
+      "mess",
+      "press",
+      "blessed",
+      "blessing"
+    ],
+    "icket": [
+      "tickets",
+      "ticket",
+      "ticketed"
+    ],
+    "eeds": [
+      "needs",
+      "heeds"
+    ],
+    "edge": [
+      "edge",
+      "pledge"
+    ],
+    "ythm": [
+      "rhythm",
+      "rhythms"
+    ],
+    "etch": [
+      "stretch",
+      "etched",
+      "sketch",
+      "stretching",
+      "sketches",
+      "stretches",
+      "etching"
+    ],
+    "obey": [
+      "obey"
+    ],
+    "ystem": [
+      "system",
+      "system's"
+    ],
+    "ends": [
+      "ends"
+    ],
+    "edg": [
+      "wedges"
+    ],
+    "ay": [
+      "way",
+      "stay",
+      "play",
+      "player",
+      "say",
+      "layers",
+      "saying",
+      "pray",
+      "prayer",
+      "players",
+      "may",
+      "lay"
+    ],
+    "imit": [
+      "limits",
+      "limit"
+    ],
+    "chase": [
+      "purchase"
+    ],
+    "rpose": [
+      "purpose"
+    ],
+    "rcial": [
+      "commercials"
+    ],
+    "ass": [
+      "class",
+      "pass",
+      "bass",
+      "passes",
+      "passed"
+    ],
+    "rtial": [
+      "inertial"
+    ],
+    "earse": [
+      "rehearse"
+    ],
+    "otes": [
+      "notes",
+      "votes"
+    ],
+    "otice": [
+      "notice"
+    ],
+    "cture": [
+      "picture",
+      "lecture"
+    ],
+    "stand": [
+      "understand",
+      "understands",
+      "wistand"
+    ],
+    "ptian": [
+      "egyptian"
+    ],
+    "pture": [
+      "scripture"
+    ],
+    "ocal": [
+      "local",
+      "vocals"
+    ],
+    "cknes": [
+      "sickness",
+      "quickness"
+    ],
+    "crypt": [
+      "encrypted"
+    ],
+    "xture": [
+      "mixture",
+      "texture"
+    ],
+    "its": [
+      "bits",
+      "sits"
+    ],
+    "ness": [
+      "witnesses",
+      "witnessed",
+      "businesses"
+    ],
+    "uilt": [
+      "built"
+    ],
+    "issue": [
+      "issue",
+      "tissue"
+    ],
+    "ister": [
+      "registered",
+      "administered"
+    ],
+    "exts": [
+      "texts"
+    ],
+    "ext": [
+      "next",
+      "text",
+      "dexter"
+    ],
+    "akes": [
+      "takes",
+      "makes",
+      "bakes"
+    ],
+    "ength": [
+      "strength",
+      "length"
+    ],
+    "end": [
+      "end",
+      "trends",
+      "trend",
+      "ending",
+      "trending",
+      "mend"
+    ],
+    "stian": [
+      "christian",
+      "christians"
+    ],
+    "igion": [
+      "religion"
+    ],
+    "ope": [
+      "hope",
+      "rope"
+    ],
+    "eal": [
+      "real",
+      "steal"
+    ],
+    "oat": [
+      "goat's",
+      "floats",
+      "float"
+    ],
+    "icent": [
+      "reticent",
+      "magnificent"
+    ],
+    "atron": [
+      "patrons"
+    ],
+    "eveal": [
+      "reveal",
+      "reveals"
+    ],
+    "shun": [
+      "vision",
+      "questions",
+      "action",
+      "attention",
+      "motion",
+      "allusion",
+      "options",
+      "precision",
+      "emotion",
+      "section",
+      "description",
+      "captions",
+      "mentions",
+      "tension",
+      "version",
+      "aversion",
+      "visions",
+      "traction",
+      "oppression",
+      "conclusions",
+      "decision",
+      "actions",
+      "expansion",
+      "nations",
+      "definitions",
+      "intermission",
+      "position",
+      "persuasion",
+      "inflation",
+      "expression",
+      "cognition",
+      "decisions",
+      "collision",
+      "rendition",
+      "tradition",
+      "edition",
+      "permission",
+      "competition",
+      "discretion",
+      "impression"
+    ],
+    "rreal": [
+      "surreal"
+    ],
+    "agent": [
+      "agents",
+      "agent"
+    ],
+    "ident": [
+      "president",
+      "evident",
+      "residents",
+      "presidents",
+      "president's",
+      "resident",
+      "incidents",
+      "confident"
+    ],
+    "urch": [
+      "church"
+    ],
+    "earch": [
+      "search"
+    ],
+    "yield": [
+      "yield",
+      "yields"
+    ],
+    "midst": [
+      "amidst"
+    ],
+    "eel": [
+      "feel",
+      "feeling"
+    ],
+    "stanc": [
+      "instances",
+      "distances"
+    ],
+    "uild": [
+      "build",
+      "builds"
+    ],
+    "enty": [
+      "plenty"
+    ],
+    "venly": [
+      "heavenly"
+    ],
+    "ayer": [
+      "layer",
+      "layered"
+    ],
+    "ake": [
+      "make",
+      "take",
+      "fake",
+      "cake"
+    ],
+    "orite": [
+      "favorite"
+    ],
+    "avor": [
+      "favor",
+      "flavors",
+      "flavor"
+    ],
+    "adily": [
+      "steadily"
+    ],
+    "aced": [
+      "paced"
+    ],
+    "ames": [
+      "games"
+    ],
+    "adium": [
+      "stadium"
+    ],
+    "etray": [
+      "betray"
+    ],
+    "endly": [
+      "friendly"
+    ],
+    "ates": [
+      "mates"
+    ],
+    "ntire": [
+      "entire"
+    ],
+    "age": [
+      "stage",
+      "page",
+      "rage",
+      "cage"
+    ],
+    "ook": [
+      "took",
+      "looking",
+      "look"
+    ],
+    "ain": [
+      "gain",
+      "main",
+      "brain",
+      "chain",
+      "pain",
+      "brains",
+      "gaining",
+      "gained",
+      "train",
+      "strains",
+      "strain",
+      "stains"
+    ],
+    "ired": [
+      "fired",
+      "tired",
+      "wired"
+    ],
+    "ause": [
+      "cause"
+    ],
+    "et": [
+      "get",
+      "let",
+      "set"
+    ],
+    "uire": [
+      "squire"
+    ],
+    "eak": [
+      "break",
+      "weak",
+      "speak",
+      "sneak",
+      "speaking"
+    ],
+    "anium": [
+      "cranium"
+    ],
+    "ur": [
+      "during"
+    ],
+    "ctice": [
+      "practice"
+    ],
+    "ee": [
+      "see",
+      "three",
+      "free",
+      "freeing"
+    ],
+    "ttice": [
+      "lattice"
+    ],
+    "ade": [
+      "made",
+      "trade",
+      "grade",
+      "man-made"
+    ],
+    "alien": [
+      "aliens"
+    ],
+    "ame": [
+      "game",
+      "fame",
+      "came",
+      "name",
+      "blame",
+      "frame",
+      "dame",
+      "flame"
+    ],
+    "etir": [
+      "retired"
+    ],
+    "atest": [
+      "latest"
+    ],
+    "it": [
+      "sit",
+      "shit",
+      "fit",
+      "writing",
+      "spit",
+      "knit",
+      "bit"
+    ],
+    "ire": [
+      "fire",
+      "wire",
+      "hire"
+    ],
+    "alize": [
+      "realize"
+    ],
+    "y": [
+      "why",
+      "cry",
+      "sky",
+      "trying"
+    ],
+    "ide": [
+      "tide",
+      "wide",
+      "side",
+      "slide"
+    ],
+    "ozone": [
+      "ozone"
+    ],
+    "efore": [
+      "before",
+      "therefore"
+    ],
+    "ome": [
+      "home"
+    ],
+    "one": [
+      "phone",
+      "tone",
+      "done"
+    ],
+    "i": [
+      "i'll",
+      "fbi"
+    ],
+    "ought": [
+      "thought",
+      "bought",
+      "thoughts",
+      "ought"
+    ],
+    "use": [
+      "use"
+    ],
+    "spire": [
+      "inspire",
+      "conspire"
+    ],
+    "nally": [
+      "finally"
+    ],
+    "esign": [
+      "design",
+      "resign",
+      "resigned",
+      "designed",
+      "designs"
+    ],
+    "ork": [
+      "work",
+      "working",
+      "workers"
+    ],
+    "erse": [
+      "verse",
+      "verse's"
+    ],
+    "quire": [
+      "inquire",
+      "require",
+      "acquire"
+    ],
+    "verse": [
+      "universe",
+      "reverse"
+    ],
+    "bject": [
+      "objects",
+      "subject",
+      "object's"
+    ],
+    "ords": [
+      "words"
+    ],
+    "um": [
+      "sum",
+      "scrum"
+    ],
+    "serve": [
+      "observe",
+      "preserve"
+    ],
+    "rtain": [
+      "curtains",
+      "certain",
+      "uncertain"
+    ],
+    "ust": [
+      "must",
+      "trust",
+      "gust"
+    ],
+    "iscus": [
+      "discuss"
+    ],
+    "tress": [
+      "distressed"
+    ],
+    "ajor": [
+      "major"
+    ],
+    "ayor": [
+      "mayor"
+    ],
+    "ssess": [
+      "assessed"
+    ],
+    "exces": [
+      "excess"
+    ],
+    "ature": [
+      "nature",
+      "signature"
+    ],
+    "ov": [
+      "covers",
+      "moving"
+    ],
+    "earth": [
+      "earth"
+    ],
+    "rface": [
+      "surface"
+    ],
+    "ecov": [
+      "recover"
+    ],
+    "rchas": [
+      "purchased"
+    ],
+    "umb": [
+      "numbers"
+    ],
+    "irst": [
+      "first"
+    ],
+    "hears": [
+      "rehearsed"
+    ],
+    "erbs": [
+      "verbs"
+    ],
+    "rvice": [
+      "service"
+    ],
+    "atoms": [
+      "atoms"
+    ],
+    "imate": [
+      "intimate",
+      "estimate",
+      "legitimate",
+      "inanimate"
+    ],
+    "erson": [
+      "person"
+    ],
+    "nimal": [
+      "animal",
+      "minimal"
+    ],
+    "binet": [
+      "cabinet"
+    ],
+    "ab": [
+      "cab"
+    ],
+    "nibal": [
+      "cannibals"
+    ],
+    "eat": [
+      "neat",
+      "beat",
+      "sweater",
+      "creates",
+      "seat",
+      "sweat",
+      "sweaters",
+      "threat",
+      "treat",
+      "eat",
+      "creating",
+      "greater",
+      "beat's"
+    ],
+    "ebt": [
+      "debt"
+    ],
+    "uriat": [
+      "infuriates"
+    ],
+    "ethod": [
+      "method",
+      "methods"
+    ],
+    "ivate": [
+      "private"
+    ],
+    "erit": [
+      "merit",
+      "merits"
+    ],
+    "ycl": [
+      "cycles"
+    ],
+    "uiet": [
+      "quiet"
+    ],
+    "itl": [
+      "titles"
+    ],
+    "ital": [
+      "vitals"
+    ],
+    "ead": [
+      "spread",
+      "threaded",
+      "read",
+      "thin-threaded",
+      "golden-threaded",
+      "head",
+      "bread",
+      "threads",
+      "leader",
+      "thread",
+      "dead"
+    ],
+    "emain": [
+      "remains",
+      "remain"
+    ],
+    "ere": [
+      "there's",
+      "here"
+    ],
+    "erest": [
+      "interested",
+      "interest",
+      "interesting"
+    ],
+    "ntage": [
+      "percentage",
+      "vantage",
+      "advantage"
+    ],
+    "itnes": [
+      "fitness",
+      "witness"
+    ],
+    "usic": [
+      "music"
+    ],
+    "ack": [
+      "track",
+      "hacking",
+      "crack",
+      "lacking",
+      "packed",
+      "lack",
+      "jack",
+      "back"
+    ],
+    "ingle": [
+      "single",
+      "jingle",
+      "mingle"
+    ],
+    "elp": [
+      "help"
+    ],
+    "andag": [
+      "bandaged"
+    ],
+    "emis": [
+      "premises"
+    ],
+    "imple": [
+      "simple"
+    ],
+    "ment": [
+      "investment",
+      "elements",
+      "sentiment",
+      "statement",
+      "payment",
+      "testament",
+      "monuments",
+      "increment",
+      "equipment",
+      "infringement",
+      "movements",
+      "improvement",
+      "comments",
+      "pigment",
+      "amusement",
+      "recruitment",
+      "debasement",
+      "impairment",
+      "refinement",
+      "excrement",
+      "entertainment",
+      "arrangement",
+      "argument",
+      "condiments",
+      "parliament",
+      "engagement",
+      "comment",
+      "torment",
+      "lament",
+      "augment",
+      "enslavement"
+    ],
+    "esent": [
+      "present",
+      "represents",
+      "presented"
+    ],
+    "ept": [
+      "kept"
+    ],
+    "aid": [
+      "said",
+      "paid",
+      "maid"
+    ],
+    "ent": [
+      "spent",
+      "went",
+      "centers",
+      "cent",
+      "vent"
+    ],
+    "ash": [
+      "cash",
+      "crash",
+      "trash",
+      "crashed",
+      "bash",
+      "clashing"
+    ],
+    "enter": [
+      "enter",
+      "centered"
+    ],
+    "venth": [
+      "seventh"
+    ],
+    "econd": [
+      "second"
+    ],
+    "ince": [
+      "since"
+    ],
+    "ast": [
+      "past",
+      "last",
+      "master",
+      "fast",
+      "wasted",
+      "master's",
+      "vast"
+    ],
+    "ffort": [
+      "effort",
+      "efforts",
+      "effort's"
+    ],
+    "ull": [
+      "full"
+    ],
+    "idden": [
+      "hidden"
+    ],
+    "ick": [
+      "tricks",
+      "ticking",
+      "tick",
+      "nick",
+      "sick",
+      "picked",
+      "wicked"
+    ],
+    "ift": [
+      "shift",
+      "drift",
+      "shifts",
+      "lift"
+    ],
+    "ode": [
+      "code"
+    ],
+    "ix": [
+      "mix",
+      "six"
+    ],
+    "rsist": [
+      "persists",
+      "persist"
+    ],
+    "ignal": [
+      "signal"
+    ],
+    "ight": [
+      "might",
+      "sight",
+      "fight",
+      "tight",
+      "night",
+      "tighter",
+      "light",
+      "right"
+    ],
+    "nchor": [
+      "anchor"
+    ],
+    "ar": [
+      "bar",
+      "far",
+      "scared"
+    ],
+    "inish": [
+      "finish",
+      "finished"
+    ],
+    "ipt": [
+      "script",
+      "scripts"
+    ],
+    "inut": [
+      "minutes"
+    ],
+    "inch": [
+      "inching",
+      "inch"
+    ],
+    "ink": [
+      "thinking",
+      "ink",
+      "sink",
+      "think",
+      "sinking",
+      "drink",
+      "thinks",
+      "linked",
+      "wink"
+    ],
+    "ing": [
+      "king",
+      "things",
+      "singing",
+      "bring"
+    ],
+    "djust": [
+      "adjusting",
+      "adjusted"
+    ],
+    "ync": [
+      "sync"
+    ],
+    "inic": [
+      "clinic"
+    ],
+    "ids": [
+      "kids"
+    ],
+    "igit": [
+      "digits",
+      "digit"
+    ],
+    "ustom": [
+      "custom"
+    ],
+    "itten": [
+      "written"
+    ],
+    "e": [
+      "he's",
+      "he'll"
+    ],
+    "antom": [
+      "phantom"
+    ],
+    "orev": [
+      "forever"
+    ],
+    "ism": [
+      "schisms",
+      "prism"
+    ],
+    "iven": [
+      "given",
+      "driven"
+    ],
+    "isdom": [
+      "wisdom"
+    ],
+    "ey": [
+      "they're",
+      "key",
+      "they'll"
+    ],
+    "ecord": [
+      "record",
+      "records"
+    ],
+    "aws": [
+      "draws"
+    ],
+    "eapon": [
+      "weapons"
+    ],
+    "bsurd": [
+      "absurd"
+    ],
+    "ike": [
+      "like",
+      "mike",
+      "spike",
+      "strike"
+    ],
+    "ngine": [
+      "engine"
+    ],
+    "dmitt": [
+      "admitted"
+    ],
+    "astic": [
+      "fantastic",
+      "stochastic",
+      "elastic",
+      "plastic"
+    ],
+    "ap": [
+      "rap",
+      "shaping",
+      "trap",
+      "papers",
+      "wrap"
+    ],
+    "ctive": [
+      "active",
+      "attractive",
+      "effective",
+      "selective",
+      "defective",
+      "directive"
+    ],
+    "ant": [
+      "want",
+      "granted"
+    ],
+    "icist": [
+      "lyricist's"
+    ],
+    "ectly": [
+      "perfectly"
+    ],
+    "mmend": [
+      "recommend"
+    ],
+    "evers": [
+      "reversed"
+    ],
+    "once": [
+      "once"
+    ],
+    "erve": [
+      "serve"
+    ],
+    "nenes": [
+      "oneness"
+    ],
+    "stice": [
+      "justice"
+    ],
+    "erv": [
+      "served",
+      "serves"
+    ],
+    "eed": [
+      "need",
+      "seed",
+      "speed"
+    ],
+    "onfes": [
+      "confess"
+    ],
+    "fford": [
+      "afford"
+    ],
+    "ic": [
+      "mic",
+      "prices"
+    ],
+    "orth": [
+      "worth"
+    ],
+    "each": [
+      "teaches",
+      "preach",
+      "teach",
+      "breach"
+    ],
+    "ow": [
+      "flow",
+      "how",
+      "now",
+      "know",
+      "show",
+      "grow",
+      "throw"
+    ],
+    "ond": [
+      "wonder",
+      "bond"
+    ],
+    "aken": [
+      "taken"
+    ],
+    "own": [
+      "known",
+      "own",
+      "crowns",
+      "down"
+    ],
+    "atan": [
+      "satan",
+      "satan's"
+    ],
+    "ays": [
+      "stays",
+      "days",
+      "ways",
+      "plays"
+    ],
+    "urn": [
+      "turning",
+      "turn",
+      "turned"
+    ],
+    "aith": [
+      "faith"
+    ],
+    "ad": [
+      "traded",
+      "trades",
+      "trading",
+      "spades",
+      "graded",
+      "shades",
+      "bad"
+    ],
+    "elief": [
+      "belief"
+    ],
+    "agan": [
+      "pagan"
+    ],
+    "splay": [
+      "displayed",
+      "displays"
+    ],
+    "innes": [
+      "guinness"
+    ],
+    "gthen": [
+      "strengthen"
+    ],
+    "sines": [
+      "business"
+    ],
+    "ore": [
+      "core",
+      "more",
+      "store",
+      "lore"
+    ],
+    "ntenc": [
+      "sentences"
+    ],
+    "apien": [
+      "sapien"
+    ],
+    "asic": [
+      "basic",
+      "basics"
+    ],
+    "scord": [
+      "discord"
+    ],
+    "egre": [
+      "degrees"
+    ],
+    "adian": [
+      "radians"
+    ],
+    "agree": [
+      "agree"
+    ],
+    "eaven": [
+      "heaven's",
+      "heaven",
+      "heavens"
+    ],
+    "even": [
+      "even",
+      "seven"
+    ],
+    "atent": [
+      "latent"
+    ],
+    "azy": [
+      "lazy"
+    ],
+    "essen": [
+      "lessen"
+    ],
+    "mc": [
+      "mc's"
+    ],
+    "ssive": [
+      "passive",
+      "progressive"
+    ],
+    "ician": [
+      "musicians",
+      "technician",
+      "magician",
+      "mathematician"
+    ],
+    "tween": [
+      "between"
+    ],
+    "eriou": [
+      "serious"
+    ],
+    "uriou": [
+      "curious",
+      "furious",
+      "spurious"
+    ],
+    "oriou": [
+      "notorious"
+    ],
+    "ourse": [
+      "course"
+    ],
+    "orce": [
+      "force"
+    ],
+    "ariou": [
+      "nefarious"
+    ],
+    "ip": [
+      "skip",
+      "ship",
+      "slip"
+    ],
+    "ssist": [
+      "assist",
+      "classist",
+      "assisted"
+    ],
+    "temic": [
+      "systemic"
+    ],
+    "nsist": [
+      "insist"
+    ],
+    "erent": [
+      "different"
+    ],
+    "ees": [
+      "sees",
+      "knees",
+      "trees",
+      "fees"
+    ],
+    "ese": [
+      "these"
+    ],
+    "ncipl": [
+      "principles"
+    ],
+    "aybe": [
+      "maybe"
+    ],
+    "itely": [
+      "definitely"
+    ],
+    "inite": [
+      "infinite",
+      "definite"
+    ],
+    "stant": [
+      "instant",
+      "distant"
+    ],
+    "easur": [
+      "measured",
+      "treasured"
+    ],
+    "ssure": [
+      "pressure"
+    ],
+    "auge": [
+      "gauge"
+    ],
+    "aper": [
+      "paper",
+      "taper"
+    ],
+    "eels": [
+      "feels"
+    ],
+    "ntain": [
+      "maintain",
+      "contained"
+    ],
+    "evel": [
+      "level"
+    ],
+    "evil": [
+      "devil",
+      "devil's",
+      "evil"
+    ],
+    "luenc": [
+      "influences"
+    ],
+    "acuou": [
+      "vacuous"
+    ],
+    "alf": [
+      "half"
+    ],
+    "uin": [
+      "ruined",
+      "ruining"
+    ],
+    "uth": [
+      "truth"
+    ],
+    "amus": [
+      "amusing",
+      "amuses"
+    ],
+    "youth": [
+      "youth"
+    ],
+    "tooth": [
+      "bluetooth"
+    ],
+    "othly": [
+      "smoothly"
+    ],
+    "ooth": [
+      "soothes",
+      "soothing",
+      "smooth"
+    ],
+    "ood": [
+      "mood"
+    ],
+    "eady": [
+      "ready",
+      "steady"
+    ],
+    "irnes": [
+      "fairness"
+    ],
+    "oose": [
+      "loose",
+      "choose"
+    ],
+    "ew": [
+      "few",
+      "new",
+      "screws"
+    ],
+    "eview": [
+      "reviewed",
+      "review",
+      "reviews"
+    ],
+    "oon": [
+      "soon"
+    ],
+    "art": [
+      "art",
+      "smarter",
+      "starts",
+      "start",
+      "starting",
+      "part"
+    ],
+    "arth": [
+      "farther"
+    ],
+    "ath": [
+      "father",
+      "path",
+      "math",
+      "gather"
+    ],
+    "our": [
+      "hour",
+      "sour"
+    ],
+    "erri": [
+      "berries"
+    ],
+    "elli": [
+      "bellies"
+    ],
+    "arry": [
+      "carrying"
+    ],
+    "ery": [
+      "very"
+    ],
+    "erry": [
+      "merry"
+    ],
+    "bsent": [
+      "absent"
+    ],
+    "estor": [
+      "investor",
+      "investors"
+    ],
+    "ails": [
+      "fails"
+    ],
+    "ail": [
+      "fail"
+    ],
+    "eals": [
+      "deals"
+    ],
+    "ilure": [
+      "failure"
+    ],
+    "nvest": [
+      "invest"
+    ],
+    "ifts": [
+      "lifts"
+    ],
+    "irit": [
+      "spirit",
+      "spirits"
+    ],
+    "open": [
+      "open"
+    ],
+    "ttest": [
+      "fittest"
+    ],
+    "mmick": [
+      "gimmicks",
+      "gimmick"
+    ],
+    "omis": [
+      "promises",
+      "promised"
+    ],
+    "omles": [
+      "bottomless"
+    ],
+    "thesi": [
+      "hypothesis",
+      "synthesis"
+    ],
+    "minou": [
+      "ominous"
+    ],
+    "yme": [
+      "rhyme"
+    ],
+    "ough": [
+      "though",
+      "tough"
+    ],
+    "bviou": [
+      "obvious"
+    ],
+    "egist": [
+      "register"
+    ],
+    "eter": [
+      "meter"
+    ],
+    "itt": [
+      "fitted",
+      "hitting",
+      "sitting"
+    ],
+    "appen": [
+      "happened",
+      "happen",
+      "happens"
+    ],
+    "angst": [
+      "gangster"
+    ],
+    "unapt": [
+      "unapt"
+    ],
+    "apt": [
+      "apt"
+    ],
+    "aract": [
+      "character"
+    ],
+    "ttern": [
+      "pattern",
+      "patterns"
+    ],
+    "ata": [
+      "data"
+    ],
+    "inent": [
+      "imminent",
+      "prominent"
+    ],
+    "ncern": [
+      "concerned"
+    ],
+    "ttack": [
+      "attacked",
+      "attack"
+    ],
+    "eturn": [
+      "return"
+    ],
+    "ackl": [
+      "shackles"
+    ],
+    "scern": [
+      "discern"
+    ],
+    "cient": [
+      "ancient",
+      "efficient",
+      "sufficient",
+      "deficient"
+    ],
+    "avern": [
+      "cavern"
+    ],
+    "you": [
+      "you're",
+      "you'll",
+      "you've"
+    ],
+    "answ": [
+      "answers",
+      "answer"
+    ],
+    "tract": [
+      "attract",
+      "attracts"
+    ],
+    "eciou": [
+      "precious"
+    ],
+    "event": [
+      "events",
+      "prevent"
+    ],
+    "erenc": [
+      "differences",
+      "referenced",
+      "inferences"
+    ],
+    "mbedd": [
+      "embedded"
+    ],
+    "ease": [
+      "please",
+      "tease"
+    ],
+    "ememb": [
+      "remember"
+    ],
+    "eep": [
+      "keep",
+      "deep"
+    ],
+    "emb": [
+      "members",
+      "member"
+    ],
+    "ector": [
+      "vectors",
+      "vector"
+    ],
+    "nnect": [
+      "connect"
+    ],
+    "xpert": [
+      "expert",
+      "experts"
+    ],
+    "efin": [
+      "refined",
+      "defining",
+      "defines",
+      "defined"
+    ],
+    "ntent": [
+      "intent"
+    ],
+    "llent": [
+      "excellent"
+    ],
+    "ac": [
+      "placed",
+      "bracing"
+    ],
+    "are": [
+      "care",
+      "share"
+    ],
+    "enev": [
+      "whenever"
+    ],
+    "asks": [
+      "asks"
+    ],
+    "uffet": [
+      "buffet"
+    ],
+    "ump": [
+      "trump"
+    ],
+    "along": [
+      "along"
+    ],
+    "ock": [
+      "locked",
+      "stock",
+      "stocks",
+      "clock"
+    ],
+    "oth": [
+      "both",
+      "bothers"
+    ],
+    "asset": [
+      "assets"
+    ],
+    "ehash": [
+      "rehash",
+      "rehashed"
+    ],
+    "isk": [
+      "risk"
+    ],
+    "other": [
+      "other"
+    ],
+    "ice": [
+      "dice",
+      "twice",
+      "nice",
+      "price"
+    ],
+    "oin": [
+      "coin",
+      "join"
+    ],
+    "oss": [
+      "tosses",
+      "cross"
+    ],
+    "ddres": [
+      "address"
+    ],
+    "onfus": [
+      "confusing",
+      "confused"
+    ],
+    "ogres": [
+      "progress"
+    ],
+    "nsive": [
+      "offensive"
+    ],
+    "atch": [
+      "watch",
+      "catch"
+    ],
+    "arkov": [
+      "markov"
+    ],
+    "oces": [
+      "process"
+    ],
+    "evolv": [
+      "evolves"
+    ],
+    "edict": [
+      "predicts"
+    ],
+    "esolv": [
+      "resolved"
+    ],
+    "timal": [
+      "optimal"
+    ],
+    "alk": [
+      "walking",
+      "talking",
+      "talk",
+      "stalking"
+    ],
+    "ewton": [
+      "newton"
+    ],
+    "about": [
+      "about"
+    ],
+    "lculu": [
+      "calculus"
+    ],
+    "edent": [
+      "precedent",
+      "antecedent"
+    ],
+    "gical": [
+      "logical"
+    ],
+    "prise": [
+      "surprise"
+    ],
+    "guise": [
+      "disguise"
+    ],
+    "tropy": [
+      "entropy"
+    ],
+    "igh": [
+      "high",
+      "higher"
+    ],
+    "omize": [
+      "randomize"
+    ],
+    "enery": [
+      "scenery"
+    ],
+    "hasiz": [
+      "emphasized"
+    ],
+    "evice": [
+      "device"
+    ],
+    "assic": [
+      "classic"
+    ],
+    "gnize": [
+      "recognize"
+    ],
+    "actic": [
+      "tactic",
+      "tactics",
+      "practiced"
+    ],
+    "ices": [
+      "vices"
+    ],
+    "tting": [
+      "settings"
+    ],
+    "dding": [
+      "embeddings"
+    ],
+    "arity": [
+      "clarity",
+      "similarity",
+      "rarity"
+    ],
+    "ari": [
+      "varies"
+    ],
+    "among": [
+      "among"
+    ],
+    "ueri": [
+      "queries"
+    ],
+    "eavy": [
+      "heavy"
+    ],
+    "urden": [
+      "burden",
+      "burdened"
+    ],
+    "sform": [
+      "transformers"
+    ],
+    "omot": [
+      "promoters"
+    ],
+    "antic": [
+      "semantics"
+    ],
+    "matic": [
+      "schematics",
+      "mathamatic",
+      "asthmatic",
+      "pragmatic",
+      "mathematics",
+      "mathematic"
+    ],
+    "oems": [
+      "poems"
+    ],
+    "ind": [
+      "mind",
+      "kind",
+      "find",
+      "binding"
+    ],
+    "asure": [
+      "measure",
+      "pleasure"
+    ],
+    "gital": [
+      "digital"
+    ],
+    "icant": [
+      "significant"
+    ],
+    "arely": [
+      "barely",
+      "rarely"
+    ],
+    "baric": [
+      "barbaric"
+    ],
+    "airly": [
+      "fairly"
+    ],
+    "asant": [
+      "peasants",
+      "peasant"
+    ],
+    "loric": [
+      "caloric"
+    ],
+    "eaten": [
+      "threatened"
+    ],
+    "rmine": [
+      "determine"
+    ],
+    "order": [
+      "order"
+    ],
+    "orn": [
+      "corners"
+    ],
+    "rfect": [
+      "perfect"
+    ],
+    "ovid": [
+      "provides"
+    ],
+    "itive": [
+      "positive",
+      "sensitive"
+    ],
+    "gular": [
+      "singular"
+    ],
+    "minal": [
+      "criminal"
+    ],
+    "icial": [
+      "artificial"
+    ],
+    "erive": [
+      "derive"
+    ],
+    "anva": [
+      "canvas"
+    ],
+    "eft": [
+      "left"
+    ],
+    "spite": [
+      "despite"
+    ],
+    "itic": [
+      "critics"
+    ],
+    "ype": [
+      "type"
+    ],
+    "ars": [
+      "bars"
+    ],
+    "oll": [
+      "rolling",
+      "rolled"
+    ],
+    "ard": [
+      "hard"
+    ],
+    "rtist": [
+      "artist",
+      "artist's"
+    ],
+    "avert": [
+      "avert"
+    ],
+    "eath": [
+      "weather"
+    ],
+    "ojan": [
+      "trojan"
+    ],
+    "orse": [
+      "horse"
+    ],
+    "osen": [
+      "chosen"
+    ],
+    "plode": [
+      "explode"
+    ],
+    "ole": [
+      "whole"
+    ],
+    "tgage": [
+      "mortgage"
+    ],
+    "expos": [
+      "exposed"
+    ],
+    "ine": [
+      "line",
+      "fine",
+      "mine"
+    ],
+    "ev": [
+      "clever"
+    ],
+    "nspir": [
+      "inspiring",
+      "inspires"
+    ],
+    "ost": [
+      "most",
+      "post"
+    ],
+    "inds": [
+      "minds"
+    ],
+    "etire": [
+      "retire"
+    ],
+    "oke": [
+      "choke"
+    ],
+    "esire": [
+      "desire"
+    ],
+    "ould": [
+      "should"
+    ],
+    "ignit": [
+      "reignited"
+    ],
+    "entum": [
+      "momentum"
+    ],
+    "toric": [
+      "historic",
+      "rhetoric's",
+      "rhetoric"
+    ],
+    "ighs": [
+      "highs"
+    ],
+    "cquir": [
+      "acquired"
+    ],
+    "esir": [
+      "desired"
+    ],
+    "dmire": [
+      "admire"
+    ],
+    "ym": [
+      "rhyming",
+      "rhymes"
+    ],
+    "in": [
+      "lining",
+      "kin",
+      "thin",
+      "shrines"
+    ],
+    "htnes": [
+      "lightness",
+      "tightness",
+      "brightness"
+    ],
+    "milar": [
+      "similar"
+    ],
+    "sland": [
+      "island"
+    ],
+    "hteou": [
+      "righteous"
+    ],
+    "neath": [
+      "beneath"
+    ],
+    "inn": [
+      "sinners",
+      "sinner",
+      "dinner",
+      "inning",
+      "sinning",
+      "spinning",
+      "grinning"
+    ],
+    "eri": [
+      "series"
+    ],
+    "egin": [
+      "begins",
+      "begin"
+    ],
+    "uctur": [
+      "structured"
+    ],
+    "itles": [
+      "limitless"
+    ],
+    "eori": [
+      "theories"
+    ],
+    "over": [
+      "covered",
+      "over"
+    ],
+    "icacy": [
+      "intricacy"
+    ],
+    "outer": [
+      "outer"
+    ],
+    "iti": [
+      "cities"
+    ],
+    "ypsi": [
+      "gypsies"
+    ],
+    "imacy": [
+      "intimacy"
+    ],
+    "oud": [
+      "louder"
+    ],
+    "ippi": [
+      "hippies"
+    ],
+    "stori": [
+      "histories"
+    ],
+    "ently": [
+      "diligently"
+    ],
+    "uette": [
+      "etiquette"
+    ],
+    "ticut": [
+      "connecticut"
+    ],
+    "elect": [
+      "select"
+    ],
+    "irect": [
+      "indirect"
+    ],
+    "em": [
+      "all'em",
+      "schemes",
+      "shackle'em",
+      "stop'em",
+      "gem",
+      "schemer"
+    ],
+    "betic": [
+      "alphabetic"
+    ],
+    "emitt": [
+      "emitted"
+    ],
+    "estly": [
+      "honestly"
+    ],
+    "ofit": [
+      "profit"
+    ],
+    "ocent": [
+      "innocent"
+    ],
+    "bable": [
+      "probable"
+    ],
+    "lenes": [
+      "nimbleness"
+    ],
+    "bolic": [
+      "symbolic"
+    ],
+    "nvert": [
+      "convert"
+    ],
+    "urse": [
+      "curse",
+      "nurse"
+    ],
+    "ums": [
+      "sums"
+    ],
+    "irt": [
+      "dirt"
+    ],
+    "irth": [
+      "birthing"
+    ],
+    "erds": [
+      "nerds"
+    ],
+    "alert": [
+      "alert"
+    ],
+    "oral": [
+      "moral"
+    ],
+    "ompas": [
+      "compass"
+    ],
+    "ormal": [
+      "formal",
+      "normal"
+    ],
+    "ants": [
+      "wants"
+    ],
+    "urplu": [
+      "surplus"
+    ],
+    "ovic": [
+      "novices"
+    ],
+    "extra": [
+      "extra"
+    ],
+    "pherd": [
+      "shepherd"
+    ],
+    "onest": [
+      "honest"
+    ],
+    "usnes": [
+      "consciousness",
+      "righteousness"
+    ],
+    "awful": [
+      "awful"
+    ],
+    "ovel": [
+      "novel"
+    ],
+    "rrent": [
+      "current"
+    ],
+    "ctrum": [
+      "spectrum"
+    ],
+    "olemn": [
+      "solemn"
+    ],
+    "era": [
+      "era"
+    ],
+    "ave": [
+      "gave",
+      "brave",
+      "wave",
+      "cave",
+      "crave"
+    ],
+    "oblem": [
+      "problem"
+    ],
+    "ahead": [
+      "ahead"
+    ],
+    "urve": [
+      "curve"
+    ],
+    "liant": [
+      "brilliant",
+      "valiant"
+    ],
+    "us": [
+      "plus",
+      "thus"
+    ],
+    "lient": [
+      "resilient"
+    ],
+    "ill": [
+      "till",
+      "fill"
+    ],
+    "ionth": [
+      "millionth"
+    ],
+    "arsal": [
+      "rehearsal"
+    ],
+    "ernal": [
+      "internal"
+    ],
+    "erval": [
+      "interval"
+    ],
+    "llabl": [
+      "syllables"
+    ],
+    "tical": [
+      "critical"
+    ],
+    "istic": [
+      "statistics",
+      "linguistics",
+      "holistic",
+      "sadistic"
+    ],
+    "ersal": [
+      "reversal"
+    ],
+    "ime": [
+      "time",
+      "crime",
+      "prime"
+    ],
+    "efine": [
+      "define"
+    ],
+    "quent": [
+      "delinquent",
+      "eloquent",
+      "consequent"
+    ],
+    "im": [
+      "timing",
+      "crimes",
+      "slim"
+    ],
+    "orks": [
+      "works"
+    ],
+    "ines": [
+      "lines"
+    ],
+    "pical": [
+      "typical"
+    ],
+    "glyph": [
+      "hieroglyphs"
+    ],
+    "ndnes": [
+      "kindness"
+    ],
+    "celes": [
+      "priceless"
+    ],
+    "where": [
+      "everywhere"
+    ],
+    "adise": [
+      "paradise"
+    ],
+    "icare": [
+      "medicare"
+    ],
+    "ffect": [
+      "affected"
+    ],
+    "rican": [
+      "american"
+    ],
+    "ell": [
+      "well",
+      "hell",
+      "better-smelling",
+      "dwelling"
+    ],
+    "rvive": [
+      "survive"
+    ],
+    "aline": [
+      "adrenaline"
+    ],
+    "yre": [
+      "pyre"
+    ],
+    "leman": [
+      "gentleman's"
+    ],
+    "ychic": [
+      "psychic"
+    ],
+    "ealth": [
+      "wealth",
+      "health",
+      "stealth"
+    ],
+    "ilot": [
+      "pilot"
+    ],
+    "scrib": [
+      "subscribers",
+      "inscribed"
+    ],
+    "right": [
+      "alright"
+    ],
+    "ask": [
+      "ask",
+      "asking",
+      "mask"
+    ],
+    "drick": [
+      "kendrick"
+    ],
+    "at": [
+      "that's",
+      "bat",
+      "what's",
+      "swat"
+    ],
+    "only": [
+      "only"
+    ],
+    "rrest": [
+      "arrested"
+    ],
+    "ands": [
+      "hands"
+    ],
+    "ettor": [
+      "bettors"
+    ],
+    "ublic": [
+      "public"
+    ],
+    "ebtor": [
+      "debtors"
+    ],
+    "scent": [
+      "crescent",
+      "nascent"
+    ],
+    "ubic": [
+      "cubic"
+    ],
+    "ximum": [
+      "maximum"
+    ],
+    "ommon": [
+      "common"
+    ],
+    "asts": [
+      "lasts"
+    ],
+    "ong": [
+      "strong",
+      "song",
+      "stronger",
+      "song's",
+      "long",
+      "wrongs"
+    ],
+    "ense": [
+      "tense",
+      "tense's"
+    ],
+    "ardon": [
+      "pardon"
+    ],
+    "osp": [
+      "prosper"
+    ],
+    "ntest": [
+      "contest"
+    ],
+    "rtian": [
+      "martian"
+    ],
+    "op": [
+      "proper"
+    ],
+    "oject": [
+      "project",
+      "projects"
+    ],
+    "ield": [
+      "field"
+    ],
+    "fully": [
+      "awfully",
+      "carefully"
+    ],
+    "arket": [
+      "market"
+    ],
+    "eems": [
+      "seems"
+    ],
+    "ocket": [
+      "rocket",
+      "socket"
+    ],
+    "arget": [
+      "target"
+    ],
+    "aunch": [
+      "launches"
+    ],
+    "spect": [
+      "prospect"
+    ],
+    "ogic": [
+      "logic"
+    ],
+    "melet": [
+      "omelet"
+    ],
+    "eddit": [
+      "reddit"
+    ],
+    "ylist": [
+      "playlist"
+    ],
+    "eserv": [
+      "deserves",
+      "reserves"
+    ],
+    "alias": [
+      "alias"
+    ],
+    "nfirm": [
+      "confirm"
+    ],
+    "ound": [
+      "sound",
+      "bounds"
+    ],
+    "nmc": [
+      "nmc's"
+    ],
+    "adiu": [
+      "radius"
+    ],
+    "ues": [
+      "blues"
+    ],
+    "iews": [
+      "views"
+    ],
+    "ssume": [
+      "assume"
+    ],
+    "zines": [
+      "laziness"
+    ],
+    "onsum": [
+      "consumed",
+      "consuming"
+    ],
+    "udent": [
+      "students"
+    ],
+    "strue": [
+      "construe"
+    ],
+    "iew": [
+      "view"
+    ],
+    "uman": [
+      "humans",
+      "human"
+    ],
+    "utant": [
+      "mutants",
+      "mutant"
+    ],
+    "ewn": [
+      "sewn"
+    ],
+    "tonic": [
+      "tectonic"
+    ],
+    "uses": [
+      "muses"
+    ],
+    "onic": [
+      "chronic"
+    ],
+    "ocean": [
+      "ocean"
+    ],
+    "urns": [
+      "turns"
+    ],
+    "ronic": [
+      "electronic"
+    ],
+    "oded": [
+      "coded"
+    ],
+    "omic": [
+      "comic"
+    ],
+    "omet": [
+      "comet"
+    ],
+    "round": [
+      "around",
+      "surround"
+    ],
+    "osmic": [
+      "cosmic"
+    ],
+    "oken": [
+      "broken"
+    ],
+    "shion": [
+      "fashion"
+    ],
+    "actor": [
+      "reactor",
+      "actors"
+    ],
+    "erful": [
+      "masterful"
+    ],
+    "namic": [
+      "dynamic"
+    ],
+    "eam": [
+      "team",
+      "dreams",
+      "dream",
+      "streaming",
+      "dreaming",
+      "streamed",
+      "streams",
+      "stream"
+    ],
+    "mpion": [
+      "champions"
+    ],
+    "eague": [
+      "league"
+    ],
+    "een": [
+      "seen"
+    ],
+    "ipp": [
+      "sipping",
+      "dripping"
+    ],
+    "ean": [
+      "lean",
+      "clean"
+    ],
+    "eek": [
+      "peek",
+      "seek"
+    ],
+    "agic": [
+      "magic",
+      "tragic"
+    ],
+    "cific": [
+      "specific"
+    ],
+    "eats": [
+      "beats"
+    ],
+    "gimen": [
+      "regimen"
+    ],
+    "ate": [
+      "late",
+      "fate",
+      "ate",
+      "hate"
+    ],
+    "east": [
+      "least"
+    ],
+    "leven": [
+      "eleven"
+    ],
+    "es": [
+      "stress"
+    ],
+    "engag": [
+      "disengaged"
+    ],
+    "ait": [
+      "traits"
+    ],
+    "scend": [
+      "transcend"
+    ],
+    "stive": [
+      "suggestive",
+      "exhaustive"
+    ],
+    "mcs": [
+      "mcs"
+    ],
+    "sipat": [
+      "dissipates"
+    ],
+    "eign": [
+      "reigns"
+    ],
+    "attle": [
+      "battle"
+    ],
+    "nsane": [
+      "insane"
+    ],
+    "eatly": [
+      "neatly"
+    ],
+    "plain": [
+      "explain"
+    ],
+    "uenes": [
+      "vagueness"
+    ],
+    "eafly": [
+      "leafly"
+    ],
+    "geles": [
+      "ageless"
+    ],
+    "ief": [
+      "brief"
+    ],
+    "stake": [
+      "mistake"
+    ],
+    "ingly": [
+      "seemingly"
+    ],
+    "ngles": [
+      "meaningless"
+    ],
+    "away": [
+      "away"
+    ],
+    "istma": [
+      "christmas"
+    ],
+    "atise": [
+      "treatise"
+    ],
+    "olism": [
+      "symbolism"
+    ],
+    "otism": [
+      "hypnotism"
+    ],
+    "esus": [
+      "jesus"
+    ],
+    "esi": [
+      "thesis"
+    ],
+    "mptom": [
+      "symptom",
+      "symptoms"
+    ],
+    "chles": [
+      "speechless"
+    ],
+    "drome": [
+      "syndrome"
+    ],
+    "ictim": [
+      "victims",
+      "victim"
+    ],
+    "ivide": [
+      "divide"
+    ],
+    "tocol": [
+      "protocol"
+    ],
+    "cohol": [
+      "alcohol"
+    ],
+    "tanyl": [
+      "fentanyl"
+    ],
+    "nymou": [
+      "anonymous",
+      "synonymous"
+    ],
+    "holic": [
+      "workaholic"
+    ],
+    "oduce": [
+      "produce"
+    ],
+    "lodic": [
+      "melodic"
+    ],
+    "ynic": [
+      "cynic"
+    ],
+    "mplic": [
+      "accomplices"
+    ],
+    "ivic": [
+      "civic"
+    ],
+    "ostag": [
+      "hostages"
+    ],
+    "ative": [
+      "quantitative"
+    ],
+    "eas": [
+      "pleasing",
+      "easing",
+      "teasing"
+    ],
+    "opoli": [
+      "metropolis"
+    ],
+    "ouns": [
+      "nouns"
+    ],
+    "nding": [
+      "surroundings"
+    ],
+    "ympic": [
+      "olympic"
+    ],
+    "owd": [
+      "crowds"
+    ],
+    "ea": [
+      "sea",
+      "tea"
+    ],
+    "awake": [
+      "awake"
+    ],
+    "lific": [
+      "prolific"
+    ],
+    "cally": [
+      "physically",
+      "practically"
+    ],
+    "lable": [
+      "syllable"
+    ],
+    "quipp": [
+      "equipped"
+    ],
+    "ord": [
+      "word"
+    ],
+    "isual": [
+      "visual"
+    ],
+    "ldren": [
+      "children"
+    ],
+    "old": [
+      "hold",
+      "gold"
+    ],
+    "enue": [
+      "venue"
+    ],
+    "enu": [
+      "menu"
+    ],
+    "imm": [
+      "slimmer"
+    ],
+    "venue": [
+      "avenue",
+      "revenue"
+    ],
+    "added": [
+      "added"
+    ],
+    "ads": [
+      "ads"
+    ],
+    "epend": [
+      "depend"
+    ],
+    "acces": [
+      "access"
+    ],
+    "act": [
+      "fact",
+      "act"
+    ],
+    "adnes": [
+      "madness",
+      "sadness"
+    ],
+    "ntend": [
+      "intend"
+    ],
+    "stnes": [
+      "vastness"
+    ],
+    "aft": [
+      "craft",
+      "drafting"
+    ],
+    "app": [
+      "rapper",
+      "app",
+      "rapping"
+    ],
+    "eart": [
+      "heart"
+    ],
+    "elax": [
+      "relaxed"
+    ],
+    "aps": [
+      "raps"
+    ],
+    "ann": [
+      "manners"
+    ],
+    "ird": [
+      "third",
+      "one-third"
+    ],
+    "ange": [
+      "change",
+      "range"
+    ],
+    "atu": [
+      "status"
+    ],
+    "tient": [
+      "patient"
+    ],
+    "ovide": [
+      "provide"
+    ],
+    "press": [
+      "suppressed",
+      "expressed"
+    ],
+    "egit": [
+      "legit"
+    ],
+    "minem": [
+      "eminem",
+      "eminem's"
+    ],
+    "scist": [
+      "fascist"
+    ],
+    "ppend": [
+      "appended"
+    ],
+    "uster": [
+      "clustered"
+    ],
+    "dvise": [
+      "advise"
+    ],
+    "orgot": [
+      "forgot"
+    ],
+    "ortal": [
+      "mortal"
+    ],
+    "ghnes": [
+      "toughness"
+    ],
+    "excit": [
+      "excites"
+    ],
+    "rsome": [
+      "cumbersome"
+    ],
+    "nside": [
+      "inside"
+    ],
+    "imb": [
+      "climbing",
+      "climb"
+    ],
+    "sight": [
+      "insight"
+    ],
+    "ewind": [
+      "rewind"
+    ],
+    "ife": [
+      "life",
+      "life's"
+    ],
+    "iv": [
+      "living",
+      "thriving"
+    ],
+    "spawn": [
+      "respawn"
+    ],
+    "ace": [
+      "space",
+      "ace",
+      "place",
+      "race",
+      "grace",
+      "trace"
+    ],
+    "llest": [
+      "illest",
+      "smallest"
+    ],
+    "iktok": [
+      "tiktok"
+    ],
+    "ircu": [
+      "circus"
+    ],
+    "ouble": [
+      "double"
+    ],
+    "oft": [
+      "soft"
+    ],
+    "awles": [
+      "lawless"
+    ],
+    "fresh": [
+      "refresh"
+    ],
+    "ach": [
+      "caches"
+    ],
+    "all": [
+      "call",
+      "stalled"
+    ],
+    "jamin": [
+      "benjamin"
+    ],
+    "abit": [
+      "habits"
+    ],
+    "ecent": [
+      "decent",
+      "recent"
+    ],
+    "indow": [
+      "window"
+    ],
+    "isco": [
+      "disco"
+    ],
+    "ear": [
+      "fear",
+      "wear"
+    ],
+    "issu": [
+      "issued"
+    ],
+    "scipl": [
+      "disciples"
+    ],
+    "cibel": [
+      "decibels"
+    ],
+    "cital": [
+      "recital"
+    ],
+    "oward": [
+      "towards",
+      "toward"
+    ],
+    "icult": [
+      "difficult"
+    ],
+    "ingl": [
+      "jingles",
+      "pringles",
+      "singles"
+    ],
+    "nnish": [
+      "finnish"
+    ],
+    "etool": [
+      "retooling"
+    ],
+    "uly": [
+      "truly"
+    ],
+    "nruly": [
+      "unruly"
+    ],
+    "isfit": [
+      "misfit"
+    ],
+    "ittle": [
+      "little"
+    ],
+    "impos": [
+      "imposed"
+    ],
+    "ules": [
+      "rules"
+    ],
+    "ntrol": [
+      "control"
+    ],
+    "sclos": [
+      "disclosed"
+    ],
+    "nique": [
+      "munique"
+    ],
+    "ews": [
+      "news"
+    ],
+    "okes": [
+      "tokes"
+    ],
+    "ote": [
+      "vote"
+    ],
+    "oes": [
+      "goes"
+    ],
+    "oker": [
+      "joker"
+    ],
+    "n't": [
+      "ain't",
+      "isn't"
+    ],
+    "easy": [
+      "easy",
+      "greasy"
+    ],
+    "eazy": [
+      "sleazy"
+    ],
+    "eeply": [
+      "deeply"
+    ],
+    "eezy": [
+      "breezy"
+    ],
+    "esson": [
+      "lessons",
+      "lesson"
+    ],
+    "iefly": [
+      "briefly"
+    ],
+    "eaply": [
+      "cheaply"
+    ],
+    "eet": [
+      "sweet"
+    ],
+    "hibit": [
+      "exhibited",
+      "exhibits",
+      "prohibits"
+    ],
+    "arate": [
+      "separate"
+    ],
+    "and": [
+      "sand",
+      "land",
+      "hand"
+    ],
+    "isite": [
+      "exquisite"
+    ],
+    "alent": [
+      "talent",
+      "talented"
+    ],
+    "lenge": [
+      "challenge"
+    ],
+    "acent": [
+      "adjacent"
+    ],
+    "emand": [
+      "demands"
+    ],
+    "asian": [
+      "asian"
+    ],
+    "arent": [
+      "parents"
+    ],
+    "spair": [
+      "despairing"
+    ],
+    "amate": [
+      "testamate"
+    ],
+    "ile": [
+      "while",
+      "vile",
+      "file",
+      "pile"
+    ],
+    "igns": [
+      "signs"
+    ],
+    "ssign": [
+      "assign"
+    ],
+    "nclin": [
+      "inclined"
+    ],
+    "align": [
+      "aligned"
+    ],
+    "ase": [
+      "chase"
+    ],
+    "cline": [
+      "decline"
+    ],
+    "arest": [
+      "nearest"
+    ],
+    "ecial": [
+      "special"
+    ],
+    "ntial": [
+      "essentials"
+    ],
+    "atrix": [
+      "matrix"
+    ],
+    "omes": [
+      "comes"
+    ],
+    "edges": [
+      "edges"
+    ],
+    "osaic": [
+      "prosaic"
+    ],
+    "alway": [
+      "always"
+    ],
+    "ecipe": [
+      "recipe"
+    ],
+    "igree": [
+      "pedigree"
+    ],
+    "unles": [
+      "unless"
+    ],
+    "akery": [
+      "bakery"
+    ],
+    "andom": [
+      "random"
+    ],
+    "org": [
+      "forged"
+    ],
+    "avery": [
+      "bravery"
+    ],
+    "ose": [
+      "close"
+    ],
+    "aste": [
+      "taste"
+    ],
+    "avory": [
+      "savory"
+    ],
+    "lican": [
+      "pelicans"
+    ],
+    "dison": [
+      "edison"
+    ],
+    "rtles": [
+      "effortless"
+    ],
+    "eason": [
+      "reasons",
+      "season"
+    ],
+    "eldom": [
+      "seldom"
+    ],
+    "emon": [
+      "demons"
+    ],
+    "lcome": [
+      "welcome"
+    ],
+    "nform": [
+      "conform"
+    ],
+    "ifest": [
+      "manifester"
+    ],
+    "nswer": [
+      "answered"
+    ],
+    "azard": [
+      "hazards"
+    ],
+    "allel": [
+      "parallel"
+    ],
+    "veral": [
+      "several"
+    ],
+    "enac": [
+      "menacing"
+    ],
+    "oetic": [
+      "poetic"
+    ],
+    "erapy": [
+      "therapy"
+    ],
+    "dient": [
+      "ingredient"
+    ],
+    "egree": [
+      "degree"
+    ],
+    "essag": [
+      "messages"
+    ],
+    "evy": [
+      "levy"
+    ],
+    "erick": [
+      "limerick"
+    ],
+    "ets": [
+      "gets"
+    ],
+    "rpret": [
+      "interpret"
+    ],
+    "any": [
+      "many"
+    ],
+    "scape": [
+      "escape"
+    ],
+    "acon": [
+      "bacon"
+    ],
+    "ut": [
+      "put"
+    ],
+    "aked": [
+      "naked"
+    ],
+    "adi": [
+      "ladies"
+    ],
+    "abid": [
+      "rabid",
+      "abides"
+    ],
+    "abbit": [
+      "rabbits"
+    ],
+    "abi": [
+      "rabies"
+    ],
+    "ndard": [
+      "standard"
+    ],
+    "assag": [
+      "passages"
+    ],
+    "pidat": [
+      "lapidated"
+    ],
+    "eadth": [
+      "breadth"
+    ],
+    "ackle": [
+      "tackle"
+    ],
+    "oint": [
+      "joints"
+    ],
+    "eathe": [
+      "breathe"
+    ],
+    "eem": [
+      "seem"
+    ],
+    "everb": [
+      "reverb"
+    ],
+    "eard": [
+      "heard"
+    ],
+    "moron": [
+      "oxymoron"
+    ],
+    "oron": [
+      "moron"
+    ],
+    "alt": [
+      "alters"
+    ],
+    "aura": [
+      "aura"
+    ],
+    "egone": [
+      "foregone"
+    ],
+    "uthor": [
+      "authors"
+    ],
+    "olve": [
+      "solve"
+    ],
+    "aiwan": [
+      "taiwan's"
+    ],
+    "ollar": [
+      "dollars"
+    ],
+    "urth": [
+      "further"
+    ],
+    "quenc": [
+      "consequences"
+    ],
+    "ecise": [
+      "precise"
+    ],
+    "usive": [
+      "intrusive",
+      "allusive"
+    ],
+    "acute": [
+      "acute"
+    ],
+    "tenes": [
+      "astuteness"
+    ],
+    "uture": [
+      "future"
+    ],
+    "oduc": [
+      "producing",
+      "produces"
+    ],
+    "abuse": [
+      "abuse"
+    ],
+    "inion": [
+      "opinion"
+    ],
+    "osely": [
+      "loosely"
+    ],
+    "efuse": [
+      "refuse"
+    ],
+    "excus": [
+      "excusing",
+      "excuses"
+    ],
+    "tizen": [
+      "citizens"
+    ],
+    "ule": [
+      "rule"
+    ],
+    "cruit": [
+      "recruiting"
+    ],
+    "dvice": [
+      "advice"
+    ],
+    "ghtly": [
+      "tightly"
+    ],
+    "aloof": [
+      "aloof"
+    ],
+    "air": [
+      "pair"
+    ],
+    "ies": [
+      "skies",
+      "lies",
+      "cries"
+    ],
+    "eyes": [
+      "eyes"
+    ],
+    "truct": [
+      "instructed"
+    ],
+    "ghten": [
+      "enlighten"
+    ],
+    "osts": [
+      "costs"
+    ],
+    "equir": [
+      "requires"
+    ],
+    "nning": [
+      "winnings"
+    ],
+    "augh": [
+      "laugh",
+      "laughs"
+    ],
+    "iss": [
+      "dissing",
+      "missed"
+    ],
+    "plest": [
+      "simplest"
+    ],
+    "licit": [
+      "elicit"
+    ],
+    "mming": [
+      "trimmings"
+    ],
+    "icks": [
+      "dicks"
+    ],
+    "inen": [
+      "linen"
+    ],
+    "aim": [
+      "claim"
+    ],
+    "engin": [
+      "engines"
+    ],
+    "oing": [
+      "going"
+    ],
+    "ades": [
+      "fades"
+    ],
+    "eps": [
+      "steps"
+    ],
+    "trate": [
+      "concentrate"
+    ],
+    "orrow": [
+      "tomorrow"
+    ],
+    "ollow": [
+      "hollow"
+    ],
+    "ebate": [
+      "debate"
+    ],
+    "await": [
+      "much-awaited"
+    ],
+    "ape": [
+      "scape",
+      "shape"
+    ],
+    "raint": [
+      "restraint"
+    ],
+    "egim": [
+      "regimes"
+    ],
+    "image": [
+      "image"
+    ],
+    "iseas": [
+      "diseases"
+    ],
+    "fraid": [
+      "afraid"
+    ],
+    "eleaf": [
+      "deleafing"
+    ],
+    "asily": [
+      "easily"
+    ],
+    "oney": [
+      "money"
+    ],
+    "stiny": [
+      "destiny"
+    ],
+    "udy": [
+      "study"
+    ],
+    "tally": [
+      "mentally"
+    ],
+    "nsity": [
+      "density",
+      "intensity"
+    ],
+    "ovely": [
+      "lovely"
+    ],
+    "eav": [
+      "leaves"
+    ],
+    "nthly": [
+      "monthly"
+    ],
+    "ucces": [
+      "success"
+    ],
+    "mpani": [
+      "companies"
+    ],
+    "ntasy": [
+      "fantasy"
+    ],
+    "ich": [
+      "which"
+    ],
+    "gress": [
+      "progresses"
+    ],
+    "egaci": [
+      "legacies"
+    ],
+    "netic": [
+      "kinetic",
+      "frenetic"
+    ],
+    "nergy": [
+      "energy"
+    ],
+    "avity": [
+      "gravity"
+    ],
+    "att": [
+      "latter",
+      "shatter"
+    ],
+    "elody": [
+      "melody'll",
+      "melody"
+    ],
+    "antly": [
+      "constantly"
+    ],
+    "add": [
+      "madder"
+    ],
+    "denly": [
+      "suddenly"
+    ],
+    "athom": [
+      "fathom"
+    ],
+    "nthem": [
+      "anthem"
+    ],
+    "nnabe": [
+      "wannabe"
+    ],
+    "ility": [
+      "ability"
+    ],
+    "ually": [
+      "actually",
+      "gradually",
+      "usually"
+    ],
+    "ality": [
+      "reality"
+    ],
+    "steem": [
+      "esteem"
+    ],
+    "chine": [
+      "machine"
+    ],
+    "akest": [
+      "weakest"
+    ],
+    "egime": [
+      "regime"
+    ],
+    "nseen": [
+      "unseen"
+    ],
+    "nquer": [
+      "conquering"
+    ],
+    "odbye": [
+      "goodbye"
+    ],
+    "otine": [
+      "nicotine"
+    ],
+    "amine": [
+      "amphetamine",
+      "dramamine"
+    ],
+    "tream": [
+      "bloodstream"
+    ],
+    "ene": [
+      "scene"
+    ],
+    "uck": [
+      "stuck",
+      "fuck"
+    ],
+    "areem": [
+      "kareem"
+    ],
+    "akim": [
+      "hakim"
+    ],
+    "utine": [
+      "routine"
+    ],
+    "edeem": [
+      "redeem"
+    ],
+    "clean": [
+      "unclean"
+    ],
+    "xteen": [
+      "sixteen"
+    ],
+    "adeen": [
+      "aladeen"
+    ],
+    "ylene": [
+      "acetylene"
+    ],
+    "anine": [
+      "mezzanine"
+    ],
+    "eece": [
+      "greece"
+    ],
+    "epeat": [
+      "repeat"
+    ],
+    "mvp": [
+      "mvp"
+    ],
+    "eaky": [
+      "leaky"
+    ],
+    "eys": [
+      "keys"
+    ],
+    "quely": [
+      "uniquely"
+    ],
+    "eedy": [
+      "greedy"
+    ],
+    "udini": [
+      "houdini"
+    ],
+    "etely": [
+      "completely"
+    ],
+    "iggie": [
+      "biggie"
+    ],
+    "imme": [
+      "gimme"
+    ],
+    "steri": [
+      "mysteries"
+    ],
+    "nchez": [
+      "sanchez"
+    ],
+    "icky": [
+      "ricky"
+    ],
+    "orty": [
+      "morty"
+    ],
+    "ickly": [
+      "sickly"
+    ],
+    "ictly": [
+      "strictly"
+    ],
+    "ctori": [
+      "victories"
+    ],
+    "rweav": [
+      "interweaves"
+    ],
+    "nergi": [
+      "synergies"
+    ],
+    "sical": [
+      "physical",
+      "classical"
+    ],
+    "uggl": [
+      "struggles"
+    ],
+    "rical": [
+      "lyrical"
+    ],
+    "imag": [
+      "images"
+    ],
+    "teral": [
+      "literal"
+    ],
+    "cipal": [
+      "principals"
+    ],
+    "egral": [
+      "integrals"
+    ],
+    "ysic": [
+      "physics"
+    ],
+    "ciple": [
+      "principle"
+    ],
+    "llabu": [
+      "syllabus"
+    ],
+    "famou": [
+      "infamous"
+    ],
+    "chola": [
+      "nicholas"
+    ],
+    "imulu": [
+      "stimulus"
+    ],
+    "nomic": [
+      "economic"
+    ],
+    "ymbol": [
+      "symbols"
+    ],
+    "ievou": [
+      "mischievous"
+    ],
+    "volou": [
+      "frivolous"
+    ],
+    "ainou": [
+      "villainous"
+    ],
+    "inist": [
+      "minister"
+    ],
+    "a3k": [
+      "a3k"
+    ],
+    "eceiv": [
+      "received"
+    ],
+    "imes": [
+      "times"
+    ],
+    "stoph": [
+      "christopher"
+    ],
+    "cular": [
+      "particular"
+    ],
+    "encil": [
+      "pencil"
+    ],
+    "eckon": [
+      "reckon"
+    ],
+    "essel": [
+      "vessel"
+    ],
+    "ustic": [
+      "acoustics"
+    ],
+    "ssing": [
+      "blessings"
+    ],
+    "ue": [
+      "due"
+    ],
+    "njoin": [
+      "conjoined"
+    ],
+    "rtnes": [
+      "shortness"
+    ],
+    "euron": [
+      "neurons"
+    ],
+    "htles": [
+      "thoughtless"
+    ],
+    "ully": [
+      "fully"
+    ],
+    "infus": [
+      "infused"
+    ],
+    "ayon": [
+      "crayons"
+    ],
+    "aos": [
+      "chaos"
+    ],
+    "int": [
+      "hint"
+    ],
+    "nwash": [
+      "brainwash"
+    ],
+    "ponse": [
+      "response"
+    ],
+    "atho": [
+      "pathos"
+    ],
+    "aches": [
+      "aches"
+    ],
+    "haust": [
+      "exhaust"
+    ],
+    "kshak": [
+      "milkshakes"
+    ],
+    "ions": [
+      "ions"
+    ],
+    "icons": [
+      "icons"
+    ],
+    "ague": [
+      "plague"
+    ],
+    "rhage": [
+      "hemorrhage"
+    ],
+    "ython": [
+      "python"
+    ],
+    "aison": [
+      "liaison"
+    ],
+    "oad": [
+      "broad"
+    ],
+    "aw": [
+      "draw"
+    ],
+    "xicon": [
+      "lexicon"
+    ],
+    "noint": [
+      "anoint"
+    ],
+    "ticon": [
+      "emoticon"
+    ],
+    "menon": [
+      "phenomenon"
+    ],
+    "xagon": [
+      "hexagons"
+    ],
+    "olden": [
+      "golden"
+    ],
+    "cimal": [
+      "hexadecimals"
+    ],
+    "ional": [
+      "three-dimensional"
+    ],
+    "athon": [
+      "marathon"
+    ],
+    "shnes": [
+      "freshness"
+    ],
+    "crite": [
+      "hypocrite"
+    ],
+    "isit": [
+      "visited"
+    ],
+    "tinct": [
+      "distinct",
+      "extinct"
+    ],
+    "admit": [
+      "admits"
+    ],
+    "inks": [
+      "links"
+    ],
+    "eorem": [
+      "theorem"
+    ],
+    "llion": [
+      "billion"
+    ],
+    "ark": [
+      "spark",
+      "dark"
+    ],
+    "start": [
+      "restarts"
+    ],
+    "ards": [
+      "cards"
+    ],
+    "ealt": [
+      "dealt"
+    ],
+    "eld": [
+      "held",
+      "welded"
+    ],
+    "empt": [
+      "tempted"
+    ],
+    "imid": [
+      "timid"
+    ],
+    "ecome": [
+      "become"
+    ],
+    "idget": [
+      "widgets"
+    ],
+    "ebit": [
+      "debits"
+    ],
+    "egun": [
+      "begun"
+    ],
+    "scuit": [
+      "biscuits"
+    ],
+    "rcuit": [
+      "circuits"
+    ],
+    "on": [
+      "won"
+    ],
+    "ermit": [
+      "permit"
+    ],
+    "ones": [
+      "ones"
+    ],
+    "iquid": [
+      "liquid"
+    ],
+    "enet": [
+      "tenets"
+    ],
+    "herit": [
+      "inherited"
+    ],
+    "rtise": [
+      "expertise"
+    ],
+    "eb": [
+      "thebes"
+    ],
+    "aknes": [
+      "weakness"
+    ],
+    "eese": [
+      "reese's"
+    ],
+    "iec": [
+      "pieces"
+    ],
+    "eniu": [
+      "genius"
+    ],
+    "otest": [
+      "protested"
+    ],
+    "dines": [
+      "readiness"
+    ],
+    "utiou": [
+      "cautious"
+    ],
+    "olish": [
+      "polishing",
+      "demolishing"
+    ],
+    "onant": [
+      "consonants"
+    ],
+    "audit": [
+      "auditing"
+    ],
+    "trine": [
+      "doctrine"
+    ],
+    "xygen": [
+      "oxygen"
+    ],
+    "il": [
+      "smiling"
+    ],
+    "ulent": [
+      "opulent"
+    ],
+    "yle": [
+      "style"
+    ],
+    "inant": [
+      "dominant"
+    ],
+    "egant": [
+      "congregant"
+    ],
+    "eguil": [
+      "beguiled"
+    ],
+    "ak": [
+      "makers"
+    ],
+    "izant": [
+      "cognizant"
+    ],
+    "abor": [
+      "labor"
+    ],
+    "ctest": [
+      "strictest"
+    ],
+    "used": [
+      "used"
+    ],
+    "ffair": [
+      "affairs"
+    ],
+    "pense": [
+      "recompense"
+    ],
+    "nnair": [
+      "questionnaires"
+    ],
+    "aven": [
+      "haven"
+    ],
+    "ehave": [
+      "behave"
+    ],
+    "ater": [
+      "later"
+    ],
+    "amer": [
+      "tamer"
+    ],
+    "aded": [
+      "faded"
+    ],
+    "rnize": [
+      "fraternize"
+    ],
+    "anize": [
+      "organize"
+    ],
+    "impli": [
+      "implies"
+    ],
+    "ubsid": [
+      "subsides"
+    ],
+    "efi": [
+      "defies"
+    ],
+    "evis": [
+      "devised"
+    ],
+    "award": [
+      "awards"
+    ],
+    "iz": [
+      "prized"
+    ],
+    "ises": [
+      "rises"
+    ],
+    "ane": [
+      "plane"
+    ],
+    "icy": [
+      "icy"
+    ],
+    "stain": [
+      "sustain"
+    ],
+    "ize": [
+      "prize",
+      "size"
+    ],
+    "acing": [
+      "acing"
+    ],
+    "able": [
+      "able"
+    ],
+    "ise": [
+      "rise"
+    ],
+    "pable": [
+      "capable"
+    ],
+    "id": [
+      "riding"
+    ],
+    "eside": [
+      "beside"
+    ],
+    "imize": [
+      "maximize"
+    ],
+    "emise": [
+      "demise"
+    ],
+    "grity": [
+      "integrity"
+    ],
+    "nalyz": [
+      "analyzed"
+    ],
+    "esize": [
+      "synthesize"
+    ],
+    "antee": [
+      "guarantee"
+    ],
+    "onize": [
+      "synchronize"
+    ],
+    "ifice": [
+      "sacrifice"
+    ],
+    "quity": [
+      "equity"
+    ],
+    "uffic": [
+      "suffices"
+    ],
+    "eme": [
+      "scheme"
+    ],
+    "egacy": [
+      "legacy"
+    ],
+    "plifi": [
+      "amplifies"
+    ],
+    "ighty": [
+      "mighty"
+    ],
+    "nxiou": [
+      "anxious"
+    ],
+    "aster": [
+      "mastered"
+    ],
+    "orm": [
+      "forming"
+    ],
+    "etter": [
+      "lettering"
+    ],
+    "uare": [
+      "square"
+    ],
+    "ptain": [
+      "captains"
+    ],
+    "acts": [
+      "acts"
+    ],
+    "agon": [
+      "dragons"
+    ],
+    "admin": [
+      "admins"
+    ],
+    "athen": [
+      "athens"
+    ],
+    "agnet": [
+      "magnet"
+    ],
+    "anet": [
+      "planet"
+    ],
+    "estic": [
+      "domestic"
+    ],
+    "nsmit": [
+      "transmit"
+    ],
+    "atic": [
+      "static"
+    ],
+    "ammit": [
+      "dammit"
+    ],
+    "anite": [
+      "granite"
+    ],
+    "under": [
+      "under"
+    ],
+    "abric": [
+      "fabric"
+    ],
+    "ystal": [
+      "crystal"
+    ],
+    "aphic": [
+      "graphic"
+    ],
+    "apid": [
+      "rapid"
+    ],
+    "acid": [
+      "acid"
+    ],
+    "alad": [
+      "salad"
+    ],
+    "allad": [
+      "ballad"
+    ],
+    "mplex": [
+      "complex"
+    ],
+    "onvex": [
+      "convex"
+    ],
+    "acks": [
+      "lacks"
+    ],
+    "ntext": [
+      "context"
+    ],
+    "ffset": [
+      "offset"
+    ],
+    "ogize": [
+      "apologize"
+    ],
+    "often": [
+      "often"
+    ],
+    "mnize": [
+      "womnize"
+    ],
+    "oped": [
+      "coped"
+    ],
+    "ive": [
+      "live"
+    ],
+    "ppily": [
+      "happily"
+    ],
+    "rgive": [
+      "forgive"
+    ],
+    "awl": [
+      "sprawls"
+    ],
+    "eadly": [
+      "deadly"
+    ],
+    "alls": [
+      "falls"
+    ],
+    "enzy": [
+      "frenzy"
+    ],
+    "uit": [
+      "quit"
+    ],
+    "oic": [
+      "voices",
+      "choices"
+    ],
+    "epent": [
+      "repent"
+    ],
+    "lieve": [
+      "relieve"
+    ],
+    "anoia": [
+      "paranoia"
+    ],
+    "yad": [
+      "dyad"
+    ],
+    "ndeur": [
+      "grandeur"
+    ],
+    "iend": [
+      "friend"
+    ],
+    "ampl": [
+      "trampled"
+    ],
+    "anger": [
+      "anger"
+    ],
+    "angl": [
+      "strangled"
+    ],
+    "ancor": [
+      "rancor"
+    ],
+    "ndure": [
+      "endure"
+    ],
+    "elson": [
+      "nelson"
+    ],
+    "ndela": [
+      "mandela"
+    ],
+    "attl": [
+      "battled"
+    ],
+    "anc": [
+      "cancer"
+    ],
+    "alice": [
+      "malice"
+    ],
+    "udice": [
+      "prejudice"
+    ],
+    "ender": [
+      "slenderer"
+    ],
+    "urage": [
+      "courage"
+    ],
+    "bulou": [
+      "nebulous"
+    ],
+    "omine": [
+      "domineer"
+    ],
+    "onqu": [
+      "conquer"
+    ],
+    "omb": [
+      "somber"
+    ],
+    "ppeal": [
+      "appeal"
+    ],
+    "eer": [
+      "jeer"
+    ],
+    "rrend": [
+      "surrender"
+    ],
+    "ubdu": [
+      "subdued"
+    ],
+    "tinue": [
+      "continue"
+    ],
+    "ush": [
+      "push"
+    ],
+    "onti": [
+      "frontier"
+    ],
+    "ursue": [
+      "pursue"
+    ],
+    "aroon": [
+      "marooned"
+    ],
+    "ied": [
+      "tied"
+    ],
+    "xhume": [
+      "exhume"
+    ],
+    "ecid": [
+      "decided"
+    ],
+    "clear": [
+      "unclear"
+    ],
+    "ermin": [
+      "determined"
+    ],
+    "rmant": [
+      "dormant"
+    ],
+    "front": [
+      "confront"
+    ],
+    "un": [
+      "run"
+    ],
+    "unn": [
+      "running"
+    ],
+    "orri": [
+      "worries"
+    ],
+    "orror": [
+      "horror"
+    ],
+    "ory": [
+      "story"
+    ],
+    "night": [
+      "midnight"
+    ],
+    "eddy": [
+      "freddy"
+    ],
+    "emind": [
+      "reminder"
+    ],
+    "emori": [
+      "memories"
+    ],
+    "anful": [
+      "panful"
+    ],
+    "ntari": [
+      "documentaries"
+    ],
+    "teful": [
+      "hateful"
+    ],
+    "yrrh": [
+      "myrrh"
+    ],
+    "aus": [
+      "causes"
+    ],
+    "eery": [
+      "leery"
+    ],
+    "eally": [
+      "really"
+    ],
+    "annot": [
+      "cannot"
+    ],
+    "eerie": [
+      "eerie"
+    ],
+    "aunt": [
+      "taunts"
+    ],
+    "ecs": [
+      "specs"
+    ],
+    "uppos": [
+      "supposed"
+    ],
+    "oals": [
+      "goals"
+    ],
+    "rplex": [
+      "perplexed"
+    ],
+    "eject": [
+      "reject"
+    ],
+    "etext": [
+      "pretext"
+    ],
+    "plete": [
+      "complete"
+    ],
+    "uelty": [
+      "cruelty"
+    ],
+    "inful": [
+      "painful",
+      "disdainful"
+    ],
+    "uti": [
+      "duties"
+    ],
+    "ool": [
+      "school",
+      "pool"
+    ],
+    "ulli": [
+      "bullies"
+    ],
+    "state": [
+      "gestate"
+    ]
+  },
+  "word_banks": {
+    "signature": [
+      "sentence",
+      "never",
+      "present",
+      "see",
+      "listen",
+      "men",
+      "rhythm",
+      "system",
+      "verse",
+      "lyric",
+      "music",
+      "method",
+      "hence",
+      "lyrics",
+      "purpose",
+      "better",
+      "made",
+      "written",
+      "presence",
+      "man",
+      "service",
+      "full",
+      "given",
+      "notes",
+      "essence",
+      "way",
+      "get",
+      "might",
+      "infinite",
+      "minute",
+      "distance",
+      "surface",
+      "hidden",
+      "rap",
+      "game",
+      "keep",
+      "guess",
+      "credit",
+      "next",
+      "let",
+      "since",
+      "tricks",
+      "mind",
+      "quite",
+      "rhythmic",
+      "best",
+      "words",
+      "minutes",
+      "like",
+      "vision",
+      "art",
+      "investor",
+      "investment",
+      "deals",
+      "rhyming",
+      "medicine",
+      "got",
+      "limits",
+      "bits",
+      "takes",
+      "use",
+      "first",
+      "spread",
+      "make",
+      "universe",
+      "pen",
+      "evidence",
+      "rhyme",
+      "letters",
+      "intimate",
+      "digital",
+      "core",
+      "while",
+      "skeleton",
+      "genuine",
+      "write",
+      "enough",
+      "stay",
+      "heavenly",
+      "steadily"
+    ],
+    "images": [
+      "sentence",
+      "verse",
+      "surface",
+      "medicine",
+      "bits",
+      "pen",
+      "letters",
+      "core",
+      "skeleton",
+      "signal",
+      "script",
+      "mic",
+      "entrance",
+      "digits",
+      "exit",
+      "engine",
+      "letter",
+      "stage",
+      "earth",
+      "code",
+      "paper",
+      "dice",
+      "ticket",
+      "radians"
+    ],
+    "actions": [
+      "signal",
+      "convert",
+      "observe",
+      "stretch",
+      "measure",
+      "determine",
+      "inspire",
+      "anchor",
+      "register",
+      "connect"
+    ],
+    "punch": [
+      "sentence",
+      "system",
+      "method",
+      "purpose",
+      "service",
+      "infinite",
+      "surface",
+      "credit",
+      "investment",
+      "medicine",
+      "universe",
+      "evidence",
+      "intimate",
+      "signal",
+      "script",
+      "resonance",
+      "venom",
+      "significant",
+      "oxymoron",
+      "debt",
+      "confidence",
+      "signature",
+      "paradise",
+      "nuisance"
+    ],
+    "all": [
+      "sentence",
+      "never",
+      "present",
+      "see",
+      "listen",
+      "men",
+      "rhythm",
+      "system",
+      "verse",
+      "lyric",
+      "music",
+      "method",
+      "hence",
+      "lyrics",
+      "purpose",
+      "better",
+      "made",
+      "written",
+      "presence",
+      "man",
+      "service",
+      "full",
+      "given",
+      "notes",
+      "essence",
+      "way",
+      "get",
+      "might",
+      "infinite",
+      "minute",
+      "distance",
+      "surface",
+      "hidden",
+      "rap",
+      "game",
+      "keep",
+      "guess",
+      "credit",
+      "next",
+      "let",
+      "since",
+      "tricks",
+      "mind",
+      "quite",
+      "rhythmic",
+      "best",
+      "words",
+      "minutes",
+      "like",
+      "vision",
+      "art",
+      "investor",
+      "investment",
+      "deals",
+      "rhyming",
+      "medicine",
+      "got",
+      "limits",
+      "bits",
+      "takes",
+      "use",
+      "first",
+      "spread",
+      "make",
+      "universe",
+      "pen",
+      "evidence",
+      "rhyme",
+      "letters",
+      "intimate",
+      "digital",
+      "core",
+      "while",
+      "skeleton",
+      "genuine",
+      "write",
+      "enough",
+      "stay",
+      "heavenly",
+      "steadily",
+      "cause",
+      "fame",
+      "must",
+      "test",
+      "covers",
+      "fed",
+      "kept",
+      "end",
+      "persists",
+      "signal",
+      "bar",
+      "finish",
+      "script",
+      "reversed",
+      "need",
+      "mic",
+      "these",
+      "flow",
+      "you're",
+      "embedded",
+      "set",
+      "watch",
+      "design",
+      "despite",
+      "clever",
+      "should",
+      "interested",
+      "time",
+      "intricate",
+      "take",
+      "that's",
+      "inside",
+      "even",
+      "which",
+      "specimen",
+      "intelligent",
+      "resonance",
+      "sometimes",
+      "entrance",
+      "tickets",
+      "needs",
+      "purchase",
+      "trends",
+      "cadence",
+      "real",
+      "president",
+      "plenty",
+      "play",
+      "practice",
+      "verbs",
+      "seventh",
+      "second",
+      "effort",
+      "digits",
+      "stitching",
+      "class",
+      "how",
+      "stays",
+      "sentences",
+      "questions",
+      "failure",
+      "they're",
+      "differences",
+      "trend",
+      "limitless",
+      "convert",
+      "curse",
+      "took",
+      "smarter",
+      "least",
+      "came",
+      "name",
+      "ever",
+      "less",
+      "recipe",
+      "inventin",
+      "venom",
+      "forget",
+      "deficit",
+      "exit",
+      "suggest",
+      "language",
+      "passage",
+      "understand",
+      "egyptian",
+      "tested",
+      "strength",
+      "christian",
+      "patience",
+      "search",
+      "player",
+      "fire",
+      "observe",
+      "numbers",
+      "interest",
+      "track",
+      "single",
+      "said",
+      "evident",
+      "length",
+      "stretch",
+      "engine",
+      "fantastic",
+      "want",
+      "active",
+      "action",
+      "known",
+      "basic",
+      "attention",
+      "between",
+      "difference",
+      "brilliance",
+      "feels",
+      "trade",
+      "motion",
+      "allusion",
+      "fails",
+      "investors",
+      "fail",
+      "options",
+      "past",
+      "imminent",
+      "please",
+      "progress",
+      "reticence",
+      "classic",
+      "among",
+      "measure",
+      "elements",
+      "persistence",
+      "significant",
+      "determine",
+      "gimmicks",
+      "ticking",
+      "etched",
+      "letter",
+      "lightness",
+      "more",
+      "promises",
+      "sight",
+      "merit",
+      "sound",
+      "students",
+      "last",
+      "thinking",
+      "neat",
+      "victims",
+      "rhythms",
+      "fight",
+      "few",
+      "lessons",
+      "life",
+      "traded",
+      "oxymoron",
+      "days",
+      "led",
+      "desperate",
+      "check",
+      "mess",
+      "registered",
+      "glistening",
+      "build",
+      "entire",
+      "stage",
+      "break",
+      "latest",
+      "thought",
+      "inspire",
+      "why",
+      "nature",
+      "earth",
+      "rehearsed",
+      "person",
+      "debt",
+      "private",
+      "threaded",
+      "remains",
+      "simple",
+      "sentiment",
+      "shift",
+      "code",
+      "mix",
+      "drift",
+      "anchor",
+      "ink",
+      "record",
+      "weapons",
+      "once",
+      "serve",
+      "justice",
+      "before",
+      "worth",
+      "beat",
+      "taken",
+      "turning",
+      "say",
+      "seven",
+      "latent",
+      "musicians",
+      "course",
+      "different",
+      "persist",
+      "sit",
+      "shit",
+      "pressure",
+      "measured",
+      "precision",
+      "paper",
+      "emotion",
+      "fittest",
+      "bought",
+      "confidence",
+      "signature",
+      "though",
+      "happened",
+      "character",
+      "answers",
+      "section",
+      "vectors",
+      "expert",
+      "excellent",
+      "read",
+      "both",
+      "passive",
+      "dice",
+      "logical",
+      "tactic",
+      "vices",
+      "queries",
+      "clarity",
+      "deliberate",
+      "instances",
+      "sketch",
+      "left",
+      "critics",
+      "spirit",
+      "rhymes",
+      "cry",
+      "etiquette",
+      "diligent",
+      "scripts",
+      "nerds",
+      "moral",
+      "gave",
+      "description",
+      "paradise",
+      "new",
+      "only",
+      "contest",
+      "seems",
+      "deep",
+      "captions",
+      "team",
+      "regimen",
+      "seemingly",
+      "strong",
+      "ways",
+      "fact",
+      "act",
+      "late",
+      "statement",
+      "well",
+      "space",
+      "habits",
+      "towards",
+      "favor",
+      "payment",
+      "feel",
+      "chase",
+      "comes",
+      "always",
+      "pedigree",
+      "close",
+      "lesson",
+      "degree",
+      "fake",
+      "standard",
+      "seem",
+      "king",
+      "moron",
+      "dollars",
+      "humans",
+      "nuisance",
+      "precise",
+      "thoughts",
+      "mike",
+      "dreams",
+      "infamous",
+      "times",
+      "kind",
+      "walking",
+      "talking",
+      "gain",
+      "delicate",
+      "setting",
+      "step",
+      "quest",
+      "message",
+      "assistance",
+      "listened",
+      "ends",
+      "ticket",
+      "picture",
+      "votes",
+      "local",
+      "mixture",
+      "texture",
+      "texts",
+      "christening",
+      "religion",
+      "hope",
+      "reticent",
+      "agents",
+      "yield",
+      "favorite",
+      "friendly",
+      "main",
+      "brain",
+      "realize",
+      "finally",
+      "resign",
+      "inquire",
+      "sum",
+      "excess",
+      "recover",
+      "fit",
+      "merits",
+      "there's",
+      "percentage",
+      "vantage",
+      "help",
+      "premises",
+      "jingle",
+      "spent",
+      "tick",
+      "inching",
+      "glisten",
+      "sync",
+      "forever",
+      "wisdom",
+      "experience",
+      "absurd",
+      "attractive",
+      "perfectly",
+      "driven",
+      "oneness",
+      "served",
+      "rest",
+      "afford",
+      "master",
+      "work",
+      "teaches",
+      "faith",
+      "now",
+      "records",
+      "degrees",
+      "radians",
+      "heaven's",
+      "mentions",
+      "vengeance",
+      "lessen",
+      "tension",
+      "force",
+      "shifts",
+      "systemic",
+      "insist",
+      "principles",
+      "instance",
+      "maybe",
+      "instant",
+      "gauge",
+      "turn",
+      "page",
+      "influences",
+      "ending",
+      "truth",
+      "amusing",
+      "moving",
+      "mood",
+      "starts",
+      "father",
+      "relevance",
+      "merry",
+      "absent",
+      "fast",
+      "invest",
+      "open",
+      "bottomless",
+      "ominous",
+      "register",
+      "fitted",
+      "understands",
+      "pattern",
+      "attacked",
+      "shackles",
+      "you'll",
+      "events",
+      "text",
+      "connect",
+      "chain",
+      "refined",
+      "rehash",
+      "other",
+      "address",
+      "confusing",
+      "ought",
+      "optimal",
+      "precedent",
+      "surprise",
+      "disguise",
+      "high",
+      "seed",
+      "scenery",
+      "balance",
+      "heavy",
+      "perfect",
+      "provides",
+      "positive",
+      "singular",
+      "criminal"
+    ]
+  },
+  "corpus_words_set": [
+    "absent",
+    "absurd",
+    "act",
+    "action",
+    "active",
+    "address",
+    "afford",
+    "agents",
+    "allusion",
+    "always",
+    "among",
+    "amusing",
+    "anchor",
+    "answers",
+    "art",
+    "assistance",
+    "attacked",
+    "attention",
+    "attractive",
+    "balance",
+    "bar",
+    "basic",
+    "beat",
+    "before",
+    "best",
+    "better",
+    "between",
+    "bits",
+    "both",
+    "bottomless",
+    "bought",
+    "brain",
+    "break",
+    "brilliance",
+    "build",
+    "cadence",
+    "came",
+    "captions",
+    "cause",
+    "chain",
+    "character",
+    "chase",
+    "check",
+    "christening",
+    "christian",
+    "clarity",
+    "class",
+    "classic",
+    "clever",
+    "close",
+    "code",
+    "comes",
+    "confidence",
+    "confusing",
+    "connect",
+    "contest",
+    "convert",
+    "core",
+    "course",
+    "covers",
+    "credit",
+    "criminal",
+    "critics",
+    "cry",
+    "curse",
+    "days",
+    "deals",
+    "debt",
+    "deep",
+    "deficit",
+    "degree",
+    "degrees",
+    "deliberate",
+    "delicate",
+    "description",
+    "design",
+    "desperate",
+    "despite",
+    "determine",
+    "dice",
+    "difference",
+    "differences",
+    "different",
+    "digital",
+    "digits",
+    "diligent",
+    "disguise",
+    "distance",
+    "dollars",
+    "dreams",
+    "drift",
+    "driven",
+    "earth",
+    "effort",
+    "egyptian",
+    "elements",
+    "embedded",
+    "emotion",
+    "end",
+    "ending",
+    "ends",
+    "engine",
+    "enough",
+    "entire",
+    "entrance",
+    "essence",
+    "etched",
+    "etiquette",
+    "even",
+    "events",
+    "ever",
+    "evidence",
+    "evident",
+    "excellent",
+    "excess",
+    "exit",
+    "experience",
+    "expert",
+    "fact",
+    "fail",
+    "fails",
+    "failure",
+    "faith",
+    "fake",
+    "fame",
+    "fantastic",
+    "fast",
+    "father",
+    "favor",
+    "favorite",
+    "fed",
+    "feel",
+    "feels",
+    "few",
+    "fight",
+    "finally",
+    "finish",
+    "fire",
+    "first",
+    "fit",
+    "fitted",
+    "fittest",
+    "flow",
+    "force",
+    "forever",
+    "forget",
+    "friendly",
+    "full",
+    "gain",
+    "game",
+    "gauge",
+    "gave",
+    "genuine",
+    "get",
+    "gimmicks",
+    "given",
+    "glisten",
+    "glistening",
+    "got",
+    "guess",
+    "habits",
+    "happened",
+    "heaven's",
+    "heavenly",
+    "heavy",
+    "help",
+    "hence",
+    "hidden",
+    "high",
+    "hope",
+    "how",
+    "humans",
+    "imminent",
+    "inching",
+    "infamous",
+    "infinite",
+    "influences",
+    "ink",
+    "inquire",
+    "inside",
+    "insist",
+    "inspire",
+    "instance",
+    "instances",
+    "instant",
+    "intelligent",
+    "interest",
+    "interested",
+    "intimate",
+    "intricate",
+    "inventin",
+    "invest",
+    "investment",
+    "investor",
+    "investors",
+    "jingle",
+    "justice",
+    "keep",
+    "kept",
+    "kind",
+    "king",
+    "known",
+    "language",
+    "last",
+    "late",
+    "latent",
+    "latest",
+    "least",
+    "led",
+    "left",
+    "length",
+    "less",
+    "lessen",
+    "lesson",
+    "lessons",
+    "let",
+    "letter",
+    "letters",
+    "life",
+    "lightness",
+    "like",
+    "limitless",
+    "limits",
+    "listen",
+    "listened",
+    "local",
+    "logical",
+    "lyric",
+    "lyrics",
+    "made",
+    "main",
+    "make",
+    "man",
+    "master",
+    "maybe",
+    "measure",
+    "measured",
+    "medicine",
+    "men",
+    "mentions",
+    "merit",
+    "merits",
+    "merry",
+    "mess",
+    "message",
+    "method",
+    "mic",
+    "might",
+    "mike",
+    "mind",
+    "minute",
+    "minutes",
+    "mix",
+    "mixture",
+    "mood",
+    "moral",
+    "more",
+    "moron",
+    "motion",
+    "moving",
+    "music",
+    "musicians",
+    "must",
+    "name",
+    "nature",
+    "neat",
+    "need",
+    "needs",
+    "nerds",
+    "never",
+    "new",
+    "next",
+    "notes",
+    "now",
+    "nuisance",
+    "numbers",
+    "observe",
+    "ominous",
+    "once",
+    "oneness",
+    "only",
+    "open",
+    "optimal",
+    "options",
+    "other",
+    "ought",
+    "oxymoron",
+    "page",
+    "paper",
+    "paradise",
+    "passage",
+    "passive",
+    "past",
+    "patience",
+    "pattern",
+    "payment",
+    "pedigree",
+    "pen",
+    "percentage",
+    "perfect",
+    "perfectly",
+    "persist",
+    "persistence",
+    "persists",
+    "person",
+    "picture",
+    "play",
+    "player",
+    "please",
+    "plenty",
+    "positive",
+    "practice",
+    "precedent",
+    "precise",
+    "precision",
+    "premises",
+    "presence",
+    "present",
+    "president",
+    "pressure",
+    "principles",
+    "private",
+    "progress",
+    "promises",
+    "provides",
+    "purchase",
+    "purpose",
+    "queries",
+    "quest",
+    "questions",
+    "quite",
+    "radians",
+    "rap",
+    "read",
+    "real",
+    "realize",
+    "recipe",
+    "record",
+    "records",
+    "recover",
+    "refined",
+    "regimen",
+    "register",
+    "registered",
+    "rehash",
+    "rehearsed",
+    "relevance",
+    "religion",
+    "remains",
+    "resign",
+    "resonance",
+    "rest",
+    "reticence",
+    "reticent",
+    "reversed",
+    "rhyme",
+    "rhymes",
+    "rhyming",
+    "rhythm",
+    "rhythmic",
+    "rhythms",
+    "said",
+    "say",
+    "scenery",
+    "script",
+    "scripts",
+    "search",
+    "second",
+    "section",
+    "see",
+    "seed",
+    "seem",
+    "seemingly",
+    "seems",
+    "sentence",
+    "sentences",
+    "sentiment",
+    "serve",
+    "served",
+    "service",
+    "set",
+    "setting",
+    "seven",
+    "seventh",
+    "shackles",
+    "shift",
+    "shifts",
+    "shit",
+    "should",
+    "sight",
+    "signal",
+    "signature",
+    "significant",
+    "simple",
+    "since",
+    "single",
+    "singular",
+    "sit",
+    "skeleton",
+    "sketch",
+    "smarter",
+    "sometimes",
+    "sound",
+    "space",
+    "specimen",
+    "spent",
+    "spirit",
+    "spread",
+    "stage",
+    "standard",
+    "starts",
+    "statement",
+    "stay",
+    "stays",
+    "steadily",
+    "step",
+    "stitching",
+    "strength",
+    "stretch",
+    "strong",
+    "students",
+    "suggest",
+    "sum",
+    "surface",
+    "surprise",
+    "sync",
+    "system",
+    "systemic",
+    "tactic",
+    "take",
+    "taken",
+    "takes",
+    "talking",
+    "teaches",
+    "team",
+    "tension",
+    "test",
+    "tested",
+    "text",
+    "texts",
+    "texture",
+    "that's",
+    "there's",
+    "these",
+    "they're",
+    "thinking",
+    "though",
+    "thought",
+    "thoughts",
+    "threaded",
+    "tick",
+    "ticket",
+    "tickets",
+    "ticking",
+    "time",
+    "times",
+    "took",
+    "towards",
+    "track",
+    "trade",
+    "traded",
+    "trend",
+    "trends",
+    "tricks",
+    "truth",
+    "turn",
+    "turning",
+    "understand",
+    "understands",
+    "universe",
+    "use",
+    "vantage",
+    "vectors",
+    "vengeance",
+    "venom",
+    "verbs",
+    "verse",
+    "vices",
+    "victims",
+    "vision",
+    "votes",
+    "walking",
+    "want",
+    "watch",
+    "way",
+    "ways",
+    "weapons",
+    "well",
+    "which",
+    "while",
+    "why",
+    "wisdom",
+    "words",
+    "work",
+    "worth",
+    "write",
+    "written",
+    "yield",
+    "you'll",
+    "you're"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "title": "Cadence \u0394 / Scansion Physics model",
+  "source": "user_notebook_image",
+  "implemented_pipeline": [
+    "word",
+    "syllables \u03c3",
+    "stress S",
+    "beat phase \u03b8",
+    "bar index \u03b2",
+    "rhyme family \u03b3",
+    "force F",
+    "torsion \u03c4",
+    "spinning \u03a9",
+    "cadence delta \u0394C",
+    "bar-structure action"
+  ],
+  "feature_translations": [
+    {
+      "notebook_term": "Cadence \u0394",
+      "implemented_as": "line-to-line cadence_delta with syllable, stress, rhyme, and bar-span change"
+    },
+    {
+      "notebook_term": "Force",
+      "implemented_as": "accent force score from stress density, landing stress, hard consonants, and content ratio"
+    },
+    {
+      "notebook_term": "Torsion",
+      "implemented_as": "syncopation/twist score from off-grid stress positions and uneven stress gaps"
+    },
+    {
+      "notebook_term": "Spinning",
+      "implemented_as": "repeated sound-loop score from internal rhymes, alliteration, and consonance"
+    },
+    {
+      "notebook_term": "word \u2192 rhythm / flow \u2192 sentence",
+      "implemented_as": "word states, pulse grid, sentence physics, and full-draft motion map"
+    },
+    {
+      "notebook_term": "tested / metric phrase table",
+      "implemented_as": "phonetic skeleton matching: consonant frame, vowel motion, stress signature, and ending sound"
+    }
+  ],
+  "default_test_phrases": [
+    "The operative effort",
+    "Eleven tickets",
+    "Twisting lyric",
+    "Setting the credit",
+    "tested metric",
+    "records",
+    "times detected",
+    "separate ethics"
+  ],
+  "symbol_legend": {
+    "\u03c3": {
+      "name": "syllable",
+      "meaning": "one spoken syllable unit inside the line"
+    },
+    "S": {
+      "name": "stress",
+      "meaning": "estimated performance accent; primary/secondary stress becomes a rap landing"
+    },
+    "\u03b8": {
+      "name": "beat phase",
+      "meaning": "where the syllable lands inside the current bar: 0.00=start, 1.00=end"
+    },
+    "\u03b2": {
+      "name": "bar index",
+      "meaning": "estimated bar number or local bar span for the line"
+    },
+    "\u03b3": {
+      "name": "rhyme family",
+      "meaning": "ending sound/rhyme key shared by end and internal words"
+    },
+    "\u03c4": {
+      "name": "torsion",
+      "meaning": "syncopation/twist score: stress that bends away from the square pulse"
+    },
+    "F": {
+      "name": "accent force",
+      "meaning": "how hard the phrase hits based on stress, hard consonants, and landing strength"
+    },
+    "\u0394C": {
+      "name": "cadence delta",
+      "meaning": "change in syllable/stress/bar load from the previous editable line"
+    },
+    "\u03a9": {
+      "name": "spinning",
+      "meaning": "repeated sound motion: internal rhyme, consonance, alliteration, and rhyme loops"
+    }
+  }
+}

@@ -1,0 +1,1173 @@
+{
+  "metadata": {
+    "version": "2026.06-comparison-beta",
+    "generated_from": "user_uploaded_comparison_file",
+    "copyright_handling": "raw copyrighted lyrics are not bundled; this file contains derived statistical profiles only",
+    "profile_count": 6,
+    "available_reference_ids": [
+      "real_rapper_blend",
+      "eminem_amityville",
+      "biggie_hypnotize",
+      "outkast_aquemini",
+      "eminem_till_collapse",
+      "mf_doom_accordion"
+    ],
+    "feature_notes": [
+      "Scores are similarity benchmarks, not imitation instructions.",
+      "No lyric lines from the reference artists are stored in this JSON.",
+      "Use profiles to guide bar length, internal-rhyme density, hook clarity, entropy, and rhyme-family variety."
+    ]
+  },
+  "profiles": [
+    {
+      "id": "real_rapper_blend",
+      "name": "Real-rapper blended benchmark",
+      "artist_family": "Comparison blend",
+      "source_label": "all comparison excerpts",
+      "content_policy": "derived_profile_only_no_raw_lyrics",
+      "notes": [
+        "Aggregated derived profile from the uploaded comparison excerpts."
+      ],
+      "stats": {
+        "line_count": 360,
+        "word_count": 3136,
+        "unique_words": 951,
+        "content_words": 1843,
+        "unique_content_words": 854,
+        "type_token_ratio": 0.303,
+        "content_type_token_ratio": 0.463,
+        "avg_words": 8.7,
+        "median_words": 8.0,
+        "word_count_q1_median_q3": [
+          6.0,
+          8.0,
+          11.0
+        ],
+        "avg_syllables": 11.3,
+        "median_syllables": 11.0,
+        "syllable_q1_median_q3": [
+          9.0,
+          11.0,
+          13.0
+        ],
+        "dense_line_pct": 9.7,
+        "open_line_pct": 17.5,
+        "internal_rhyme_line_pct": 10.0,
+        "alliteration_line_pct": 41.1,
+        "avg_internal_groups_per_line": 0.1,
+        "avg_alliteration_groups_per_line": 0.47,
+        "unique_rhyme_keys": 180,
+        "rhyme_reuse_ratio_pct": 29.4,
+        "repeated_end_word_pct": 18.3,
+        "avg_word_length": 4.2,
+        "avg_content_word_length": 5.17,
+        "lexical_entropy_bits": 8.895,
+        "lexical_perplexity": 476.04,
+        "rhyme_entropy_bits": 6.819,
+        "rhyme_perplexity": 112.9,
+        "rhyme_normalized_entropy": 91,
+        "syllable_entropy_bits": 1.774,
+        "word_count_entropy_bits": 1.559
+      },
+      "cadence_histogram": [
+        {
+          "key": "short_7_10",
+          "count": 146,
+          "pct": 40.6,
+          "self_information_bits": 1.3
+        },
+        {
+          "key": "pocket_11_14",
+          "count": 131,
+          "pct": 36.4,
+          "self_information_bits": 1.46
+        },
+        {
+          "key": "long_15_18",
+          "count": 61,
+          "pct": 16.9,
+          "self_information_bits": 2.56
+        },
+        {
+          "key": "micro_0_6",
+          "count": 19,
+          "pct": 5.3,
+          "self_information_bits": 4.24
+        },
+        {
+          "key": "extended_19_plus",
+          "count": 3,
+          "pct": 0.8,
+          "self_information_bits": 6.91
+        }
+      ],
+      "word_count_histogram": [
+        {
+          "key": "short_5_8",
+          "count": 173,
+          "pct": 48.1,
+          "self_information_bits": 1.06
+        },
+        {
+          "key": "standard_9_12",
+          "count": 141,
+          "pct": 39.2,
+          "self_information_bits": 1.35
+        },
+        {
+          "key": "dense_13_16",
+          "count": 32,
+          "pct": 8.9,
+          "self_information_bits": 3.49
+        },
+        {
+          "key": "micro_0_4",
+          "count": 11,
+          "pct": 3.1,
+          "self_information_bits": 5.03
+        },
+        {
+          "key": "packed_17_plus",
+          "count": 3,
+          "pct": 0.8,
+          "self_information_bits": 6.91
+        }
+      ],
+      "top_rhyme_keys": [
+        {
+          "key": "uh",
+          "count": 21,
+          "pct": 5.8
+        },
+        {
+          "key": "ill",
+          "count": 20,
+          "pct": 5.6
+        },
+        {
+          "key": "e",
+          "count": 17,
+          "pct": 4.7
+        },
+        {
+          "key": "ville",
+          "count": 14,
+          "pct": 3.9
+        },
+        {
+          "key": "it",
+          "count": 12,
+          "pct": 3.3
+        },
+        {
+          "key": "en",
+          "count": 6,
+          "pct": 1.7
+        },
+        {
+          "key": "an",
+          "count": 6,
+          "pct": 1.7
+        },
+        {
+          "key": "a",
+          "count": 5,
+          "pct": 1.4
+        },
+        {
+          "key": "ee",
+          "count": 5,
+          "pct": 1.4
+        },
+        {
+          "key": "ays",
+          "count": 5,
+          "pct": 1.4
+        },
+        {
+          "key": "em",
+          "count": 5,
+          "pct": 1.4
+        },
+        {
+          "key": "ight",
+          "count": 4,
+          "pct": 1.1
+        },
+        {
+          "key": "otize",
+          "count": 4,
+          "pct": 1.1
+        },
+        {
+          "key": "ie",
+          "count": 4,
+          "pct": 1.1
+        }
+      ],
+      "benchmark_moves": [
+        "Compare your draft against the closest individual reference rather than copying a specific lyric.",
+        "Use the blended profile for broad cadence/rhyme density targets.",
+        "When scores diverge, choose whether you want hook clarity, technical density, narrative scope, or oblique compression."
+      ],
+      "line_targets": {
+        "one_bar_syllables": [
+          9,
+          13
+        ],
+        "median_line_syllables": 11.0,
+        "median_line_words": 8.0
+      }
+    },
+    {
+      "id": "eminem_amityville",
+      "name": "Eminem / Bizarre shock-flow benchmark",
+      "artist_family": "Eminem",
+      "source_label": "Eminem/Bizarre excerpt",
+      "content_policy": "derived_profile_only_no_raw_lyrics",
+      "notes": [
+        "Fast internal clustering",
+        "high-tension end landings",
+        "short hook repetition around a compact rhyme family"
+      ],
+      "stats": {
+        "line_count": 64,
+        "word_count": 501,
+        "unique_words": 215,
+        "content_words": 303,
+        "unique_content_words": 165,
+        "type_token_ratio": 0.429,
+        "content_type_token_ratio": 0.545,
+        "avg_words": 7.8,
+        "median_words": 6.0,
+        "word_count_q1_median_q3": [
+          5.0,
+          6.0,
+          11.0
+        ],
+        "avg_syllables": 11.8,
+        "median_syllables": 11.0,
+        "syllable_q1_median_q3": [
+          10.0,
+          11.0,
+          15.0
+        ],
+        "dense_line_pct": 15.6,
+        "open_line_pct": 4.7,
+        "internal_rhyme_line_pct": 10.9,
+        "alliteration_line_pct": 35.9,
+        "avg_internal_groups_per_line": 0.11,
+        "avg_alliteration_groups_per_line": 0.42,
+        "unique_rhyme_keys": 29,
+        "rhyme_reuse_ratio_pct": 20.7,
+        "repeated_end_word_pct": 18.2,
+        "avg_word_length": 4.77,
+        "avg_content_word_length": 5.91,
+        "lexical_entropy_bits": 6.665,
+        "lexical_perplexity": 101.47,
+        "rhyme_entropy_bits": 3.826,
+        "rhyme_perplexity": 14.19,
+        "rhyme_normalized_entropy": 79,
+        "syllable_entropy_bits": 1.876,
+        "word_count_entropy_bits": 1.524
+      },
+      "cadence_histogram": [
+        {
+          "key": "short_7_10",
+          "count": 28,
+          "pct": 43.8,
+          "self_information_bits": 1.19
+        },
+        {
+          "key": "pocket_11_14",
+          "count": 16,
+          "pct": 25.0,
+          "self_information_bits": 2.0
+        },
+        {
+          "key": "long_15_18",
+          "count": 15,
+          "pct": 23.4,
+          "self_information_bits": 2.09
+        },
+        {
+          "key": "micro_0_6",
+          "count": 3,
+          "pct": 4.7,
+          "self_information_bits": 4.42
+        },
+        {
+          "key": "extended_19_plus",
+          "count": 2,
+          "pct": 3.1,
+          "self_information_bits": 5.0
+        }
+      ],
+      "word_count_histogram": [
+        {
+          "key": "short_5_8",
+          "count": 36,
+          "pct": 56.2,
+          "self_information_bits": 0.83
+        },
+        {
+          "key": "standard_9_12",
+          "count": 19,
+          "pct": 29.7,
+          "self_information_bits": 1.75
+        },
+        {
+          "key": "dense_13_16",
+          "count": 5,
+          "pct": 7.8,
+          "self_information_bits": 3.68
+        },
+        {
+          "key": "micro_0_4",
+          "count": 4,
+          "pct": 6.2,
+          "self_information_bits": 4.0
+        }
+      ],
+      "top_rhyme_keys": [
+        {
+          "key": "ill",
+          "count": 18,
+          "pct": 28.1
+        },
+        {
+          "key": "ville",
+          "count": 14,
+          "pct": 21.9
+        },
+        {
+          "key": "um",
+          "count": 3,
+          "pct": 4.7
+        },
+        {
+          "key": "oo",
+          "count": 2,
+          "pct": 3.1
+        },
+        {
+          "key": "ere",
+          "count": 2,
+          "pct": 3.1
+        },
+        {
+          "key": "you",
+          "count": 2,
+          "pct": 3.1
+        },
+        {
+          "key": "a",
+          "count": 1,
+          "pct": 1.6
+        },
+        {
+          "key": "ist",
+          "count": 1,
+          "pct": 1.6
+        },
+        {
+          "key": "stick",
+          "count": 1,
+          "pct": 1.6
+        },
+        {
+          "key": "it",
+          "count": 1,
+          "pct": 1.6
+        },
+        {
+          "key": "isit",
+          "count": 1,
+          "pct": 1.6
+        },
+        {
+          "key": "shh",
+          "count": 1,
+          "pct": 1.6
+        },
+        {
+          "key": "itch",
+          "count": 1,
+          "pct": 1.6
+        },
+        {
+          "key": "years",
+          "count": 1,
+          "pct": 1.6
+        }
+      ],
+      "benchmark_moves": [
+        "Add one internal sound cluster before the final landing.",
+        "Keep hook lines short enough to chant back.",
+        "Use sharper stress accents at the start and end of the bar."
+      ],
+      "line_targets": {
+        "one_bar_syllables": [
+          10,
+          15
+        ],
+        "median_line_syllables": 11.0,
+        "median_line_words": 6.0
+      }
+    },
+    {
+      "id": "biggie_hypnotize",
+      "name": "The Notorious B.I.G. bounce benchmark",
+      "artist_family": "The Notorious B.I.G. bounce",
+      "source_label": "Biggie excerpt",
+      "content_policy": "derived_profile_only_no_raw_lyrics",
+      "notes": [
+        "Chantable hook/refrain density",
+        "shorter punch landings",
+        "swagger/image-driven noun placement"
+      ],
+      "stats": {
+        "line_count": 94,
+        "word_count": 735,
+        "unique_words": 285,
+        "content_words": 448,
+        "unique_content_words": 227,
+        "type_token_ratio": 0.388,
+        "content_type_token_ratio": 0.507,
+        "avg_words": 7.8,
+        "median_words": 8.0,
+        "word_count_q1_median_q3": [
+          6.2,
+          8.0,
+          9.0
+        ],
+        "avg_syllables": 10.1,
+        "median_syllables": 10.0,
+        "syllable_q1_median_q3": [
+          9.0,
+          10.0,
+          12.0
+        ],
+        "dense_line_pct": 0.0,
+        "open_line_pct": 21.3,
+        "internal_rhyme_line_pct": 11.7,
+        "alliteration_line_pct": 33.0,
+        "avg_internal_groups_per_line": 0.13,
+        "avg_alliteration_groups_per_line": 0.38,
+        "unique_rhyme_keys": 44,
+        "rhyme_reuse_ratio_pct": 29.5,
+        "repeated_end_word_pct": 23.1,
+        "avg_word_length": 4.32,
+        "avg_content_word_length": 5.25,
+        "lexical_entropy_bits": 7.09,
+        "lexical_perplexity": 136.24,
+        "rhyme_entropy_bits": 4.743,
+        "rhyme_perplexity": 26.78,
+        "rhyme_normalized_entropy": 87,
+        "syllable_entropy_bits": 1.325,
+        "word_count_entropy_bits": 0.958
+      },
+      "cadence_histogram": [
+        {
+          "key": "short_7_10",
+          "count": 55,
+          "pct": 58.5,
+          "self_information_bits": 0.77
+        },
+        {
+          "key": "pocket_11_14",
+          "count": 32,
+          "pct": 34.0,
+          "self_information_bits": 1.55
+        },
+        {
+          "key": "micro_0_6",
+          "count": 5,
+          "pct": 5.3,
+          "self_information_bits": 4.23
+        },
+        {
+          "key": "long_15_18",
+          "count": 2,
+          "pct": 2.1,
+          "self_information_bits": 5.55
+        }
+      ],
+      "word_count_histogram": [
+        {
+          "key": "short_5_8",
+          "count": 65,
+          "pct": 69.1,
+          "self_information_bits": 0.53
+        },
+        {
+          "key": "standard_9_12",
+          "count": 28,
+          "pct": 29.8,
+          "self_information_bits": 1.75
+        },
+        {
+          "key": "micro_0_4",
+          "count": 1,
+          "pct": 1.1,
+          "self_information_bits": 6.55
+        }
+      ],
+      "top_rhyme_keys": [
+        {
+          "key": "uh",
+          "count": 20,
+          "pct": 21.3
+        },
+        {
+          "key": "e",
+          "count": 6,
+          "pct": 6.4
+        },
+        {
+          "key": "it",
+          "count": 5,
+          "pct": 5.3
+        },
+        {
+          "key": "ee",
+          "count": 5,
+          "pct": 5.3
+        },
+        {
+          "key": "ays",
+          "count": 5,
+          "pct": 5.3
+        },
+        {
+          "key": "ight",
+          "count": 4,
+          "pct": 4.3
+        },
+        {
+          "key": "otize",
+          "count": 4,
+          "pct": 4.3
+        },
+        {
+          "key": "a",
+          "count": 3,
+          "pct": 3.2
+        },
+        {
+          "key": "on",
+          "count": 3,
+          "pct": 3.2
+        },
+        {
+          "key": "us",
+          "count": 2,
+          "pct": 2.1
+        },
+        {
+          "key": "at",
+          "count": 2,
+          "pct": 2.1
+        },
+        {
+          "key": "aha",
+          "count": 2,
+          "pct": 2.1
+        },
+        {
+          "key": "ment",
+          "count": 2,
+          "pct": 2.1
+        },
+        {
+          "key": "erage",
+          "count": 1,
+          "pct": 1.1
+        }
+      ],
+      "benchmark_moves": [
+        "Make the hook more repeatable by shortening the syntax.",
+        "Move concrete nouns and flex details closer to the rhyme landing.",
+        "Let some lines breathe instead of filling every pocket."
+      ],
+      "line_targets": {
+        "one_bar_syllables": [
+          9,
+          12
+        ],
+        "median_line_syllables": 10.0,
+        "median_line_words": 8.0
+      }
+    },
+    {
+      "id": "outkast_aquemini",
+      "name": "OutKast narrative-philosophy benchmark",
+      "artist_family": "OutKast narrative-philosophy",
+      "source_label": "OutKast excerpt",
+      "content_policy": "derived_profile_only_no_raw_lyrics",
+      "notes": [
+        "Narrative-philosophical movement",
+        "section contrast",
+        "longer reflective lines with flexible cadence"
+      ],
+      "stats": {
+        "line_count": 90,
+        "word_count": 758,
+        "unique_words": 345,
+        "content_words": 436,
+        "unique_content_words": 279,
+        "type_token_ratio": 0.455,
+        "content_type_token_ratio": 0.64,
+        "avg_words": 8.4,
+        "median_words": 8.0,
+        "word_count_q1_median_q3": [
+          6.0,
+          8.0,
+          11.0
+        ],
+        "avg_syllables": 11.1,
+        "median_syllables": 11.0,
+        "syllable_q1_median_q3": [
+          8.0,
+          11.0,
+          13.0
+        ],
+        "dense_line_pct": 8.9,
+        "open_line_pct": 28.9,
+        "internal_rhyme_line_pct": 10.0,
+        "alliteration_line_pct": 44.4,
+        "avg_internal_groups_per_line": 0.1,
+        "avg_alliteration_groups_per_line": 0.52,
+        "unique_rhyme_keys": 61,
+        "rhyme_reuse_ratio_pct": 21.3,
+        "repeated_end_word_pct": 11.6,
+        "avg_word_length": 4.17,
+        "avg_content_word_length": 5.17,
+        "lexical_entropy_bits": 7.771,
+        "lexical_perplexity": 218.42,
+        "rhyme_entropy_bits": 5.662,
+        "rhyme_perplexity": 50.62,
+        "rhyme_normalized_entropy": 95,
+        "syllable_entropy_bits": 1.836,
+        "word_count_entropy_bits": 1.53
+      },
+      "cadence_histogram": [
+        {
+          "key": "pocket_11_14",
+          "count": 39,
+          "pct": 43.3,
+          "self_information_bits": 1.21
+        },
+        {
+          "key": "short_7_10",
+          "count": 28,
+          "pct": 31.1,
+          "self_information_bits": 1.68
+        },
+        {
+          "key": "long_15_18",
+          "count": 15,
+          "pct": 16.7,
+          "self_information_bits": 2.58
+        },
+        {
+          "key": "micro_0_6",
+          "count": 7,
+          "pct": 7.8,
+          "self_information_bits": 3.68
+        },
+        {
+          "key": "extended_19_plus",
+          "count": 1,
+          "pct": 1.1,
+          "self_information_bits": 6.49
+        }
+      ],
+      "word_count_histogram": [
+        {
+          "key": "short_5_8",
+          "count": 43,
+          "pct": 47.8,
+          "self_information_bits": 1.07
+        },
+        {
+          "key": "standard_9_12",
+          "count": 36,
+          "pct": 40.0,
+          "self_information_bits": 1.32
+        },
+        {
+          "key": "dense_13_16",
+          "count": 6,
+          "pct": 6.7,
+          "self_information_bits": 3.91
+        },
+        {
+          "key": "micro_0_4",
+          "count": 5,
+          "pct": 5.6,
+          "self_information_bits": 4.17
+        }
+      ],
+      "top_rhyme_keys": [
+        {
+          "key": "an",
+          "count": 5,
+          "pct": 5.6
+        },
+        {
+          "key": "en",
+          "count": 5,
+          "pct": 5.6
+        },
+        {
+          "key": "ie",
+          "count": 4,
+          "pct": 4.4
+        },
+        {
+          "key": "y",
+          "count": 4,
+          "pct": 4.4
+        },
+        {
+          "key": "orev",
+          "count": 4,
+          "pct": 4.4
+        },
+        {
+          "key": "emini",
+          "count": 4,
+          "pct": 4.4
+        },
+        {
+          "key": "yeah",
+          "count": 3,
+          "pct": 3.3
+        },
+        {
+          "key": "rtain",
+          "count": 3,
+          "pct": 3.3
+        },
+        {
+          "key": "ill",
+          "count": 2,
+          "pct": 2.2
+        },
+        {
+          "key": "ence",
+          "count": 2,
+          "pct": 2.2
+        },
+        {
+          "key": "ional",
+          "count": 2,
+          "pct": 2.2
+        },
+        {
+          "key": "in",
+          "count": 2,
+          "pct": 2.2
+        },
+        {
+          "key": "it",
+          "count": 2,
+          "pct": 2.2
+        },
+        {
+          "key": "ow",
+          "count": 1,
+          "pct": 1.1
+        }
+      ],
+      "benchmark_moves": [
+        "Use a reflective image, then widen it into a bigger idea.",
+        "Vary the line length between narrative and hook sections.",
+        "Make the section turn clear before the rhyme scheme changes."
+      ],
+      "line_targets": {
+        "one_bar_syllables": [
+          8,
+          13
+        ],
+        "median_line_syllables": 11.0,
+        "median_line_words": 8.0
+      }
+    },
+    {
+      "id": "eminem_till_collapse",
+      "name": "Eminem technical-momentum benchmark",
+      "artist_family": "Eminem technical-momentum",
+      "source_label": "Eminem excerpt",
+      "content_policy": "derived_profile_only_no_raw_lyrics",
+      "notes": [
+        "Motivational momentum",
+        "multi-syllable end chains",
+        "drive through repeated hook architecture"
+      ],
+      "stats": {
+        "line_count": 78,
+        "word_count": 853,
+        "unique_words": 277,
+        "content_words": 481,
+        "unique_content_words": 221,
+        "type_token_ratio": 0.325,
+        "content_type_token_ratio": 0.459,
+        "avg_words": 10.9,
+        "median_words": 11.0,
+        "word_count_q1_median_q3": [
+          9.0,
+          11.0,
+          13.0
+        ],
+        "avg_syllables": 13.0,
+        "median_syllables": 13.0,
+        "syllable_q1_median_q3": [
+          10.0,
+          13.0,
+          15.0
+        ],
+        "dense_line_pct": 21.8,
+        "open_line_pct": 7.7,
+        "internal_rhyme_line_pct": 9.0,
+        "alliteration_line_pct": 50.0,
+        "avg_internal_groups_per_line": 0.09,
+        "avg_alliteration_groups_per_line": 0.55,
+        "unique_rhyme_keys": 45,
+        "rhyme_reuse_ratio_pct": 26.7,
+        "repeated_end_word_pct": 23.9,
+        "avg_word_length": 3.81,
+        "avg_content_word_length": 4.73,
+        "lexical_entropy_bits": 6.853,
+        "lexical_perplexity": 115.63,
+        "rhyme_entropy_bits": 5.082,
+        "rhyme_perplexity": 33.88,
+        "rhyme_normalized_entropy": 93,
+        "syllable_entropy_bits": 1.58,
+        "word_count_entropy_bits": 1.636
+      },
+      "cadence_histogram": [
+        {
+          "key": "long_15_18",
+          "count": 28,
+          "pct": 35.9,
+          "self_information_bits": 1.48
+        },
+        {
+          "key": "pocket_11_14",
+          "count": 27,
+          "pct": 34.6,
+          "self_information_bits": 1.53
+        },
+        {
+          "key": "short_7_10",
+          "count": 23,
+          "pct": 29.5,
+          "self_information_bits": 1.76
+        }
+      ],
+      "word_count_histogram": [
+        {
+          "key": "standard_9_12",
+          "count": 40,
+          "pct": 51.3,
+          "self_information_bits": 0.96
+        },
+        {
+          "key": "dense_13_16",
+          "count": 20,
+          "pct": 25.6,
+          "self_information_bits": 1.96
+        },
+        {
+          "key": "short_5_8",
+          "count": 15,
+          "pct": 19.2,
+          "self_information_bits": 2.38
+        },
+        {
+          "key": "packed_17_plus",
+          "count": 3,
+          "pct": 3.8,
+          "self_information_bits": 4.7
+        }
+      ],
+      "top_rhyme_keys": [
+        {
+          "key": "e",
+          "count": 10,
+          "pct": 12.8
+        },
+        {
+          "key": "em",
+          "count": 5,
+          "pct": 6.4
+        },
+        {
+          "key": "oof",
+          "count": 4,
+          "pct": 5.1
+        },
+        {
+          "key": "off",
+          "count": 4,
+          "pct": 5.1
+        },
+        {
+          "key": "egs",
+          "count": 4,
+          "pct": 5.1
+        },
+        {
+          "key": "out",
+          "count": 3,
+          "pct": 3.8
+        },
+        {
+          "key": "outh",
+          "count": 3,
+          "pct": 3.8
+        },
+        {
+          "key": "erhap",
+          "count": 3,
+          "pct": 3.8
+        },
+        {
+          "key": "lapse",
+          "count": 3,
+          "pct": 3.8
+        },
+        {
+          "key": "up",
+          "count": 2,
+          "pct": 2.6
+        },
+        {
+          "key": "end",
+          "count": 2,
+          "pct": 2.6
+        },
+        {
+          "key": "in",
+          "count": 2,
+          "pct": 2.6
+        },
+        {
+          "key": "minem",
+          "count": 1,
+          "pct": 1.3
+        },
+        {
+          "key": "enom",
+          "count": 1,
+          "pct": 1.3
+        }
+      ],
+      "benchmark_moves": [
+        "Stack a motivational premise, then resolve it with a hard final word.",
+        "Keep momentum high with chained internal echoes.",
+        "Use repeated hook phrasing to create memory."
+      ],
+      "line_targets": {
+        "one_bar_syllables": [
+          10,
+          15
+        ],
+        "median_line_syllables": 13.0,
+        "median_line_words": 11.0
+      }
+    },
+    {
+      "id": "mf_doom_accordion",
+      "name": "MF DOOM oblique-pocket benchmark",
+      "artist_family": "MF DOOM oblique-pocket",
+      "source_label": "MF DOOM excerpt",
+      "content_policy": "derived_profile_only_no_raw_lyrics",
+      "notes": [
+        "Compressed oblique references",
+        "enjambed pocket",
+        "dense internal slant-rhyme texture"
+      ],
+      "stats": {
+        "line_count": 34,
+        "word_count": 289,
+        "unique_words": 185,
+        "content_words": 175,
+        "unique_content_words": 146,
+        "type_token_ratio": 0.64,
+        "content_type_token_ratio": 0.834,
+        "avg_words": 8.5,
+        "median_words": 9.0,
+        "word_count_q1_median_q3": [
+          7.0,
+          9.0,
+          10.0
+        ],
+        "avg_syllables": 10.3,
+        "median_syllables": 11.0,
+        "syllable_q1_median_q3": [
+          9.0,
+          11.0,
+          12.8
+        ],
+        "dense_line_pct": 0.0,
+        "open_line_pct": 23.5,
+        "internal_rhyme_line_pct": 5.9,
+        "alliteration_line_pct": 44.1,
+        "avg_internal_groups_per_line": 0.06,
+        "avg_alliteration_groups_per_line": 0.47,
+        "unique_rhyme_keys": 30,
+        "rhyme_reuse_ratio_pct": 10.0,
+        "repeated_end_word_pct": 3.1,
+        "avg_word_length": 4.11,
+        "avg_content_word_length": 4.89,
+        "lexical_entropy_bits": 6.944,
+        "lexical_perplexity": 123.1,
+        "rhyme_entropy_bits": 4.83,
+        "rhyme_perplexity": 28.44,
+        "rhyme_normalized_entropy": 98,
+        "syllable_entropy_bits": 1.543,
+        "word_count_entropy_bits": 1.312
+      },
+      "cadence_histogram": [
+        {
+          "key": "pocket_11_14",
+          "count": 17,
+          "pct": 50.0,
+          "self_information_bits": 1.0
+        },
+        {
+          "key": "short_7_10",
+          "count": 12,
+          "pct": 35.3,
+          "self_information_bits": 1.5
+        },
+        {
+          "key": "micro_0_6",
+          "count": 4,
+          "pct": 11.8,
+          "self_information_bits": 3.09
+        },
+        {
+          "key": "long_15_18",
+          "count": 1,
+          "pct": 2.9,
+          "self_information_bits": 5.09
+        }
+      ],
+      "word_count_histogram": [
+        {
+          "key": "standard_9_12",
+          "count": 18,
+          "pct": 52.9,
+          "self_information_bits": 0.92
+        },
+        {
+          "key": "short_5_8",
+          "count": 14,
+          "pct": 41.2,
+          "self_information_bits": 1.28
+        },
+        {
+          "key": "dense_13_16",
+          "count": 1,
+          "pct": 2.9,
+          "self_information_bits": 5.09
+        },
+        {
+          "key": "micro_0_4",
+          "count": 1,
+          "pct": 2.9,
+          "self_information_bits": 5.09
+        }
+      ],
+      "top_rhyme_keys": [
+        {
+          "key": "it",
+          "count": 3,
+          "pct": 8.8
+        },
+        {
+          "key": "ast",
+          "count": 2,
+          "pct": 5.9
+        },
+        {
+          "key": "old",
+          "count": 2,
+          "pct": 5.9
+        },
+        {
+          "key": "aught",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "xmast",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "efold",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "ehold",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "itt",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "cture",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "a",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "iquor",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "are",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "yeah",
+          "count": 1,
+          "pct": 2.9
+        },
+        {
+          "key": "appen",
+          "count": 1,
+          "pct": 2.9
+        }
+      ],
+      "benchmark_moves": [
+        "Compress setup words and let odd nouns carry surprise.",
+        "Use enjambment when a thought is too strange for one line.",
+        "Add slant echoes rather than only clean end rhymes."
+      ],
+      "line_targets": {
+        "one_bar_syllables": [
+          9,
+          13
+        ],
+        "median_line_syllables": 11.0,
+        "median_line_words": 9.0
+      }
+    }
+  ]
+}
