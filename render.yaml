@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: nmc-beta-rap-lab
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_NAME
+        value: NMC Beta Rap Lab
+      - key: APP_VERSION
+        value: 2026.06-song-render-voicefix-beta
+      - key: SECRET_KEY
+        generateValue: true
+      - key: BETA_ACCESS_CODE
+        sync: false
+      - key: BETA_ADMIN_TOKEN
+        sync: false
+      - key: MAX_UPLOAD_MB
+        value: "80"
+      - key: MAX_BEAT_UPLOAD_MB
+        value: "80"
+      - key: MAX_TEXT_UPLOAD_MB
+        value: "5"
+      - key: MAX_LYRICS_CHARS
+        value: "120000"
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "90"
+      - key: GUNICORN_THREADS
+        value: "4"
+      - key: GUNICORN_TIMEOUT
+        value: "180"
+      - key: NMC_PROFILE_PATH
+        value: data/corpus_profile.json
+      - key: NMC_EXPOSE_CORPUS_SAMPLES
+        value: "0"

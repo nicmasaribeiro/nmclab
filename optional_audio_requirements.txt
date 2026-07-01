@@ -1,0 +1,3 @@
+# Optional, recommended for MP3/M4A/FLAC/OGG beat analysis.
+librosa>=0.10.0
+soundfile>=0.12.1

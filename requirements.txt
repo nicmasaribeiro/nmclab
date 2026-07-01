@@ -1,0 +1,9 @@
+Flask>=3.0,<4.0
+gunicorn>=23.0,<24.0
+numpy>=1.23
+librosa>=0.10.0
+soundfile>=0.12.1
+pronouncing>=0.2,<1.0
+setuptools>=68
+
+reportlab>=4.2,<5.0

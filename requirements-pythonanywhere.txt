@@ -1,0 +1,5 @@
+Flask>=3.0,<4.0
+numpy>=1.24,<3.0
+pronouncing>=0.2,<1.0
+reportlab>=4.2,<5.0
+setuptools>=68
