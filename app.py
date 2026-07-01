@@ -28,9 +28,11 @@ from editing_engine import build_editing_lab_result, build_line_fix, build_sente
 from meter_engine import analyze_meter_text, analyze_sentence_meter
 from physics_engine import PHYSICAL_ANCHORS, SYMBOL_LEGEND, NOTEBOOK_TEST_PAIRS, build_scansion_physics_report, build_sentence_physics_report
 from rhyme_engine import advanced_rhyme_for_word, build_rhyme_suggestion_lab
+from live_rhyme_core import build_live_rhyme_payload, build_selected_word_payload as build_selected_word_core_payload, smoke_test as live_rhyme_core_smoke_test
 from sentence_pattern_engine import compare_sentence_rhyme_patterns
 from score_engine import build_rap_score_report, compare_rap_edits
 from report_engine import build_csv_report, build_pdf_report, report_filename
+from live_writer_engine import build_live_writer_payload, build_selected_word_payload as build_live_writer_word_payload
 from lyric_engine import (
     MODE_LABELS,
     analyze_lyrics,
@@ -66,7 +68,7 @@ def _env_int(name: str, default: int, low: int | None = None, high: int | None =
 
 
 APP_NAME = os.getenv("APP_NAME", "NMC Live Rhyme Writer Lab")
-APP_VERSION = os.getenv("APP_VERSION", "2026.07-pythonanywhere-live-rhyme-v6-direct")
+APP_VERSION = os.getenv("APP_VERSION", "2026.07-live-writer-refactor-v7-noqueue")
 APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
 IS_PRODUCTION = APP_ENV in {"prod", "production"}
 
@@ -89,13 +91,13 @@ def _detect_pythonanywhere() -> bool:
 
 PYTHONANYWHERE_COMPAT = _env_bool("PYTHONANYWHERE_COMPAT", _detect_pythonanywhere())
 ASYNC_JOB_MODE = os.getenv("ASYNC_JOB_MODE", "inline" if PYTHONANYWHERE_COMPAT else "thread").strip().lower()
-INLINE_GENERAL_ASYNC = _env_bool("INLINE_GENERAL_ASYNC", ASYNC_JOB_MODE in {"inline", "sync", "pythonanywhere"})
+INLINE_GENERAL_ASYNC = True  # Refactor: all writing-analysis routes complete inside the request; no WSGI queue.
 # Live rhyme is now direct-by-default. The browser still uses asynchronous fetches,
 # but the server returns the completed result in the POST response and never depends
 # on a queued in-memory poll cycle for the live writer. This is the most reliable
 # mode for PythonAnywhere and other WSGI-only hosts.
 LIVE_RHYME_INLINE_JOBS = True
-LIVE_RHYME_DIRECT_JOBS = _env_bool("LIVE_RHYME_DIRECT_JOBS", True)
+LIVE_RHYME_DIRECT_JOBS = True
 
 NOTEBOOK_MODEL = {
     "available": True,
@@ -564,47 +566,52 @@ def _build_live_rhyme_result(
     beat: Dict[str, Any] | None = None,
     beat_id: str | None = None,
 ) -> Dict[str, Any]:
-    warning = None
+    """Fast-core live rhyme result.
+
+    The previous live writer reused the heavyweight static snapshot and advanced
+    rhyme lab paths. That produced huge JSON payloads and could make hosted WSGI
+    deployments look stuck on queued/polling states. The refactored live writer
+    is a compact, deterministic, no-worker endpoint. Full Static Snapshot is
+    still available from /api/snapshot; this route returns only the data needed
+    by the live sidecar.
+    """
     try:
-        result = build_rhyme_suggestion_lab(lyrics, mode=mode, active_line=active_line)
-        if not result.get("available", True):
-            warning = str(result.get("error") or "advanced rhyme engine returned unavailable")
-            result = _fallback_live_rhyme_result(lyrics, mode, active_line, warning=warning)
+        return build_live_rhyme_payload(
+            lyrics,
+            mode=mode,
+            active_line=active_line,
+            job_id=job_id,
+            context_offset=context_offset,
+            context_clipped=context_clipped,
+            total_source_lines=total_source_lines,
+            beat_id=beat_id,
+        )
     except Exception as exc:
-        warning = str(exc)
-        result = _fallback_live_rhyme_result(lyrics, mode, active_line, warning=warning)
-    live_static = _build_live_static_line_analysis(lyrics, mode, active_line, beat=beat, context_offset=context_offset)
-    _shift_live_result_line_numbers(result, context_offset)
-    active_report = result.get("active_report") or {}
-    if isinstance(active_report, dict) and live_static.get("active_line"):
-        active_report["static_line_analysis"] = live_static.get("active_line")
-        active_report["snapshot_elements_available"] = live_static.get("snapshot_elements", [])
-    result.update({
-        "available": True,
-        "job_id": job_id,
-        "job_type": "live_rhyme_writer",
-        "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "context_clipped": bool(context_clipped),
-        "context_offset_lines": int(context_offset or 0),
-        "total_source_lines": total_source_lines,
-        "live_writer": {
+        result = _fallback_live_rhyme_result(lyrics, mode, active_line, warning=str(exc))
+        _shift_live_result_line_numbers(result, context_offset)
+        result.update({
             "available": True,
-            "same_template": True,
-            "active_line_number": result.get("active_line_number") or (active_line + context_offset if active_line else None),
-            "instruction": "Keep writing in the editor; the rhyme sidebar refreshes asynchronously without replacing your draft.",
-            "primary_landing": active_report.get("end_word"),
-            "primary_rhyme_key": active_report.get("rhyme_key"),
-            "primary_rhyme_power": (active_report.get("rhyme_power") or {}).get("score"),
-            "route_family": "live-rhyme",
+            "job_id": job_id,
+            "job_type": "live_rhyme_writer",
+            "report_type": "live_rhyme_writer_emergency_fallback",
+            "engine": "legacy_emergency_fallback",
+            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
             "context_clipped": bool(context_clipped),
-            "fallback_used": bool(warning or result.get("fallback_used")),
-            "static_line_analysis": bool(live_static.get("available")),
-            "beat_id": beat_id,
-            "beat_guidance": bool(beat),
-        },
-        "live_static_analysis": live_static,
-    })
-    return result
+            "context_offset_lines": int(context_offset or 0),
+            "total_source_lines": total_source_lines,
+            "fallback_used": True,
+            "warnings": [str(exc)],
+            "live_static_analysis": {"available": False, "error": str(exc), "active_line": {}, "nearby_lines": []},
+            "live_writer": {
+                "available": True,
+                "same_template": True,
+                "instruction": "Emergency fallback returned compact rhyme suggestions without queueing.",
+                "route_family": "live-rhyme",
+                "context_clipped": bool(context_clipped),
+                "fallback_used": True,
+            },
+        })
+        return result
 
 
 def _selected_word_request_fields(payload: Dict[str, Any]) -> tuple[str, str, str, str, int | None, int | None, int | None]:
@@ -645,27 +652,50 @@ def _build_selected_word_rhyme_result(
     selection_end: int | None = None,
     job_id: str | None = None,
 ) -> Dict[str, Any]:
-    clean_word = re.sub(r"[^A-Za-z0-9'’\-]", "", str(word or "")).strip()
-    if not clean_word:
-        raise ValueError("Highlight or select a word before requesting similar rhymes.")
-    warning = None
+    """Compact highlighted-word rhyme result used by the live sidecar."""
     try:
-        result = advanced_rhyme_for_word(
-            clean_word,
-            line_text=line_text,
+        return build_selected_word_core_payload(
+            word,
             mode=mode,
-            limit=_env_int("RHYME_WORD_LIMIT", 18, low=6, high=80),
+            line_text=line_text,
+            lyrics=lyrics,
+            active_line=active_line,
+            selection_start=selection_start,
+            selection_end=selection_end,
+            job_id=job_id,
         )
     except Exception as exc:
-        warning = str(exc)
-        result = {"available": False, "error": warning}
-    if not result.get("available"):
-        warning = warning or str(result.get("error") or "advanced selected-word rhyme failed")
+        clean_word = re.sub(r"[^A-Za-z0-9'’\-]", "", str(word or "")).strip()
+        if not clean_word:
+            raise ValueError("Highlight or select a word before requesting similar rhymes.") from exc
         basic = _safe_word_lists(clean_word)
         ranked_fallback = _fallback_ranked_options(clean_word, basic, limit=_env_int("RHYME_WORD_LIMIT", 18, low=6, high=80))
-        result = {
+        patches = []
+        for row in ranked_fallback[:10]:
+            candidate = str(row.get("word") or row.get("display") or "").strip()
+            if candidate:
+                patches.append({
+                    "type": "replace_selection",
+                    "label": f"Replace highlighted word → {candidate}",
+                    "replacement": candidate,
+                    "score": row.get("score"),
+                    "kind": row.get("kind"),
+                    "why": "; ".join(row.get("reasons") or []) or "Similar phonetic landing.",
+                })
+        return {
             "available": True,
+            "job_id": job_id,
+            "job_type": "selected_word_rhyme",
+            "report_type": "highlighted_word_rhyme_emergency_fallback",
+            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "selected_word": clean_word,
             "target_word": clean_word,
+            "mode": mode,
+            "line_text": line_text,
+            "active_line": active_line,
+            "selection": {"start": selection_start, "end": selection_end},
+            "selection_range": {"start": selection_start, "end": selection_end},
+            "lyrics_chars": len(lyrics or ""),
             "summary": {
                 "rhyme_key": basic.get("rhyme_key") or lyric_rhyme_key(clean_word),
                 "syllables": count_syllables(clean_word),
@@ -681,54 +711,14 @@ def _build_selected_word_rhyme_result(
                 "multi_syllable_endings": basic.get("phrase_landings", []),
             },
             "ranked": ranked_fallback,
-            "rhyme_ladder": [{"stage": "safe fallback", "use_when": "advanced phonetic lookup is unavailable", "options": [row.get("word") for row in ranked_fallback[:10]]}],
-            "warnings": [warning],
+            "rhyme_ladder": [{"stage": "safe fallback", "use_when": "fast core was unavailable", "options": [row.get("word") for row in ranked_fallback[:10]]}],
+            "similar_rhymes": [{"word": row.get("word"), "category": row.get("kind")} for row in ranked_fallback[:48]],
+            "applyable_patches": patches,
+            "instruction": "Click a similar rhyme to replace the highlighted word.",
+            "warnings": [str(exc)],
             "fallback_used": True,
+            "live_writer": {"available": True, "trigger": "highlighted_word", "instruction": "Highlight any word in the editor to fetch compact rhyme suggestions."},
         }
-    ranked = result.get("ranked") or []
-    patches = []
-    for row in ranked[:10]:
-        candidate = str(row.get("word") or row.get("display") or "").strip()
-        if not candidate:
-            continue
-        patches.append({
-            "type": "replace_selection",
-            "label": f"Replace highlighted word → {candidate}",
-            "replacement": candidate,
-            "score": row.get("score"),
-            "kind": row.get("kind"),
-            "why": "; ".join(row.get("reasons") or []) or "Similar phonetic landing.",
-        })
-    similar = []
-    for category, words in (result.get("word_lists") or {}).items():
-        if isinstance(words, list):
-            for item in words[:10]:
-                similar.append({"word": item, "category": category.replace("_", " ")})
-    result.update({
-        "job_id": job_id,
-        "job_type": "selected_word_rhyme",
-        "report_type": "highlighted_word_rhyme",
-        "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "selected_word": clean_word,
-        "target_word": result.get("target_word") or clean_word,
-        "mode": mode,
-        "line_text": line_text,
-        "active_line": active_line,
-        "selection": {"start": selection_start, "end": selection_end},
-        "selection_range": {"start": selection_start, "end": selection_end},
-        "lyrics_chars": len(lyrics or ""),
-        "similar_rhymes": similar[:48],
-        "applyable_patches": patches,
-        "instruction": "Click a similar rhyme to replace the highlighted word, or use it as a landing option.",
-        "warnings": (result.get("warnings") or []) + ([warning] if warning and warning not in (result.get("warnings") or []) else []),
-        "fallback_used": bool(result.get("fallback_used") or warning),
-        "live_writer": {
-            "available": True,
-            "trigger": "highlighted_word",
-            "instruction": "Highlight any word in the editor to fetch similar rhymes asynchronously.",
-        },
-    })
-    return result
 
 
 def _client_ip() -> str:
@@ -1147,6 +1137,7 @@ def readyz():
             "async_job_mode": ASYNC_JOB_MODE,
             "inline_general_async": INLINE_GENERAL_ASYNC,
             "live_rhyme_inline_jobs": LIVE_RHYME_INLINE_JOBS,
+        "refactor": "queue_free_fast_core_v8",
             "live_rhyme_direct_jobs": LIVE_RHYME_DIRECT_JOBS,
             "executor": "disabled" if EXECUTOR is None else "threadpool",
             "async_workers": ASYNC_WORKERS,
@@ -1177,6 +1168,7 @@ def pythonanywhere_diagnostics():
         "async_job_mode": ASYNC_JOB_MODE,
         "inline_general_async": INLINE_GENERAL_ASYNC,
         "live_rhyme_inline_jobs": LIVE_RHYME_INLINE_JOBS,
+        "refactor": "queue_free_fast_core_v8",
         "live_rhyme_direct_jobs": LIVE_RHYME_DIRECT_JOBS,
         "executor": "disabled" if EXECUTOR is None else "threadpool",
         "async_workers": ASYNC_WORKERS,
@@ -1185,6 +1177,9 @@ def pythonanywhere_diagnostics():
             "GET /healthz",
             "GET /readyz",
             "GET /api/live-rhyme/health",
+            "GET /live-writer",
+            "POST /api/live-writer/analyze",
+            "POST /api/live-writer/word",
             "POST /api/live-rhyme-job",
             "GET /api/live-rhyme/job/<job_id>",
             "POST /api/rhyme-word-job",
@@ -1457,8 +1452,62 @@ def download_render(filename: str):
     return send_from_directory(OUTPUT_DIR, safe_name, as_attachment=_song_bool(request.args.get("download"), False))
 
 
+@app.route("/live-writer", methods=["GET"])
+def live_writer_standalone():
+    """Standalone queue-free writer. Uses inline JS to avoid stale app.js cache."""
+    return render_template(
+        "live_writer.html",
+        app_name=APP_NAME,
+        app_version=APP_VERSION,
+        modes=MODE_LABELS,
+        selected_mode="match",
+    )
+
+
+@app.route("/api/live-writer/analyze", methods=["POST"])
+def api_live_writer_analyze():
+    payload = _json_payload()
+    try:
+        result = build_live_writer_payload(payload)
+        status = 200 if result.get("available") else 400
+        return jsonify(result), status
+    except Exception as exc:
+        return jsonify({
+            "available": False,
+            "error": str(exc),
+            "engine": "live_writer_engine_direct_noqueue",
+            "direct_complete": True,
+            "poll_required": False,
+            "no_poll_required": True,
+        }), 500
+
+
+@app.route("/api/live-writer/word", methods=["POST"])
+def api_live_writer_word():
+    payload = _json_payload()
+    try:
+        result = build_live_writer_word_payload(payload)
+        status = 200 if result.get("available") else 400
+        return jsonify(result), status
+    except Exception as exc:
+        return jsonify({
+            "available": False,
+            "error": str(exc),
+            "engine": "live_writer_engine_direct_noqueue",
+            "direct_complete": True,
+            "poll_required": False,
+            "no_poll_required": True,
+        }), 500
+
+
 @app.route("/api/suggest-job", methods=["POST"])
 def api_suggest_job():
+    """Direct-complete general live coaching.
+
+    Older builds returned queued jobs here. This refactor keeps the same route
+    but completes inside the POST request so PythonAnywhere cannot strand the UI
+    on a pending in-memory job.
+    """
     payload = _json_payload()
     lyrics = payload.get("lyrics", "")
     error = _lyrics_error(lyrics, "Provide lyrics text before requesting suggestions.")
@@ -1467,90 +1516,21 @@ def api_suggest_job():
     mode = _mode(payload.get("coach_mode", "match"))
     active = _active_line(payload.get("active_line"))
     beat_id = str(payload.get("beat_id")) if payload.get("beat_id") else None
-    if beat_id and not _beat_by_id(beat_id):
-        return jsonify({"error": "Beat id not found. Upload the beat again."}), 404
-    job_id = uuid.uuid4().hex[:16]
-    with STATE_LOCK:
-        JOBS[job_id] = {
-            "job_id": job_id,
-            "status": "queued",
-            "created_at": _now(),
-            "mode": mode,
-            "active_line": active,
-            "beat_id": beat_id,
-            "error": None,
-            "result": None,
-        }
-    engine = _run_job_or_submit(_job_runner, INLINE_GENERAL_ASYNC, job_id, lyrics, mode, active, beat_id)
-    _cleanup_state()
-    payload = _job_public_payload(job_id, include_complete_result=INLINE_GENERAL_ASYNC)
-    payload["engine"] = engine
-    return jsonify(payload)
-
-
-@app.route("/api/live-rhyme-job", methods=["POST"])
-@app.route("/api/live-rhyme-job/", methods=["POST"])
-@app.route("/api/rhyme/live-job", methods=["POST"])
-@app.route("/api/rhyme/live-job/", methods=["POST"])
-def api_live_rhyme_job():
-    """Start a live-rhyme job, but complete it inside this request by default.
-
-    On WSGI hosts such as PythonAnywhere, background workers and in-memory queues
-    can leave the browser polling a job that never reaches the same process. For
-    the Live Rhyme Writer, a direct response is better: the JavaScript call is
-    still asynchronous from the user's point of view, but the server returns a
-    completed payload and no polling is required.
-    """
-    payload = _json_payload()
-    raw_lyrics, mode, active = _live_rhyme_request_fields(payload)
-    client_offset = max(0, _int_payload(payload.get("context_offset_lines", payload.get("line_offset", 0)), 0))
-    total_hint = _int_payload(payload.get("total_source_lines"), 0) or None
-    beat_id = str(payload.get("beat_id") or "") or None
     beat = _beat_by_id(beat_id) if beat_id else None
-    if beat_id and not beat:
-        beat_id = None
-    lyrics, relative_active, context_offset, context_clipped, total_source_lines = _clip_lyrics_around_line(raw_lyrics, active)
-    context_offset = client_offset + context_offset
-    total_source_lines = total_hint or total_source_lines
-    error = _lyrics_error(lyrics, "Provide lyrics text before requesting live rhyme suggestions.")
-    if error:
-        return jsonify({"error": error}), 400
     job_id = uuid.uuid4().hex[:16]
     try:
-        result = _build_live_rhyme_result(
-            lyrics,
-            mode,
-            relative_active,
-            job_id=job_id,
-            context_offset=context_offset,
-            context_clipped=context_clipped,
-            total_source_lines=total_source_lines,
-            beat=beat,
-            beat_id=beat_id,
-        )
+        result = build_editing_lab_result(lyrics, mode=mode, active_line=active, beat=beat)
+        result["job_id"] = job_id
+        result["beat_id"] = beat_id
+        result["generated_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
         status = "complete"
         error_text = None
     except Exception as exc:
-        # The live writer must never strand the UI on queued. Return a completed
-        # fallback object that the sidecar can render as a soft failure.
-        result = _fallback_live_rhyme_result(lyrics, mode, relative_active, warning=str(exc))
-        result.update({
-            "available": True,
-            "job_id": job_id,
-            "job_type": "live_rhyme_writer",
-            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "context_clipped": bool(context_clipped),
-            "context_offset_lines": int(context_offset or 0),
-            "total_source_lines": total_source_lines,
-            "error": str(exc),
-            "fallback_used": True,
-        })
-        status = "complete"
-        error_text = str(exc)
+        return jsonify({"error": str(exc), "status": "error", "job_id": job_id}), 500
     with STATE_LOCK:
         JOBS[job_id] = {
             "job_id": job_id,
-            "job_type": "live_rhyme_writer",
+            "job_type": "editing_lab_direct",
             "status": status,
             "engine": "direct",
             "created_at": _now(),
@@ -1558,10 +1538,6 @@ def api_live_rhyme_job():
             "finished_at": _now(),
             "mode": mode,
             "active_line": active,
-            "relative_active_line": relative_active,
-            "context_offset_lines": context_offset,
-            "context_clipped": context_clipped,
-            "request_id": payload.get("request_id"),
             "beat_id": beat_id,
             "error": error_text,
             "result": result,
@@ -1569,8 +1545,45 @@ def api_live_rhyme_job():
     _cleanup_state()
     return jsonify({
         "job_id": job_id,
+        "job_type": "editing_lab_direct",
         "status": "complete",
         "engine": "direct",
+        "result": result,
+        "direct_complete": True,
+        "poll_required": False,
+        "no_poll_required": True,
+    })
+
+@app.route("/api/live-rhyme-job", methods=["POST"])
+@app.route("/api/live-rhyme-job/", methods=["POST"])
+@app.route("/api/rhyme/live-job", methods=["POST"])
+@app.route("/api/rhyme/live-job/", methods=["POST"])
+def api_live_rhyme_job():
+    """Compatibility alias for the queue-free live writer.
+
+    The response is complete. Clients must not wait for a queue/poll cycle.
+    """
+    payload = _json_payload()
+    job_id = uuid.uuid4().hex[:16]
+    result = build_live_writer_payload(payload)
+    result["job_id"] = job_id
+    with STATE_LOCK:
+        JOBS[job_id] = {
+            "job_id": job_id,
+            "job_type": "live_rhyme_writer",
+            "status": "complete",
+            "engine": "direct_refactor",
+            "created_at": _now(),
+            "started_at": _now(),
+            "finished_at": _now(),
+            "error": None if result.get("available") else result.get("error"),
+            "result": result,
+        }
+    _cleanup_state()
+    return jsonify({
+        "job_id": job_id,
+        "status": "complete",
+        "engine": "direct_refactor",
         "job_type": "live_rhyme_writer",
         "result": result,
         "direct_complete": True,
@@ -1578,10 +1591,7 @@ def api_live_rhyme_job():
         "no_poll_required": True,
         "poll_url": url_for("api_live_rhyme_job_lookup", job_id=job_id),
         "generic_poll_url": url_for("api_job", job_id=job_id),
-        "context_clipped": context_clipped,
-        "context_offset_lines": context_offset,
-        "beat_id": beat_id,
-    })
+    }), (200 if result.get("available") else 400)
 
 
 @app.route("/api/live-rhyme", methods=["POST"])
@@ -1592,49 +1602,12 @@ def api_live_rhyme_job():
 @app.route("/api/rhyme/live/", methods=["POST"])
 def api_live_rhyme_sync():
     payload = _json_payload()
-    raw_lyrics, mode, active = _live_rhyme_request_fields(payload)
-    client_offset = max(0, _int_payload(payload.get("context_offset_lines", payload.get("line_offset", 0)), 0))
-    total_hint = _int_payload(payload.get("total_source_lines"), 0) or None
-    beat_id = str(payload.get("beat_id") or "") or None
-    beat = _beat_by_id(beat_id) if beat_id else None
-    if beat_id and not beat:
-        beat_id = None
-        beat = None
-    lyrics, relative_active, context_offset, context_clipped, total_source_lines = _clip_lyrics_around_line(raw_lyrics, active)
-    context_offset = client_offset + context_offset
-    total_source_lines = total_hint or total_source_lines
-    error = _lyrics_error(lyrics, "Provide lyrics text before requesting live rhyme suggestions.")
-    if error:
-        return jsonify({"error": error}), 400
-    try:
-        result = _build_live_rhyme_result(
-            lyrics,
-            mode,
-            relative_active,
-            job_id=None,
-            context_offset=context_offset,
-            context_clipped=context_clipped,
-            total_source_lines=total_source_lines,
-            beat=beat,
-            beat_id=beat_id,
-        )
-    except Exception as exc:
-        result = _fallback_live_rhyme_result(lyrics, mode, relative_active, warning=str(exc))
-        _shift_live_result_line_numbers(result, context_offset)
-        result.update({
-            "available": True,
-            "job_type": "live_rhyme_writer",
-            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "context_clipped": bool(context_clipped),
-            "context_offset_lines": int(context_offset or 0),
-            "total_source_lines": total_source_lines,
-            "fallback_used": True,
-            "warnings": [str(exc)],
-        })
+    result = build_live_writer_payload(payload)
     result["sync"] = True
     result["direct_complete"] = True
-    return jsonify(result)
-
+    result["poll_required"] = False
+    result["no_poll_required"] = True
+    return jsonify(result), (200 if result.get("available") else 400)
 
 @app.route("/api/rhyme-word-job", methods=["POST"])
 @app.route("/api/rhyme-word-job/", methods=["POST"])
@@ -1644,109 +1617,50 @@ def api_live_rhyme_sync():
 @app.route("/api/live-rhyme/word-job/", methods=["POST"])
 @app.route("/api/rhyme/similar-job", methods=["POST"])
 def api_selected_word_rhyme_job():
-    """Return highlighted-word rhyme suggestions as a completed async payload."""
+    """Compatibility alias for queue-free highlighted-word suggestions."""
     payload = _json_payload()
-    word, mode, line_text, lyrics, active, selection_start, selection_end = _selected_word_request_fields(payload)
-    if not word:
-        return jsonify({"error": "Highlight or provide a single word before requesting similar rhymes."}), 400
     job_id = uuid.uuid4().hex[:16]
-    try:
-        result = _build_selected_word_rhyme_result(
-            word,
-            mode,
-            line_text=line_text,
-            lyrics=lyrics,
-            active_line=active,
-            selection_start=selection_start,
-            selection_end=selection_end,
-            job_id=job_id,
-        )
-        error_text = None
-    except Exception as exc:
-        result = {
-            "available": True,
-            "job_id": job_id,
-            "job_type": "selected_word_rhyme",
-            "target_word": word,
-            "selected_word": word,
-            "error": str(exc),
-            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-        }
-        error_text = str(exc)
+    result = build_live_writer_word_payload(payload)
+    result["job_id"] = job_id
     with STATE_LOCK:
         JOBS[job_id] = {
             "job_id": job_id,
             "job_type": "selected_word_rhyme",
             "status": "complete",
-            "engine": "direct",
+            "engine": "direct_refactor",
             "created_at": _now(),
             "started_at": _now(),
             "finished_at": _now(),
-            "mode": mode,
-            "word": word,
-            "active_line": active,
-            "selection": {"start": selection_start, "end": selection_end},
-            "request_id": payload.get("request_id"),
-            "error": error_text,
+            "error": None if result.get("available") else result.get("error"),
             "result": result,
         }
     _cleanup_state()
     return jsonify({
         "job_id": job_id,
         "status": "complete",
-        "engine": "direct",
+        "engine": "direct_refactor",
         "job_type": "selected_word_rhyme",
-        "word": word,
         "result": result,
         "direct_complete": True,
         "poll_required": False,
         "no_poll_required": True,
         "poll_url": url_for("api_selected_word_rhyme_job_lookup", job_id=job_id),
-        "generic_poll_url": url_for("api_job", job_id=job_id),
-    })
+    }), (200 if result.get("available") else 400)
 
 
 @app.route("/api/rhyme-word/sync", methods=["POST"])
 @app.route("/api/rhyme-word", methods=["POST"])
-@app.route("/api/rhyme/word-sync", methods=["POST"])
-@app.route("/api/rhyme/word/sync", methods=["POST"])
-@app.route("/api/live-rhyme/word", methods=["POST"])
+@app.route("/api/rhyme/word", methods=["POST"])
 @app.route("/api/rhyme/similar", methods=["POST"])
+@app.route("/api/live-rhyme/word", methods=["POST"])
 def api_selected_word_rhyme_sync():
     payload = _json_payload()
-    word, mode, line_text, lyrics, active, selection_start, selection_end = _selected_word_request_fields(payload)
-    if not word:
-        return jsonify({"error": "Highlight or provide a single word before requesting similar rhymes."}), 400
-    try:
-        result = _build_selected_word_rhyme_result(
-            word,
-            mode,
-            line_text=line_text,
-            lyrics=lyrics,
-            active_line=active,
-            selection_start=selection_start,
-            selection_end=selection_end,
-            job_id=None,
-        )
-    except Exception as exc:
-        basic = _safe_word_lists(word)
-        result = {
-            "available": True,
-            "target_word": word,
-            "selected_word": word,
-            "job_type": "selected_word_rhyme",
-            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "summary": {"rhyme_key": basic.get("rhyme_key") or lyric_rhyme_key(word), "best_score": 0, "best_kind": "fallback"},
-            "word_lists": basic,
-            "ranked": _fallback_ranked_options(word, basic),
-            "applyable_patches": [],
-            "warnings": [str(exc)],
-            "fallback_used": True,
-        }
+    result = build_live_writer_word_payload(payload)
     result["sync"] = True
     result["direct_complete"] = True
-    return jsonify(result)
-
+    result["poll_required"] = False
+    result["no_poll_required"] = True
+    return jsonify(result), (200 if result.get("available") else 400)
 
 @app.route("/api/rhyme-word/job/<job_id>", methods=["GET"])
 @app.route("/api/rhyme/word-job/<job_id>", methods=["GET"])
@@ -1780,7 +1694,7 @@ def api_selected_word_rhyme_routes():
 def api_live_rhyme_health():
     sample = "The expression is in the direction of the diction\nThe present presence corrects the sentence"
     try:
-        result = _build_live_rhyme_result(sample, "match", 1)
+        result = build_live_writer_payload({"lyrics": sample, "active_line": 1, "coach_mode": "match"})
         return jsonify({
             "available": True,
             "ok": True,
@@ -1788,6 +1702,9 @@ def api_live_rhyme_health():
             "fallback_used": result.get("fallback_used", False),
             "pythonanywhere_compat": PYTHONANYWHERE_COMPAT,
             "live_rhyme_inline_jobs": LIVE_RHYME_INLINE_JOBS,
+            "refactor": "queue_free_fast_core_v8",
+            "engine": result.get("engine"),
+            "payload_bytes_est": len(json.dumps(result)),
             "live_rhyme_direct_jobs": LIVE_RHYME_DIRECT_JOBS,
             "async_job_mode": ASYNC_JOB_MODE,
             "executor": "disabled" if EXECUTOR is None else "threadpool",
@@ -1795,6 +1712,15 @@ def api_live_rhyme_health():
         })
     except Exception as exc:
         return jsonify({"available": False, "ok": False, "error": str(exc), "now": _iso_now()}), 500
+
+@app.route("/api/live-writer/health", methods=["GET"])
+def api_live_writer_health():
+    try:
+        smoke = live_rhyme_core_smoke_test()
+        return jsonify({"available": True, "ok": True, "engine": "live_writer_engine_v8_core", "smoke": smoke, "now": _iso_now()})
+    except Exception as exc:
+        return jsonify({"available": False, "ok": False, "error": str(exc), "now": _iso_now()}), 500
+
 
 @app.route("/api/live-rhyme/routes", methods=["GET"])
 @app.route("/api/rhyme/live/routes", methods=["GET"])
@@ -1807,13 +1733,16 @@ def api_live_rhyme_routes():
         "start_async": ["POST /api/live-rhyme-job", "POST /api/rhyme/live-job"],
         "poll_async": ["not required in direct mode", "GET /api/live-rhyme/job/<job_id> still works for completed jobs"],
         "sync_fallback": ["POST /api/live-rhyme", "POST /api/live-rhyme/sync", "POST /api/rhyme/live"],
-        "health": ["GET /api/live-rhyme/health"],
+        "health": ["GET /api/live-rhyme/health", "GET /api/live-writer/health"],
+        "direct_refactor_page": "GET /live-writer",
+        "direct_refactor_api": ["POST /api/live-writer/analyze", "POST /api/live-writer/word"],
         "highlighted_word_async": ["POST /api/rhyme-word-job", "GET /api/rhyme-word/job/<job_id>", "POST /api/rhyme-word/sync"],
         "payload_aliases": {"lyrics": ["lyrics", "text", "draft", "content"], "active_line": ["active_line", "line_number", "line", "cursor_line"]},
         "jobs_in_memory": live_jobs,
         "pythonanywhere_diagnostics": "GET /api/pythonanywhere/diagnostics",
         "pythonanywhere_compat": PYTHONANYWHERE_COMPAT,
         "live_rhyme_inline_jobs": LIVE_RHYME_INLINE_JOBS,
+        "refactor": "queue_free_fast_core_v8",
         "live_rhyme_direct_jobs": LIVE_RHYME_DIRECT_JOBS,
         "async_job_mode": ASYNC_JOB_MODE,
         "executor": "disabled" if EXECUTOR is None else "threadpool",
@@ -1834,18 +1763,35 @@ def api_live_rhyme_job_lookup(job_id: str):
 def api_job(job_id: str):
     with STATE_LOCK:
         job = JOBS.get(job_id)
-        if not job:
-            return jsonify({"error": "Job not found or expired."}), 404
-        safe = dict(job)
-    if safe.get("status") in {"queued", "running"} and safe.get("job_type") in {"live_rhyme_writer", "selected_word_rhyme"}:
-        # Live jobs should be direct-complete. If an old queued job survives from
-        # a previous deployment/process, do not let the browser sit forever.
-        safe["status"] = "error"
-        safe["error"] = "Live job was left queued by an older worker. The current build uses direct live analysis; refresh the page and run live rhyme again."
-    if safe.get("status") != "complete":
-        safe.pop("result", None)
+        safe = dict(job) if job else None
+    if not safe:
+        # Old cached JavaScript may still poll. Return a complete soft-failure
+        # object instead of a 404 so the UI never stays queued forever.
+        return jsonify({
+            "job_id": job_id,
+            "status": "complete",
+            "engine": "direct_refactor_missing_job_guard",
+            "result": {
+                "available": False,
+                "error": "This queued job id is not available in this worker. The refactored live writer uses direct endpoints; refresh and use /live-writer or run live rhyme again.",
+                "direct_complete": True,
+                "poll_required": False,
+                "no_poll_required": True,
+            },
+            "direct_complete": True,
+            "poll_required": False,
+            "no_poll_required": True,
+        })
+    if safe.get("status") in {"queued", "running"}:
+        safe["status"] = "complete"
+        safe["result"] = safe.get("result") or {
+            "available": False,
+            "error": "This route has been refactored to direct mode. Refresh the page and retry the live writer.",
+            "direct_complete": True,
+            "poll_required": False,
+            "no_poll_required": True,
+        }
     return jsonify(safe)
-
 
 @app.route("/api/line-fix", methods=["POST"])
 def api_line_fix():

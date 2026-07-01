@@ -705,3 +705,64 @@ A successful `/api/live-rhyme-job` response should have:
 ```json
 { "status": "complete", "engine": "direct", "no_poll_required": true, "result": { "available": true } }
 ```
+
+
+## Live Rhyme Writer refactor v8
+
+The Live Rhyme Writer has been refactored to use a queue-free fast core. The most reliable page is:
+
+```text
+/live-writer
+```
+
+That standalone route uses only these direct endpoints and does not depend on background workers, thread pools, in-memory queues, or polling:
+
+```http
+POST /api/live-writer/analyze
+POST /api/live-writer/word
+GET  /api/live-writer/health
+```
+
+The older compatibility routes still exist, but they now complete inside the request:
+
+```http
+POST /api/live-rhyme/sync
+POST /api/live-rhyme-job
+POST /api/rhyme-word/sync
+POST /api/rhyme-word-job
+```
+
+On PythonAnywhere, after uploading this build, click **Reload** in the Web tab and hard-refresh the browser. If the main app still shows stale queue messages, open `/live-writer`; it ships with inline JavaScript so it cannot use an old cached `static/app.js`.
+
+## Queue-free Live Rhyme Writer refactor
+
+This build includes a refactored Live Rhyme Writer that avoids PythonAnywhere queue/polling problems.
+
+Use this page first on hosted deployments:
+
+```text
+/live-writer
+```
+
+The page uses inline JavaScript and direct endpoints, so it does not rely on stale cached `app.js`, background threads, in-memory job queues, or cross-worker polling.
+
+Direct routes:
+
+```http
+POST /api/live-writer/analyze
+POST /api/live-writer/word
+GET  /api/live-writer/health
+```
+
+Compatibility routes still exist but now complete immediately:
+
+```http
+POST /api/live-rhyme/sync
+POST /api/live-rhyme-job
+GET  /api/live-rhyme/job/<job_id>
+POST /api/rhyme-word/sync
+POST /api/rhyme-word-job
+GET  /api/rhyme-word/job/<job_id>
+```
+
+Every compatibility POST returns `status: complete`, `poll_required: false`, and `no_poll_required: true` when applicable.

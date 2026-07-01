@@ -123,3 +123,51 @@ A successful `/api/live-rhyme-job` response should have:
 ```json
 { "status": "complete", "engine": "direct", "no_poll_required": true, "result": { "available": true } }
 ```
+
+
+## Live Rhyme Writer refactor v8
+
+The Live Rhyme Writer has been refactored to use a queue-free fast core. The most reliable page is:
+
+```text
+/live-writer
+```
+
+That standalone route uses only these direct endpoints and does not depend on background workers, thread pools, in-memory queues, or polling:
+
+```http
+POST /api/live-writer/analyze
+POST /api/live-writer/word
+GET  /api/live-writer/health
+```
+
+The older compatibility routes still exist, but they now complete inside the request:
+
+```http
+POST /api/live-rhyme/sync
+POST /api/live-rhyme-job
+POST /api/rhyme-word/sync
+POST /api/rhyme-word-job
+```
+
+On PythonAnywhere, after uploading this build, click **Reload** in the Web tab and hard-refresh the browser. If the main app still shows stale queue messages, open `/live-writer`; it ships with inline JavaScript so it cannot use an old cached `static/app.js`.
+
+## Important: use the refactored writer page
+
+After uploading this build and reloading the Web app, open:
+
+```text
+https://YOURUSERNAME.pythonanywhere.com/live-writer
+```
+
+This page is the queue-free writer. It uses inline JavaScript and direct request/response endpoints, so it avoids PythonAnywhere worker/queue issues and browser caching of old static JavaScript.
+
+Quick tests after reload:
+
+```text
+/api/live-writer/health
+/api/live-rhyme/health
+/api/live-rhyme/routes
+```
+
+If the old full lab still shows a queued state, it is usually the browser serving cached static files. The `/live-writer` page avoids that problem.
