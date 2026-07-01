@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>{{ app_name }} — Privacy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell legal-shell">
+    <section class="panel inset">
+      <p class="eyebrow">Beta privacy notice · v{{ app_version }}</p>
+      <h1>Privacy for beta testers</h1>
+      <p>This beta analyzes lyrics and beat uploads on the Flask server hosting the app. It does not require an external AI API key and the included analysis engines run locally in the server process.</p>
+      <h2>What may be processed</h2>
+      <p>Text pasted into the editor, imported lyric files, uploaded beat/audio files, browser requests, and optional feedback form submissions may be processed to generate suggestions and debug the beta.</p>
+      <h2>Storage</h2>
+      <p>Drafts are autosaved in the tester’s browser local storage. Uploaded beats are stored in the configured runtime upload folder while the server keeps their beat-analysis state. Feedback is stored server-side as JSONL.</p>
+      <h2>Raw corpus and benchmark privacy</h2>
+      <p>This publish build supports compiled corpus and comparison profiles, so the public deployment does not need to include the raw RTF lyric corpus or raw commercial reference lyrics. Do not commit private lyric files or unlicensed reference corpora to a public repository unless you intend to publish them and have the rights to do so.</p>
+      <h2>Beta limitations</h2>
+      <p>This app is for writing assistance and beta testing. It is not a copyright registration system, legal review system, label-submission system, or permanent backup for creative work.</p>
+      <p><a class="ghost-link" href="{{ url_for('index') }}">Back to app</a></p>
+    </section>
+  </main>
+</body>
+</html>

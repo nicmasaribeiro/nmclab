@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>{{ app_name }} — Beta Access</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+  <main class="auth-shell panel glow-panel">
+    <p class="eyebrow">Private beta · v{{ app_version }}</p>
+    <h1>{{ app_name }}</h1>
+    <p class="subhead">Enter the beta access code to open the rap editing lab.</p>
+    {% if error %}<div class="fit-callout muted">{{ error }}</div>{% endif %}
+    <form method="post" class="auth-form">
+      <input type="hidden" name="next" value="{{ next_url }}">
+      <label class="field">
+        <span>Access code</span>
+        <input name="access_code" type="password" autocomplete="current-password" autofocus required>
+      </label>
+      <button type="submit">Enter beta</button>
+    </form>
+    <p class="muted small-copy">This beta is intentionally no-indexed and access-gated when configured.</p>
+  </main>
+</body>
+</html>

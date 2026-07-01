@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ app_name }} — Beta Rap Editing Lab</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ app_version }}">
+</head>
+<body>
+  <div class="noise"></div>
+  <main class="shell">
+    <header class="hero panel glow-panel">
+      <div class="hero-copy">
+        <p class="eyebrow">Beta-ready snapshot-first rap editing system · v{{ app_version }}</p>
+        <h1>{{ app_name }}</h1>
+        <p class="subhead">
+          A deployable beta lab for rap writing: fixed static snapshots, highlighted rhyme families, advanced rhyme suggestions, phonetic/slant/multisyllable rhyme scoring, line diagnostics, rhyme maps, bar structure, verse structure, information-theoretic stats, real-rapper benchmark profiles, beat upload, beat+lyric song rendering, a synchronous one-sentence lab, sentence meter/stress scansion, notebook-derived scansion physics, and a separate live async preview for active edits.
+        </p>
+        <div class="hero-actions">
+          <button type="button" id="snapshotNowTop">Refresh snapshot</button>
+          <button type="button" class="ghost" id="openEditorTop">Live Rhyme Writer</button>
+          <button type="button" class="ghost" id="openSentenceTop">Sentence Lab</button>
+          <button type="button" class="ghost" id="openSentencePatternsTop">Sentence Patterns</button>
+          <button type="button" class="ghost" id="openLiveTop">Open live preview</button>
+          <button type="button" class="ghost" id="openPhysicsTop">Scansion Physics</button>
+          <button type="button" class="ghost" id="openSongTop">Song Render</button>
+          <button type="button" class="ghost" id="loadSampleTop">Load sample draft</button>
+          <a class="ghost-link" href="{{ url_for('privacy') }}">Privacy</a>
+          <a class="ghost-link" href="{{ url_for('terms') }}">Terms</a>
+          <code>POST /api/snapshot</code>
+          <code>POST /api/information-theory</code>
+          <code>POST /api/comparison</code>
+          <code>POST /api/sentence/analyze</code>
+          <code>POST /api/sentence/compare-patterns</code>
+          <code>POST /api/live-rhyme-job</code><code>POST /api/live-rhyme/sync</code><code>GET /api/live-rhyme/routes</code>
+          <code>POST /api/meter/analyze</code>
+          <code>POST /api/physics/analyze</code>
+          <code>POST /api/physics/sentence</code>
+          <code>POST /api/song/render</code>
+          <code>GET /api/beat/diagnostics</code>
+          <code>POST /api/suggest-job</code>
+          <code>GET /healthz</code>
+        </div>
+      </div>
+      <aside class="dna-card">
+        <span>Corpus pocket</span>
+        <strong>{{ corpus.stats.median_syllables }}</strong>
+        <em>median syllables / line</em>
+        <div class="mini-stats">
+          <div><b>{{ corpus.stats.line_count }}</b><small>corpus lines</small></div>
+          <div><b>{{ corpus.stats.rhyme_families }}</b><small>rhyme families</small></div>
+          <div><b>{{ corpus.stats.unique_words }}</b><small>unique words</small></div>
+        </div>
+      </aside>
+    </header>
+
+    <section class="corpus-strip">
+      <article class="metric-card"><span>Top signature</span><strong>{{ corpus.stats.top_signature_word }}</strong><small>recurring catalog word</small></article>
+      <article class="metric-card"><span>Top ending</span><strong>{{ corpus.stats.top_rhyme_key }}</strong><small>dominant rhyme key</small></article>
+      <article class="metric-card"><span>Avg cadence</span><strong>{{ corpus.stats.avg_syllables }}</strong><small>syllables per line</small></article>
+      <article class="metric-card"><span>Reference profiles</span><strong>{{ comparisons.profiles|length }}</strong><small>derived benchmarks</small></article>
+      <article class="metric-card"><span>Live state</span><strong id="liveStateMetric">IDLE</strong><small id="liveStateSmall">waiting for edits</small></article>
+    </section>
+
+    <nav class="tabs main-tabs" aria-label="Editing lab views">
+      <button class="tab active" data-tab="snapshot">Static Snapshot</button>
+      <button class="tab" data-tab="score">Scores / Edit Compare</button>
+      <button class="tab" data-tab="editor">Live Rhyme Writer</button>
+      <button class="tab" data-tab="sentence">Sentence Lab</button>
+      <button class="tab" data-tab="sentence-patterns">Sentence Pattern Compare</button>
+      <button class="tab" data-tab="meter">Meter / Stress</button>
+      <button class="tab" data-tab="physics">Scansion Physics</button>
+      <button class="tab" data-tab="live">Live Preview</button>
+      <button class="tab" data-tab="theory">Info Theory</button>
+      <button class="tab" data-tab="comparison">Reference Benchmarks</button>
+      <button class="tab" data-tab="beat">Beat + Bars</button>
+      <button class="tab" data-tab="song">Song Render</button>
+      <button class="tab" data-tab="rhyme">Rhyme Highlights / Words</button>
+      <button class="tab" data-tab="dna">Corpus DNA</button>
+      <button class="tab" data-tab="beta">Beta / Feedback</button>
+      <button class="tab" data-tab="json">JSON</button>
+    </nav>
+
+    <section id="tab-snapshot" class="tab-panel active">
+      <section class="panel inset snapshot-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">First view</p>
+            <h2>Static snapshot of the current lyric draft</h2>
+          </div>
+          <div class="static-tools">
+            <button type="button" id="generateStaticBreakdown">Refresh snapshot</button>
+            <button type="button" class="ghost" id="copyStaticReport">Copy report</button>
+            <button type="button" class="ghost" id="downloadSnapshotPdf">Download PDF</button>
+            <button type="button" class="ghost" id="downloadSnapshotCsv">Download CSV</button>
+          </div>
+        </div>
+        <p class="muted static-help">
+          This view does not change while you type. Press refresh to capture a new version. Shared rhyme families are highlighted with matching colors, end rhymes carry letter tags, and internal echoes are underlined. The report also includes entropy, perplexity, compression, surprise, bar-density, rhyme-transition, verse-section stats, and meter/stress diagnostics.
+        </p>
+        <div id="staticBreakdownStatus" class="fit-callout muted">No static snapshot yet. Open the editor, paste lyrics, then refresh the snapshot.</div>
+        <div id="staticSnapshotSource" class="snapshot-source empty-state">Snapshot source preview will appear here.</div>
+        <div id="staticMetrics" class="score-row"></div>
+        <div id="staticOverview" class="static-overview"></div>
+        <div id="snapshotTheoryPanel" class="theory-panel empty-state">Information-theoretic stats will appear after the first snapshot.</div>
+        <div class="section-head compact static-filter-row">
+          <div>
+            <p class="eyebrow">Detailed static cards</p>
+            <h2>Every editable line</h2>
+          </div>
+          <input id="staticLineFilter" type="search" placeholder="Filter line cards, rhymes, words, issues...">
+        </div>
+        <div id="staticLineBreakdown" class="static-line-list empty-state">Static line cards will appear here.</div>
+      </section>
+    </section>
+
+
+
+    <section id="tab-score" class="tab-panel">
+      <section class="panel inset score-lab-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">System score</p>
+            <h2>Whole-rap score, bar scores, and edit comparison</h2>
+          </div>
+          <div class="static-tools">
+            <button type="button" id="scoreCurrentRap">Score current rap</button>
+            <button type="button" class="ghost" id="captureScoreBaseline">Capture current as baseline</button>
+            <button type="button" class="ghost" id="compareCurrentToBaseline">Compare baseline → current</button>
+            <button type="button" class="ghost" id="downloadScorePdf">Download score PDF</button>
+            <button type="button" class="ghost" id="downloadScoreCsv">Download score CSV</button>
+          </div>
+        </div>
+        <p class="muted static-help">
+          This view combines style match, rhyme power, cadence, beat/bar fit, meter stress, Scansion Physics, content clarity, and reference-benchmark fit. Use the edit comparison to decide whether a revision actually improved the rap or only changed the wording.
+        </p>
+        <div id="scoreLabStatus" class="fit-callout muted">Score the current draft or capture a baseline to compare edits.</div>
+        <div id="scoreGlobalPanel" class="score-lab-output empty-state">Whole-rap scorecards will appear here.</div>
+
+        <div class="section-head compact mini-head">
+          <div>
+            <p class="eyebrow">Compare edits</p>
+            <h2>Baseline vs. edited draft</h2>
+          </div>
+          <div class="static-tools">
+            <button type="button" class="ghost" id="loadCurrentIntoEdited">Copy current to edited box</button>
+            <button type="button" id="compareEditedBox">Compare boxes</button>
+            <button type="button" class="ghost" id="copyCompareJson">Copy compare JSON</button>
+            <button type="button" class="ghost" id="downloadComparePdf">Download compare PDF</button>
+            <button type="button" class="ghost" id="downloadCompareCsv">Download compare CSV</button>
+          </div>
+        </div>
+        <div class="compare-edit-grid">
+          <label class="field">
+            <span>Original / baseline</span>
+            <textarea id="scoreBaselineInput" rows="10" placeholder="Capture or paste the earlier version here..."></textarea>
+          </label>
+          <label class="field">
+            <span>Edited version</span>
+            <textarea id="scoreEditedInput" rows="10" placeholder="Paste an edited version, or compare against the current editor..."></textarea>
+          </label>
+        </div>
+        <div id="lyricDiffPanel" class="lyric-diff-panel empty-state">Before/after highlighted lyric diff will appear after you compare edits.</div>
+        <div id="scoreComparePanel" class="score-compare-output empty-state">Edit comparison results will appear here.</div>
+      </section>
+    </section>
+
+    <section id="tab-editor" class="tab-panel">
+      <section class="panel editor-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Draft editor</p>
+            <h2>Type, import, or revise</h2>
+          </div>
+          <div class="status-pill" id="statusPill"><span></span>Idle</div>
+        </div>
+
+        <div class="toolbar">
+          <label class="field compact-field">
+            <span>Coach mode</span>
+            <select id="coachMode">
+              {% for key, label in modes.items() %}
+              <option value="{{ key }}" {% if key == selected_mode %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label class="file-button">
+            Import lyrics
+            <input id="lyricsFile" type="file" accept=".txt,.md,.lyrics,.rtf,text/plain,application/rtf">
+          </label>
+
+          <label class="file-button beat-upload">
+            Upload beat
+            <input id="beatFile" type="file" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg,.aif,.aiff">
+          </label>
+
+          <button type="button" id="analyzeNow">Run live analysis</button>
+          <button type="button" class="ghost" id="staticBreakdownNow">Refresh snapshot</button>
+          <button type="button" class="ghost" id="downloadDraft">Download draft</button>
+        </div>
+
+        <div class="live-writing-shell">
+          <section class="live-writing-editor-col">
+            <div class="beat-status" id="beatStatus">
+              <strong>No beat loaded.</strong>
+              <span>Upload audio to make bar-structure patches beat-aware.</span>
+            </div>
+
+            <div class="editor-wrap live-rhyme-editor-wrap">
+              <div class="line-gutter" id="lineGutter">1</div>
+              <textarea id="lyricEditor" spellcheck="true" placeholder="Paste or write your rap here...\n\nRhyme suggestions update asynchronously in the side panel while you keep typing. The snapshot view only changes when you refresh it."></textarea>
+            </div>
+
+            <div class="editor-footer">
+              <span id="cursorInfo">Line 1</span>
+              <span id="draftStats">0 words · 0 lines</span>
+              <span id="autosaveInfo">Autosave ready</span>
+            </div>
+          </section>
+
+          <aside class="live-rhyme-sidebar" aria-live="polite">
+            <div class="section-head compact">
+              <div>
+                <p class="eyebrow">Live rhyme sidecar</p>
+                <h2>Live rhyme suggestions</h2>
+              </div>
+              <span id="liveRhymeStatus" class="status-pill sentence-status"><span></span>Ready</span>
+            </div>
+            <p class="muted tiny-text">The current line, rhyme banks, applyable rhyme patches, and Static Snapshot-style line diagnostics refresh with a direct non-queued request so the editor does not get stuck on queued jobs.</p>
+            <div class="sentence-toolbar live-rhyme-toolbar">
+              <button type="button" id="runLiveRhymeNow">Run live rhyme</button>
+              <button type="button" id="analyzeHighlightedWord">Analyze highlighted word</button>
+              <button type="button" class="ghost" id="runLiveRhymeSync">Direct fallback</button>
+              <button type="button" class="ghost" id="testLiveRhymeRoutes">Test routes</button>
+              <button type="button" class="ghost" id="testPythonAnywhere">PythonAnywhere check</button>
+              <button type="button" class="ghost" id="copyLiveRhymeJson">Copy JSON</button>
+              <label class="inline-check">
+                <input id="liveRhymeAuto" type="checkbox" checked>
+                live while typing
+              </label>
+              <label class="inline-check">
+                <input id="selectedWordAuto" type="checkbox" checked>
+                live highlighted word
+              </label>
+            </div>
+            <div class="live-rhyme-guide">
+              <strong>Stable live mode:</strong> the sidecar analyzes a clipped context around your cursor and returns completed results directly, so PythonAnywhere cannot leave the UI stuck on queued. It still runs in the browser background and never changes your draft unless you click a suggestion.
+            </div>
+            <div id="liveRhymeDiagnostics" class="live-rhyme-diagnostics empty-state compact-empty">Route diagnostics and job state will appear here.</div>
+            <div id="pythonAnywherePanel" class="pythonanywhere-panel empty-state compact-empty">PythonAnywhere diagnostics will appear here if you run the check.</div>
+            <div id="highlightedWordPanel" class="highlighted-word-panel empty-state compact-empty">Highlight or double-click a word in the editor to fetch similar rhymes with a direct live request.</div>
+            <div id="liveRhymeActive" class="live-rhyme-active empty-state">Start writing and place the cursor on a line. Active-line rhyme suggestions will appear here.</div>
+            <div id="liveRhymeLineMap" class="live-rhyme-line-map-wrap"></div>
+            <div id="liveRhymeBanks" class="live-rhyme-banks"></div>
+            <div id="liveRhymeScheme" class="live-rhyme-scheme empty-state">Draft-level rhyme scheme guidance will appear after the first live rhyme job.</div>
+          </aside>
+        </div>
+      </section>
+    </section>
+
+    <section id="tab-sentence-patterns" class="tab-panel">
+      <section class="sentence-pattern-grid">
+        <article class="panel sentence-pattern-input-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Rhyme-structure compare</p>
+              <h2>Compare different sentences by rhyme pattern</h2>
+            </div>
+            <span id="sentencePatternStatus" class="status-pill sentence-status"><span></span>Ready</span>
+          </div>
+          <p class="muted">
+            Put each sentence or bar on its own line. The lab compares end-rhyme families, internal echo placement, tail stress, consonance/alliteration, and syllable shape. It then recommends transferable rhyme patterns you can apply to weaker sentences.
+          </p>
+          <label class="field">
+            <span>Sentences / bars to compare</span>
+            <textarea id="sentencePatternInput" rows="10" maxlength="{{ max_lyrics_chars }}" placeholder="Sentence one...
+Sentence two...
+Sentence three..."></textarea>
+          </label>
+          <div class="sentence-toolbar">
+            <button type="button" id="compareSentencePatterns">Compare patterns</button>
+            <button type="button" class="ghost" id="loadEditorSentencePatterns">Load editor lines</button>
+            <button type="button" class="ghost" id="loadActiveSentencePattern">Add active sentence</button>
+            <button type="button" class="ghost" id="copySentencePatternJson">Copy pattern JSON</button>
+          </div>
+          <div class="fit-callout muted">
+            Best use: compare two to eight possible versions of the same idea. Keep the one with the strongest pattern, then transfer its internal rhyme shape to the others.
+          </div>
+        </article>
+
+        <article class="panel inset sentence-pattern-output-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Pattern output</p>
+              <h2>Sentence rhyme architecture</h2>
+            </div>
+          </div>
+          <div id="sentencePatternMetrics" class="score-row sentence-pattern-score-row"></div>
+          <div id="sentencePatternOutput" class="sentence-pattern-output empty-state">Sentence pattern comparison will appear here.</div>
+        </article>
+      </section>
+    </section>
+
+
+    <section id="tab-sentence" class="tab-panel">
+      <section class="sentence-lab-grid">
+        <article class="panel sentence-input-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Synchronous side function</p>
+              <h2>One-sentence feedback lab</h2>
+            </div>
+            <span id="sentenceSyncStatus" class="status-pill sentence-status"><span></span>Ready</span>
+          </div>
+          <p class="muted">
+            Analyze exactly one sentence/thought at a time. This endpoint returns immediately and does not use the async live-fix queue, so it is useful for active fixing before you place the sentence back into the full rap.
+          </p>
+          <label class="field">
+            <span>Sentence to fix</span>
+            <textarea id="sentenceInput" rows="7" maxlength="{{ max_sentence_chars }}" placeholder="Type one sentence or pull the active sentence from the editor..."></textarea>
+          </label>
+          <div class="sentence-toolbar">
+            <button type="button" id="analyzeSentenceNow">Analyze sentence</button>
+            <button type="button" class="ghost" id="pullActiveSentence">Use active sentence from editor</button>
+            <button type="button" class="ghost" id="applySentenceToEditor">Apply current sentence to editor</button>
+            <label class="inline-check">
+              <input id="sentenceAutoSync" type="checkbox" checked>
+              sync while typing
+            </label>
+          </div>
+          <div class="fit-callout muted" id="sentenceHelper">
+            Tip: put the cursor inside a sentence in the editor, then press “Use active sentence from editor.” Beat uploads and coach mode are shared with the rest of the lab.
+          </div>
+        </article>
+
+        <article class="panel inset sentence-output-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Immediate result</p>
+              <h2>Sentence diagnosis</h2>
+            </div>
+            <button type="button" class="ghost tiny" id="copySentenceJson">Copy JSON</button>
+          </div>
+          <div id="sentenceMetrics" class="score-row sentence-score-row"></div>
+          <div id="sentenceOutput" class="sentence-output empty-state">Sentence-level feedback will appear here.</div>
+        </article>
+      </section>
+    </section>
+
+
+    <section id="tab-meter" class="tab-panel">
+      <section class="panel inset">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Meter and stress map</p>
+            <h2>Sentence meter, stress anchors, and rap pulse</h2>
+          </div>
+          <button type="button" class="ghost" id="meterRefreshSnapshot" onclick="document.getElementById('generateStaticBreakdown')?.click()">Refresh snapshot</button>
+        </div>
+        <p class="muted">
+          This view reads each editable line as a performable sentence: likely stressed syllables, weak pickups, dominant foot patterns, stress density, final landing strength, and four-beat pulse placement. Upload a beat first to make the target pocket beat-aware.
+        </p>
+        <div id="meterFullPanel" class="meter-panel empty-state">Generate a static snapshot or live analysis to populate meter and stress analysis.</div>
+      </section>
+    </section>
+
+    <section id="tab-physics" class="tab-panel">
+      <section class="panel inset physics-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Notebook model</p>
+            <h2>Scansion Physics: ΔC, F, τ, Ω, θ, β, γ</h2>
+          </div>
+          <div class="static-tools">
+            <button type="button" id="physicsRefreshSnapshot">Run physics snapshot</button>
+            <button type="button" class="ghost" id="copyPhysicsJson">Copy physics JSON</button>
+          </div>
+        </div>
+        <p class="muted">
+          This view implements the handwritten cadence model: word → syllables/stresses → beat phase θ → force/torsion/spin → cadence delta → flow advice. It uses the uploaded notebook image as the reference map and combines it with the lyric, meter, rhyme, and optional beat analysis.
+        </p>
+        <div class="notebook-reference-card">
+          <img src="{{ url_for('static', filename='reference/scansion_notebook.jpg') }}" alt="Uploaded cadence notebook model">
+          <div>
+            <h3>Implemented from the page</h3>
+            <ul>
+              <li><b>ΔC</b> tracks cadence change from line to line.</li>
+              <li><b>F</b> measures accent force from stress, content weight, and rhyme landing.</li>
+              <li><b>τ</b> measures off-grid torsion/syncopation against the 1-e-&amp;-a grid.</li>
+              <li><b>Ω</b> measures phonetic spin from internal rhyme and alliteration loops.</li>
+              <li><b>θ / β / γ</b> tie syllables to beat phase, bar range, and rhyme family.</li>
+            </ul>
+          </div>
+        </div>
+        <div id="physicsFullPanel" class="physics-output empty-state">Generate a static snapshot or live analysis to populate scansion physics.</div>
+      </section>
+    </section>
+
+
+    <section id="tab-live" class="tab-panel">
+      <section class="live-grid">
+        <aside class="panel active-panel live-active-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Separate live preview</p>
+              <h2>Current line coach</h2>
+            </div>
+            <button type="button" class="ghost tiny" id="refreshLine">Refresh line</button>
+          </div>
+          <div id="activeFix" class="empty-state">
+            Start writing, then place your cursor on a line. The lab will show the best edit, word bank, and applyable patches for that line.
+          </div>
+        </aside>
+
+        <section class="panel inset live-queue-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Async fix queue</p>
+              <h2>What to fix first</h2>
+            </div>
+            <input id="lineFilter" type="search" placeholder="Filter live cards...">
+          </div>
+          <div class="score-row" id="scoreRow"></div>
+          <div id="editorActions" class="action-grid"></div>
+          <div id="fixQueue" class="line-list empty-state">Suggestions will appear here after the first live analysis.</div>
+        </section>
+      </section>
+    </section>
+
+    <section id="tab-theory" class="tab-panel">
+      <section class="panel inset">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Information theory</p>
+            <h2>Rhymes, lines, bars, and verses as distributions</h2>
+          </div>
+          <button type="button" class="ghost" id="refreshTheorySnapshot">Refresh snapshot stats</button>
+        </div>
+        <p class="muted">These stats are generated from the latest static snapshot. They quantify how concentrated or varied the draft is: entropy measures uncertainty/variety, perplexity approximates effective choices, and surprise identifies dense or rare lines.</p>
+        <div id="theoryFullPanel" class="theory-panel empty-state">Generate a static snapshot to populate this view.</div>
+      </section>
+    </section>
+
+    <section id="tab-comparison" class="tab-panel">
+      <section class="panel inset comparison-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Reference benchmarks</p>
+            <h2>Compare the draft to real-rapper flow profiles</h2>
+          </div>
+          <button type="button" class="ghost" id="refreshComparisonSnapshot">Refresh comparison</button>
+        </div>
+        <p class="muted">
+          These benchmarks use derived statistics from the uploaded comparison file: cadence windows, rhyme entropy, internal-rhyme density, line-length distribution, and rhyme-family movement. The app does not ship raw reference lyrics.
+        </p>
+        <div id="comparisonPanel" class="comparison-output empty-state">Generate a static snapshot or live analysis to populate rapper benchmark comparisons.</div>
+      </section>
+    </section>
+
+    <section id="tab-beat" class="tab-panel">
+      <section class="panel inset">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Beat-aware structure</p>
+            <h2>Bar map and pocket</h2>
+          </div>
+          <p class="muted">Upload a beat to let the editor split, compress, or stretch lines against the detected rap grid.</p>
+        </div>
+        <div class="beat-tools">
+          <button type="button" class="ghost" id="runBeatDiagnostics">Run decoder diagnostics</button>
+          <span class="muted">Use this when MP3/M4A/WAV upload fails.</span>
+        </div>
+        <div id="beatDiagnostics" class="diagnostic-panel empty-state">Decoder diagnostics will appear here.</div>
+        <div id="beatPanel" class="empty-state">No beat analysis yet.</div>
+      </section>
+    </section>
+
+    <section id="tab-song" class="tab-panel">
+      <section class="song-lab-grid">
+        <article class="panel song-render-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Lyrics + beat to audio</p>
+              <h2>Song Render Lab</h2>
+            </div>
+            <span id="songRenderStatus" class="status-pill song-status"><span></span>Ready</span>
+          </div>
+          <p class="muted">Render the current lyrics over the uploaded beat as a downloadable WAV. <strong>Auto now uses real speech TTS only</strong>: <code>espeak-ng</code>/<code>espeak</code> on Linux/Docker or macOS <code>say</code> on your Mac. It no longer silently falls back to the buzzy synth.</p>
+          <div id="songTtsStatus" class="song-warning fit-callout muted">Checking TTS backend status…</div>
+          <div class="song-warning fit-callout muted">Guide vocals are timing demos, not artist voice clones. If you choose the built-in timing guide, it will buzz by design and should only be used to test pocket/bar placement.</div>
+          <div class="song-control-grid">
+            <label class="file-button song-file-button">
+              Upload/change beat
+              <input id="songBeatFile" type="file" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg,.aif,.aiff">
+            </label>
+            <label class="field">
+              <span>TTS backend</span>
+              <select id="songVoiceEngine">
+                <option value="auto">Auto: real speech only</option>
+                <option value="mac_say">macOS system say</option>
+                <option value="espeak">espeak-ng / espeak speech</option>
+                <option value="built_in">Built-in timing guide synth — buzzy, not speech</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Voice preset</span>
+              <select id="songVoicePreset">
+                <option value="neutral">Neutral rap TTS</option>
+                <option value="low">Low gritty pocket</option>
+                <option value="bright">Bright clear pocket</option>
+                <option value="robot">Robot demo voice</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Rap intensity</span>
+              <select id="songRapIntensity">
+                <option value="balanced">Balanced</option>
+                <option value="dense">Dense / double-time</option>
+                <option value="laidback">Laid-back / half-time</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Start after bars</span>
+              <input id="songStartBar" type="number" min="0" max="32" step="0.5" value="1">
+            </label>
+            <label class="field">
+              <span>Tail bars</span>
+              <input id="songTailBars" type="number" min="0" max="16" step="0.5" value="1">
+            </label>
+            <label class="field">
+              <span>Beat gain dB</span>
+              <input id="songBeatGain" type="number" min="-30" max="6" step="0.5" value="-3.5">
+            </label>
+            <label class="field">
+              <span>Vocal gain dB</span>
+              <input id="songVocalGain" type="number" min="-30" max="8" step="0.5" value="1.5">
+            </label>
+            <label class="field">
+              <span>Ducking</span>
+              <input id="songDucking" type="number" min="0" max="0.65" step="0.05" value="0.18">
+            </label>
+            <label class="inline-check song-loop-check">
+              <input id="songLoopBeat" type="checkbox" checked>
+              loop beat if the lyrics need more time
+            </label>
+          </div>
+          <div class="song-actions">
+            <button type="button" id="buildSongTiming">Preview timing plan</button>
+            <button type="button" class="ghost" id="testSongVoice">Test speech voice</button>
+            <button type="button" id="renderSongNow">Render WAV song</button>
+            <button type="button" class="ghost" id="copySongJson">Copy render JSON</button>
+          </div>
+        </article>
+
+        <article class="panel inset song-output-panel">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Song output</p>
+              <h2>Rendered mix + timing</h2>
+            </div>
+          </div>
+          <div id="songOutput" class="song-output empty-state">Upload a beat, write lyrics, then render a song. The mix, vocal stem, and timing JSON will appear here.</div>
+        </article>
+      </section>
+    </section>
+
+    <section id="tab-rhyme" class="tab-panel">
+      <section class="panel inset rhyme-lab-shell">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Advanced rhyme suggestions</p>
+            <h2>Rhyme ladders, slants, internal echoes, and scheme repair</h2>
+          </div>
+          <p class="muted">Run a full rhyme pass for the draft or analyze one landing word. Click chips to insert at the cursor.</p>
+        </div>
+        <div class="rhyme-lab-controls">
+          <input id="rhymeTargetWord" type="text" placeholder="Target word, e.g. diction, presence, surface">
+          <button type="button" id="analyzeTargetRhyme" class="ghost">Analyze word</button>
+          <button type="button" id="runAdvancedRhyme">Run full rhyme pass</button>
+          <button type="button" id="copyRhymeJson" class="ghost">Copy rhyme JSON</button>
+        </div>
+        <div id="advancedRhymePanel" class="empty-state">Run the advanced rhyme pass to see scheme-level diagnostics, active-line repairs, multi-syllable landings, slant options, stress-matched words, and internal echo placements.</div>
+        <div class="section-head compact mini-head">
+          <div>
+            <p class="eyebrow">Live active-line banks</p>
+            <h2>Current line words</h2>
+          </div>
+        </div>
+        <div id="rhymePanel" class="empty-state">Select a line or wait for live analysis. The enhanced rhyme engine will show rhyme power, scheme repairs, ladders, and scored word choices.</div>
+      </section>
+    </section>
+
+    <section id="tab-dna" class="tab-panel">
+      <section class="panel inset">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Corpus DNA</p>
+            <h2>Raw style reference loaded from your rap file</h2>
+          </div>
+          <p class="muted">The lab uses a compiled style profile to score signature motifs, rhyme endings, and word suggestions. It also loads derived real-rapper benchmark profiles for comparison. The production package can run without exposing raw private corpus files or raw reference lyrics publicly.</p>
+        </div>
+        <div class="dna-grid">
+          <article>
+            <h3>Signature words</h3>
+            <div class="chips">
+              {% for row in corpus.signature_words[:24] %}<span>{{ row.word }} <em>{{ row.count }}</em></span>{% endfor %}
+            </div>
+          </article>
+          <article>
+            <h3>Rhyme families</h3>
+            <div class="chips">
+              {% for row in corpus.top_rhymes[:12] %}<span>{{ row.key }} <em>{{ row.count }}</em></span>{% endfor %}
+            </div>
+          </article>
+          <article>
+            <h3>Motif clusters</h3>
+            <div class="cluster-list static">
+              {% for cluster in corpus.motif_clusters[:6] %}
+              <div><strong>{{ cluster.name }}</strong><small>{{ cluster.words|join(', ') }}</small></div>
+              {% endfor %}
+            </div>
+          </article>
+          <article>
+            <h3>Reference benchmarks</h3>
+            <p class="muted tiny-text">Profile-only comparison data. No raw commercial lyric text is included in the beta package.</p>
+            <div class="cluster-list static">
+              {% for ref in comparisons.profiles[:6] %}
+              <div><strong>{{ ref.name }}</strong><small>{{ ref.stats.avg_syllables }} avg syllables · {{ ref.stats.rhyme_entropy_bits }} rhyme bits</small></div>
+              {% endfor %}
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+
+
+    <section id="tab-beta" class="tab-panel">
+      <section class="panel inset beta-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Beta publishing</p>
+            <h2>Tester feedback and launch status</h2>
+          </div>
+          <div class="beta-badges">
+            <span class="badge">{{ 'Invite gated' if beta_enabled else 'Open beta mode' }}</span>
+            <span class="badge">Max beat {{ max_beat_upload_mb }} MB</span>
+            <span class="badge">Max lyrics {{ max_lyrics_chars }} chars</span>
+          </div>
+        </div>
+        <div class="beta-grid">
+          <article class="beta-card">
+            <h3>What testers can do</h3>
+            <ul>
+              <li>Paste or import lyrics and generate a static snapshot.</li>
+              <li>Upload a beat and get beat-aware bar-structure coaching.</li>
+              <li>Render the lyrics over the beat into a WAV mix, vocal stem, and timing JSON.</li>
+              <li>Use live async suggestions while editing.</li>
+              <li>Highlight rhyme families across the draft.</li>
+            </ul>
+          </article>
+          <article class="beta-card">
+            <h3>Online beta protections</h3>
+            <ul>
+              <li>Optional invite code through <code>BETA_ACCESS_CODE</code>.</li>
+              <li>No-index robots headers for beta testing.</li>
+              <li>Upload and lyrics length limits.</li>
+              <li>Compiled corpus and comparison profiles to avoid publishing raw private or commercial lyrics.</li>
+            </ul>
+          </article>
+        </div>
+        <form id="feedbackForm" class="feedback-form">
+          <label class="field">
+            <span>Feedback type</span>
+            <select id="feedbackKind">
+              <option value="general">General feedback</option>
+              <option value="bug">Bug report</option>
+              <option value="suggestion">Feature suggestion</option>
+              <option value="bar-structure">Beat/bar structure</option>
+              <option value="rhyme-highlighting">Rhyme highlighting</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Rating</span>
+            <select id="feedbackRating">
+              <option value="">No rating</option>
+              <option value="5">5 — strong</option>
+              <option value="4">4 — useful</option>
+              <option value="3">3 — needs polish</option>
+              <option value="2">2 — confusing</option>
+              <option value="1">1 — broken</option>
+            </select>
+          </label>
+          <label class="field feedback-wide">
+            <span>Email or handle, optional</span>
+            <input id="feedbackEmail" type="text" maxlength="200" placeholder="where to follow up">
+          </label>
+          <label class="field feedback-wide">
+            <span>Feedback</span>
+            <textarea id="feedbackMessage" rows="6" maxlength="3000" placeholder="What worked, what broke, and what would make the suggestions better?"></textarea>
+          </label>
+          <label class="inline-check feedback-wide">
+            <input id="feedbackIncludeDraft" type="checkbox">
+            Include the first 1,500 characters of the current draft with this feedback
+          </label>
+          <div class="feedback-actions feedback-wide">
+            <button type="submit">Send beta feedback</button>
+            <button type="button" class="ghost" id="checkHealth">Check health</button>
+            <span id="feedbackStatus" class="muted">Feedback is stored server-side as JSONL for this beta.</span>
+          </div>
+          <div id="betaHealthStatus" class="fit-callout muted feedback-wide">Health check has not been run in this browser.</div>
+        </form>
+      </section>
+    </section>
+
+    <section id="tab-json" class="tab-panel">
+      <section class="panel inset">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Developer view</p>
+            <h2>Latest live or snapshot result</h2>
+          </div>
+          <button type="button" id="copyJson" class="ghost">Copy JSON</button>
+        </div>
+        <pre id="jsonBlock">{}</pre>
+      </section>
+    </section>
+    <footer class="beta-footer">
+      <span>{{ app_name }} · {{ app_version }}</span>
+      <a href="{{ url_for('privacy') }}">Privacy</a>
+      <a href="{{ url_for('terms') }}">Terms</a>
+      <a href="{{ url_for('healthz') }}">Health</a>
+      {% if beta_enabled %}<a href="{{ url_for('beta_logout') }}">Log out</a>{% endif %}
+    </footer>
+  </main>
+
+  <script>
+    window.NMC_BOOTSTRAP = {
+      corpus: {{ corpus|tojson }},
+      comparisons: {{ comparisons|tojson }},
+      modes: {{ modes|tojson }},
+      sampleLyrics: {{ sample_lyrics|tojson }},
+      audioExtensions: {{ audio_extensions|tojson }},
+      appName: {{ app_name|tojson }},
+      appVersion: {{ app_version|tojson }},
+      betaEnabled: {{ beta_enabled|tojson }},
+      maxLyricsChars: {{ max_lyrics_chars|tojson }},
+      maxBeatUploadMb: {{ max_beat_upload_mb|tojson }},
+      maxRenderSeconds: {{ max_render_seconds|tojson }},
+      songRenderBackends: {{ song_render_backends|tojson }},
+      voicePresets: {{ voice_presets|tojson }},
+      intensityPresets: {{ intensity_presets|tojson }},
+      tts: {{ tts|tojson }},
+      maxSongRenderLines: {{ max_song_render_lines|tojson }},
+      maxSentenceChars: {{ max_sentence_chars|tojson }},
+      notebookModel: {{ notebook_model|tojson }}
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}?v={{ app_version }}"></script>
+</body>
+</html>

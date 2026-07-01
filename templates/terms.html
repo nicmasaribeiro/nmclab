@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>{{ app_name }} — Terms</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell legal-shell">
+    <section class="panel inset">
+      <p class="eyebrow">Beta terms · v{{ app_version }}</p>
+      <h1>Beta use terms</h1>
+      <p>Use this beta to test rap-writing workflows, rhyme highlighting, beat-aware bar suggestions, and line-level revision tools.</p>
+      <h2>Creative ownership</h2>
+      <p>Testers remain responsible for their own lyrics, beats, samples, and rights. The app provides deterministic writing suggestions and does not guarantee originality, clearance, or commercial fitness.</p>
+      <h2>Uploads and reference data</h2>
+      <p>Upload only lyrics and audio that you have the right to use for testing. Do not upload confidential third-party material without permission. Reference-artist comparisons are statistical benchmarks and should not be used to copy or reproduce another artist’s lyrics.</p>
+      <h2>Availability</h2>
+      <p>This is a beta build. Features, storage behavior, rate limits, and analysis quality may change between versions.</p>
+      <p><a class="ghost-link" href="{{ url_for('index') }}">Back to app</a></p>
+    </section>
+  </main>
+</body>
+</html>
