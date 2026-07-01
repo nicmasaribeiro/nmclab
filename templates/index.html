@@ -19,10 +19,12 @@
         </p>
         <div class="hero-actions">
           <button type="button" id="snapshotNowTop">Refresh snapshot</button>
-          <button type="button" class="ghost" id="openEditorTop">Live Rhyme Writer</button>
+          <a class="ghost-link" href="{{ url_for('live_writer_standalone') }}">Stable Live Writer</a>
+          <button type="button" class="ghost" id="openEditorTop">Full Lab Writer</button>
           <button type="button" class="ghost" id="openSentenceTop">Sentence Lab</button>
           <button type="button" class="ghost" id="openSentencePatternsTop">Sentence Patterns</button>
           <button type="button" class="ghost" id="openLiveTop">Open live preview</button>
+          <a class="ghost-link" href="{{ url_for('live_writer_standalone') }}">Standalone live writer</a>
           <button type="button" class="ghost" id="openPhysicsTop">Scansion Physics</button>
           <button type="button" class="ghost" id="openSongTop">Song Render</button>
           <button type="button" class="ghost" id="loadSampleTop">Load sample draft</button>
@@ -90,14 +92,15 @@
             <h2>Static snapshot of the current lyric draft</h2>
           </div>
           <div class="static-tools">
-            <button type="button" id="generateStaticBreakdown">Refresh snapshot</button>
+            <button type="button" id="generateStaticBreakdown">Refresh fast snapshot</button>
+            <button type="button" class="ghost" id="generateFullSnapshot">Full deep snapshot</button>
             <button type="button" class="ghost" id="copyStaticReport">Copy report</button>
             <button type="button" class="ghost" id="downloadSnapshotPdf">Download PDF</button>
             <button type="button" class="ghost" id="downloadSnapshotCsv">Download CSV</button>
           </div>
         </div>
         <p class="muted static-help">
-          This view does not change while you type. Press refresh to capture a new version. Shared rhyme families are highlighted with matching colors, end rhymes carry letter tags, and internal echoes are underlined. The report also includes entropy, perplexity, compression, surprise, bar-density, rhyme-transition, verse-section stats, and meter/stress diagnostics.
+          This view does not change while you type. Fast snapshot is now the default so it loads on PythonAnywhere and other WSGI hosts. It shows line cards, rhyme highlights, score heat maps, entropy, meter/stress estimates, and bar guidance quickly. Use Full deep snapshot only for smaller drafts or local runs.
         </p>
         <div id="staticBreakdownStatus" class="fit-callout muted">No static snapshot yet. Open the editor, paste lyrics, then refresh the snapshot.</div>
         <div id="staticSnapshotSource" class="snapshot-source empty-state">Snapshot source preview will appear here.</div>
