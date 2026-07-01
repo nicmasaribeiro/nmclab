@@ -33,6 +33,7 @@ from sentence_pattern_engine import compare_sentence_rhyme_patterns
 from score_engine import build_rap_score_report, compare_rap_edits
 from report_engine import build_csv_report, build_pdf_report, report_filename
 from live_writer_engine import build_live_writer_payload, build_selected_word_payload as build_live_writer_word_payload
+from fast_snapshot_engine import build_fast_snapshot_report
 from lyric_engine import (
     MODE_LABELS,
     analyze_lyrics,
@@ -68,7 +69,7 @@ def _env_int(name: str, default: int, low: int | None = None, high: int | None =
 
 
 APP_NAME = os.getenv("APP_NAME", "NMC Live Rhyme Writer Lab")
-APP_VERSION = os.getenv("APP_VERSION", "2026.07-live-writer-refactor-v7-noqueue")
+APP_VERSION = os.getenv("APP_VERSION", "2026.07-snapshot-fast-v9")
 APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
 IS_PRODUCTION = APP_ENV in {"prod", "production"}
 
@@ -1984,30 +1985,73 @@ def api_compare_edits():
     beat = _beat_by_id(payload.get("beat_id"))
     return jsonify(compare_rap_edits(original, edited, mode=mode, beat=beat))
 
-@app.route("/api/static-breakdown", methods=["POST"])
-def api_static_breakdown():
+def _snapshot_request_fields() -> tuple[str, str, Dict[str, Any] | None, bool]:
+    """Normalize snapshot request inputs and decide fast vs full mode.
+
+    Hosted deployments such as PythonAnywhere can time out on the original deep
+    snapshot because it runs comparison, meter, physics, rhyme, and scoring over
+    the whole draft. The default route now returns a fast schema-compatible
+    snapshot. Use `full=true`, `/api/snapshot/full`, or `/api/static-breakdown/full`
+    for the old exhaustive local report.
+    """
     if request.is_json:
         payload = _json_payload()
-        lyrics = payload.get("lyrics", "")
-        mode = _mode(payload.get("coach_mode", "match"))
+        lyrics = payload.get("lyrics", payload.get("text", payload.get("draft", "")))
+        mode = _mode(payload.get("coach_mode", payload.get("mode", "match")))
         beat = _beat_by_id(payload.get("beat_id"))
+        full = str(payload.get("full", payload.get("deep", ""))).strip().lower() in {"1", "true", "yes", "on", "full", "deep"}
     else:
-        lyrics = request.form.get("lyrics", "")
-        mode = _mode(request.form.get("coach_mode", "match"))
+        lyrics = request.form.get("lyrics", request.form.get("text", ""))
+        mode = _mode(request.form.get("coach_mode", request.form.get("mode", "match")))
         beat = None
+        full = str(request.form.get("full", request.form.get("deep", ""))).strip().lower() in {"1", "true", "yes", "on", "full", "deep"}
         if request.files.get("beat_file"):
             beat, error = _save_and_analyze_beat(request.files.get("beat_file"))
             if error:
-                return jsonify({"error": error}), 400
+                raise ValueError(error)
+    return str(lyrics or ""), mode, beat, full
+
+
+def _snapshot_response(force_full: bool = False):
+    try:
+        lyrics, mode, beat, requested_full = _snapshot_request_fields()
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
     error = _lyrics_error(lyrics, "Provide lyrics text before generating the static line breakdown.")
     if error:
         return jsonify({"error": error}), 400
-    return jsonify(build_static_line_breakdown(lyrics, mode=mode, beat=beat))
+    full = bool(force_full or requested_full)
+    if full:
+        try:
+            data = build_static_line_breakdown(lyrics, mode=mode, beat=beat)
+            data["snapshot_mode"] = "full_deep"
+            return jsonify(data)
+        except Exception as exc:
+            # Never leave the first view blank. If the deep pass fails, fall back
+            # to the fast hosted snapshot and expose the reason to the UI.
+            data = build_fast_snapshot_report(lyrics, mode=mode, beat=beat)
+            data["snapshot_mode"] = "fast_fallback_after_full_error"
+            data.setdefault("warnings", []).append(f"Full snapshot failed, fast snapshot shown instead: {exc}")
+            return jsonify(data)
+    data = build_fast_snapshot_report(lyrics, mode=mode, beat=beat)
+    data["snapshot_mode"] = "fast_hosted_safe"
+    return jsonify(data)
+
+
+@app.route("/api/static-breakdown", methods=["POST"])
+def api_static_breakdown():
+    return _snapshot_response(force_full=False)
 
 
 @app.route("/api/snapshot", methods=["POST"])
 def api_snapshot():
-    return api_static_breakdown()
+    return _snapshot_response(force_full=False)
+
+
+@app.route("/api/static-breakdown/full", methods=["POST"])
+@app.route("/api/snapshot/full", methods=["POST"])
+def api_snapshot_full():
+    return _snapshot_response(force_full=True)
 
 
 @app.route("/api/information-theory", methods=["POST"])
