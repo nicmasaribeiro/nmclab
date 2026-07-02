@@ -28,6 +28,7 @@
           <button type="button" class="ghost" id="openPhysicsTop">Scansion Physics</button>
           <button type="button" class="ghost" id="openSongTop">Song Render</button>
           <button type="button" class="ghost" id="loadSampleTop">Load sample draft</button>
+          <button type="button" class="ghost" id="openAccountTop">Account / Saved Raps</button>
           <a class="ghost-link" href="{{ url_for('privacy') }}">Privacy</a>
           <a class="ghost-link" href="{{ url_for('terms') }}">Terms</a>
           <code>POST /api/snapshot</code>
@@ -63,12 +64,14 @@
       <article class="metric-card"><span>Avg cadence</span><strong>{{ corpus.stats.avg_syllables }}</strong><small>syllables per line</small></article>
       <article class="metric-card"><span>Reference profiles</span><strong>{{ comparisons.profiles|length }}</strong><small>derived benchmarks</small></article>
       <article class="metric-card"><span>Live state</span><strong id="liveStateMetric">IDLE</strong><small id="liveStateSmall">waiting for edits</small></article>
+      <article class="metric-card"><span>Account</span><strong id="accountStateMetric">Guest</strong><small id="accountStateSmall">login to save raps</small></article>
     </section>
 
     <nav class="tabs main-tabs" aria-label="Editing lab views">
       <button class="tab active" data-tab="snapshot">Static Snapshot</button>
       <button class="tab" data-tab="score">Scores / Edit Compare</button>
       <button class="tab" data-tab="editor">Live Rhyme Writer</button>
+      <button class="tab" data-tab="account">Account / Saved Raps</button>
       <button class="tab" data-tab="sentence">Sentence Lab</button>
       <button class="tab" data-tab="sentence-patterns">Sentence Pattern Compare</button>
       <button class="tab" data-tab="meter">Meter / Stress</button>
@@ -201,6 +204,8 @@
 
           <button type="button" id="analyzeNow">Run live analysis</button>
           <button type="button" class="ghost" id="staticBreakdownNow">Refresh snapshot</button>
+          <button type="button" class="ghost" id="quickSaveRap">Save rap</button>
+          <button type="button" class="ghost" id="openSavedRapsFromEditor">Saved raps</button>
           <button type="button" class="ghost" id="downloadDraft">Download draft</button>
         </div>
 
@@ -234,7 +239,7 @@
             <p class="muted tiny-text">The current line, rhyme banks, applyable rhyme patches, and Static Snapshot-style line diagnostics refresh with a direct non-queued request so the editor does not get stuck on queued jobs.</p>
             <div class="sentence-toolbar live-rhyme-toolbar">
               <button type="button" id="runLiveRhymeNow">Run live rhyme</button>
-              <button type="button" id="analyzeHighlightedWord">Analyze highlighted word</button>
+              <button type="button" id="analyzeHighlightedWord">Analyze highlighted word/phrase</button>
               <button type="button" class="ghost" id="runLiveRhymeSync">Direct fallback</button>
               <button type="button" class="ghost" id="testLiveRhymeRoutes">Test routes</button>
               <button type="button" class="ghost" id="testPythonAnywhere">PythonAnywhere check</button>
@@ -253,7 +258,7 @@
             </div>
             <div id="liveRhymeDiagnostics" class="live-rhyme-diagnostics empty-state compact-empty">Route diagnostics and job state will appear here.</div>
             <div id="pythonAnywherePanel" class="pythonanywhere-panel empty-state compact-empty">PythonAnywhere diagnostics will appear here if you run the check.</div>
-            <div id="highlightedWordPanel" class="highlighted-word-panel empty-state compact-empty">Highlight or double-click a word in the editor to fetch similar rhymes with a direct live request.</div>
+            <div id="highlightedWordPanel" class="highlighted-word-panel empty-state compact-empty">Highlight or double-click a word or phrase in the editor to fetch similar rhymes with a direct live request.</div>
             <div id="liveRhymeActive" class="live-rhyme-active empty-state">Start writing and place the cursor on a line. Active-line rhyme suggestions will appear here.</div>
             <div id="liveRhymeLineMap" class="live-rhyme-line-map-wrap"></div>
             <div id="liveRhymeBanks" class="live-rhyme-banks"></div>
@@ -306,6 +311,103 @@ Sentence three..."></textarea>
       </section>
     </section>
 
+
+
+    <section id="tab-account" class="tab-panel">
+      <section class="panel inset account-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Saved Rap Suite</p>
+            <h2>Login, save, version, tag, and restore raps</h2>
+          </div>
+          <div class="static-tools">
+            <button type="button" id="refreshAccountState">Refresh account</button>
+            <button type="button" class="ghost" id="accountDiagnostics">Account diagnostics</button>
+          </div>
+        </div>
+        <p class="muted static-help">
+          Create an account to save drafts on the server. The enhanced suite now supports tags, notes, pins, archives, version history, restore points, library stats, JSON export/import, and saved-rap comparison.
+        </p>
+        <div id="accountStatus" class="fit-callout muted">Checking account state...</div>
+
+        <div id="authForms" class="account-auth-grid">
+          <form id="loginForm" class="account-card">
+            <h3>Login</h3>
+            <label class="field"><span>Email</span><input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+            <label class="field"><span>Password</span><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Minimum 8 characters"></label>
+            <button type="submit">Login</button>
+          </form>
+          <form id="registerForm" class="account-card">
+            <h3>Create account</h3>
+            <label class="field"><span>Name</span><input id="registerName" type="text" autocomplete="name" placeholder="Artist name"></label>
+            <label class="field"><span>Email</span><input id="registerEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+            <label class="field"><span>Password</span><input id="registerPassword" type="password" autocomplete="new-password" required placeholder="Minimum 8 characters"></label>
+            <button type="submit">Create account</button>
+          </form>
+        </div>
+
+        <div id="accountWorkspace" class="account-workspace hidden">
+          <div id="savedRapStats" class="saved-suite-stats empty-state">Library stats will appear here.</div>
+
+          <div class="account-save-bar enhanced-save-bar">
+            <label class="field rap-title-field"><span>Current rap title</span><input id="rapTitleInput" type="text" placeholder="Untitled rap"></label>
+            <label class="field rap-tags-field"><span>Tags</span><input id="rapTagsInput" type="text" placeholder="hook, verse, draft, battle"></label>
+            <label class="field rap-flags-field inline-flag"><span>Pin</span><input id="rapPinnedInput" type="checkbox"></label>
+            <label class="field rap-flags-field inline-flag"><span>Archive</span><input id="rapArchivedInput" type="checkbox"></label>
+            <button type="button" id="saveRapAsNew">Save as new</button>
+            <button type="button" class="ghost" id="updateSavedRap">Update selected</button>
+            <button type="button" class="ghost" id="saveVersionCheckpoint">Save checkpoint</button>
+            <button type="button" class="ghost" id="logoutAccount">Logout</button>
+          </div>
+
+          <label class="field saved-notes-field">
+            <span>Notes for this saved rap</span>
+            <textarea id="rapNotesInput" rows="3" placeholder="Concept, beat, hook idea, revision goal, or performance note..."></textarea>
+          </label>
+
+          <div class="account-library-grid enhanced-library-grid">
+            <aside class="saved-raps-panel">
+              <div class="section-head compact mini-head">
+                <div>
+                  <p class="eyebrow">Library</p>
+                  <h2>Saved raps</h2>
+                </div>
+                <button type="button" class="ghost" id="reloadSavedRaps">Reload</button>
+              </div>
+              <div class="saved-library-tools">
+                <input id="savedRapSearch" type="search" placeholder="Search title, notes, tags, lyrics...">
+                <select id="savedRapSort" aria-label="Sort saved raps">
+                  <option value="updated_desc">Recently updated</option>
+                  <option value="created_desc">Newest created</option>
+                  <option value="title">Title A-Z</option>
+                  <option value="score_desc">Highest score</option>
+                  <option value="words_desc">Longest draft</option>
+                </select>
+                <label class="inline-check"><input id="savedRapIncludeArchived" type="checkbox"> include archived</label>
+              </div>
+              <div class="saved-library-actions">
+                <button type="button" class="ghost" id="exportRapsJson">Export JSON</button>
+                <label class="file-button ghost">Import JSON<input id="importRapsJson" type="file" accept=".json,application/json"></label>
+              </div>
+              <div id="savedRapsList" class="saved-raps-list empty-state">Login to see saved raps.</div>
+            </aside>
+
+            <section class="saved-rap-detail">
+              <div id="selectedRapInfo" class="empty-state">Select a saved rap to load, update, duplicate, compare, archive, or restore an older version.</div>
+              <div class="saved-rap-actions">
+                <button type="button" id="loadSelectedRap" class="ghost">Load selected into editor</button>
+                <button type="button" id="compareSelectedRap" class="ghost">Compare selected → editor</button>
+                <button type="button" id="duplicateSelectedRap" class="ghost">Duplicate selected</button>
+                <button type="button" id="togglePinSelectedRap" class="ghost">Pin / unpin</button>
+                <button type="button" id="toggleArchiveSelectedRap" class="ghost">Archive / unarchive</button>
+                <button type="button" id="deleteSelectedRap" class="ghost danger-button">Delete selected</button>
+              </div>
+              <div id="savedRapVersions" class="saved-versions-panel empty-state">Version history will appear after selecting a rap.</div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </section>
 
     <section id="tab-sentence" class="tab-panel">
       <section class="sentence-lab-grid">

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ app_name }} — Account</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ app_version }}">
+</head>
+<body>
+  <div class="noise"></div>
+  <main class="shell auth-shell">
+    <section class="panel glow-panel account-login-page">
+      <p class="eyebrow">Account</p>
+      <h1>{{ 'Create account' if mode == 'register' else 'Login' }}</h1>
+      <p class="subhead">Login to save rap drafts, load previous versions, and keep edits synced to this server.</p>
+      {% if error %}<div class="fit-callout muted">{{ error }}</div>{% endif %}
+      <form method="post" class="account-card account-login-card">
+        <input type="hidden" name="next" value="{{ next_url }}">
+        {% if mode == 'register' %}
+          <label class="field"><span>Name</span><input name="display_name" type="text" autocomplete="name" placeholder="Artist name"></label>
+        {% endif %}
+        <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+        <label class="field"><span>Password</span><input name="password" type="password" required autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" placeholder="Minimum 8 characters"></label>
+        <div class="hero-actions">
+          <button type="submit">{{ 'Create account' if mode == 'register' else 'Login' }}</button>
+          {% if mode == 'register' %}
+            <a class="ghost-link" href="{{ url_for('user_login', next=next_url) }}">Already have an account?</a>
+          {% else %}
+            <a class="ghost-link" href="{{ url_for('user_register', next=next_url) }}">Create account</a>
+          {% endif %}
+          <a class="ghost-link" href="{{ url_for('index') }}">Back to app</a>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
