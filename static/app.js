@@ -63,6 +63,22 @@ const highlightedWordPanelEl = $('#highlightedWordPanel');
 const pythonAnywherePanelEl = $('#pythonAnywherePanel');
 const analyzeHighlightedWordBtn = $('#analyzeHighlightedWord');
 const selectedWordAutoEl = $('#selectedWordAuto');
+const accountStateMetricEl = $('#accountStateMetric');
+const accountStateSmallEl = $('#accountStateSmall');
+const accountStatusEl = $('#accountStatus');
+const authFormsEl = $('#authForms');
+const accountWorkspaceEl = $('#accountWorkspace');
+const loginFormEl = $('#loginForm');
+const registerFormEl = $('#registerForm');
+const loginEmailEl = $('#loginEmail');
+const loginPasswordEl = $('#loginPassword');
+const registerNameEl = $('#registerName');
+const registerEmailEl = $('#registerEmail');
+const registerPasswordEl = $('#registerPassword');
+const rapTitleInputEl = $('#rapTitleInput');
+const savedRapSearchEl = $('#savedRapSearch');
+const savedRapsListEl = $('#savedRapsList');
+const selectedRapInfoEl = $('#selectedRapInfo');
 
 const state = {
   beatId: null,
@@ -104,6 +120,13 @@ const state = {
   selectedWordJobId: null,
   selectedWordContextKey: '',
   selectedWordRange: null,
+  currentUser: null,
+  savedRaps: [],
+  selectedRapId: null,
+  selectedRap: null,
+  selectedRapVersions: [],
+  currentRapId: null,
+  accountLoaded: false,
   charts: {},
 };
 
@@ -214,7 +237,7 @@ async function queueSuggestion(force = false) {
   state.sequence += 1;
   const token = state.sequence;
   state.lastLyricsSent = lyrics;
-  setStatus('queued', 'Queued', `line ${state.activeLine}`);
+  setStatus('running', 'Thinking', `line ${state.activeLine}`);
   try {
     const response = await fetch('/api/suggest-job', {
       method: 'POST',
@@ -230,6 +253,18 @@ async function queueSuggestion(force = false) {
     if (!response.ok) throw new Error(payload.error || 'Suggestion job failed.');
     if (token !== state.sequence) return;
     state.jobId = payload.job_id;
+    if (payload.status === 'complete' && payload.result) {
+      state.latest = payload.result;
+      setStatus('complete', 'Live', `updated ${payload.result.generated_at || ''}`);
+      renderResult(payload.result);
+      return;
+    }
+    if (payload.no_poll_required && payload.result) {
+      state.latest = payload.result;
+      renderResult(payload.result);
+      setStatus('complete', 'Live', 'direct complete · no queue');
+      return;
+    }
     pollJob(payload.job_id, token);
   } catch (error) {
     setStatus('error', 'Error', error.message);
@@ -250,7 +285,7 @@ async function pollJob(jobId, token) {
       return;
     }
     if (payload.status === 'error') throw new Error(payload.error || 'Analysis error.');
-    setStatus('running', payload.status === 'queued' ? 'Queued' : 'Thinking', `job ${jobId.slice(0, 6)}`);
+    setStatus('running', payload.status === 'queued' ? 'Direct' : 'Thinking', `job ${jobId.slice(0, 6)}`);
     state.pollTimer = setTimeout(() => pollJob(jobId, token), 420);
   } catch (error) {
     setStatus('error', 'Error', error.message);
@@ -663,7 +698,7 @@ async function runLiveRhymeSync(lyrics, active, token, reason = '', context = nu
   setLiveRhymeDiagnostics(reason ? `safe fallback after: ${reason}` : 'sync fallback');
   try {
     const body = context || liveRhymeContextPayload(false);
-    const response = await fetch('/api/live-rhyme/sync', {
+    const response = await fetch('/api/live-writer/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...body, coach_mode: coachMode.value, beat_id: state.beatId, request_id: token }),
@@ -701,12 +736,12 @@ async function queueLiveRhymeJob(force = false) {
   state.lastLiveRhymeActiveLine = active;
   if (state.liveRhymePollTimer) clearTimeout(state.liveRhymePollTimer);
   setLiveRhymeStatus('running', 'Analyzing');
-  setLiveRhymeDiagnostics(context.client_clipped ? 'direct live analysis with clipped local context' : 'direct live analysis');
+  setLiveRhymeDiagnostics(context.client_clipped ? 'queue-free direct live analysis with clipped local context' : 'queue-free direct live analysis');
   try {
     // Direct live mode: still asynchronous in the browser, but the server returns
     // the completed result in this response. This prevents PythonAnywhere/WSGI
     // deployments from getting stuck on queued jobs.
-    const response = await fetch('/api/live-rhyme/sync', {
+    const response = await fetch('/api/live-writer/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...context, coach_mode: coachMode.value, beat_id: state.beatId, request_id: token, direct_live: true }),
@@ -717,7 +752,7 @@ async function queueLiveRhymeJob(force = false) {
     const result = payload.result || (payload.available ? payload : null);
     if (!result) throw new Error(payload.error || `Live rhyme returned ${payload.status || 'no result'}.`);
     setLiveRhymeStatus(result.fallback_used ? 'warning' : 'complete', result.fallback_used ? 'Fallback' : 'Rhymes');
-    setLiveRhymeDiagnostics(`direct complete${context.client_clipped ? ' · local context clipped' : ''}`);
+    setLiveRhymeDiagnostics(`direct complete · no queue${context.client_clipped ? ' · local context clipped' : ''}`);
     renderLiveRhymeReport(result);
   } catch (error) {
     state.liveRhymeFailCount += 1;
@@ -739,7 +774,7 @@ async function pollLiveRhymeJob(jobId, token, attempt = 0, context = null) {
       return;
     }
     if (payload.status === 'error') throw new Error(payload.error || 'Live rhyme analysis error.');
-    setLiveRhymeStatus('running', payload.status === 'queued' ? 'Queued' : 'Thinking');
+    setLiveRhymeStatus('running', payload.status === 'queued' ? 'Direct' : 'Thinking');
     setLiveRhymeDiagnostics(`${payload.status || 'running'} · poll ${attempt + 1}`);
     if (attempt >= 24) {
       await runLiveRhymeSync(context?.lyrics || editor.value, context?.active_line || activeLineNumber(), token, 'async job timed out', context || liveRhymeContextPayload(false));
@@ -759,29 +794,113 @@ function scheduleLiveRhymeSuggestion() {
 }
 
 
+const WORD_TOKEN_RE_SOURCE = "[A-Za-z0-9]+(?:['’\\-][A-Za-z0-9]+)*";
+const WORD_TOKEN_RE_GLOBAL = new RegExp(WORD_TOKEN_RE_SOURCE, 'g');
+
+function lineStartOffset(lineNumber) {
+  const lines = (editor.value || '').split(/\r?\n/);
+  const target = Math.max(1, Number(lineNumber || 1));
+  let offset = 0;
+  for (let i = 0; i < Math.min(target - 1, lines.length); i += 1) offset += lines[i].length + 1;
+  return offset;
+}
+
+function tokenMatchesInRange(text, start, end) {
+  const a = Math.max(0, Math.min(Number(start || 0), text.length));
+  const b = Math.max(a, Math.min(Number(end || a), text.length));
+  const fragment = text.slice(a, b);
+  const matches = [];
+  const localRe = new RegExp(WORD_TOKEN_RE_SOURCE, 'g');
+  let match;
+  while ((match = localRe.exec(fragment))) {
+    const absStart = a + match.index;
+    const absEnd = absStart + match[0].length;
+    const center = (absStart + absEnd) / 2;
+    matches.push({ word: match[0], start: absStart, end: absEnd, distance: Math.abs(center - ((a + b) / 2)) });
+  }
+  return matches;
+}
+
+function bestWordTokenInRange(text, start, end, cursor = start) {
+  const matches = tokenMatchesInRange(text, start, end).map((m) => ({ ...m, distance: Math.abs(((m.start + m.end) / 2) - cursor) }));
+  if (!matches.length) return null;
+  matches.sort((x, y) => (x.distance - y.distance) || (y.word.length - x.word.length));
+  return matches[0];
+}
+
+function phraseTokenInRange(text, start, end) {
+  const matches = tokenMatchesInRange(text, start, end);
+  if (matches.length < 2) return null;
+  const first = matches[0];
+  const last = matches[matches.length - 1];
+  const phrase = text.slice(first.start, last.end).replace(/\s+/g, ' ').trim();
+  if (!phrase || phrase.length > 140) return null;
+  const lineNumber = text.slice(0, first.start).split(/\r?\n/).length;
+  const lastLineNumber = text.slice(0, last.end).split(/\r?\n/).length;
+  if (lineNumber !== lastLineNumber) return null;
+  return { word: phrase, start: first.start, end: last.end, phrase: true, tokenCount: matches.length, distance: 0 };
+}
+
 function wordAtEditorCursor() {
   const text = editor.value || '';
-  const start = editor.selectionStart || 0;
-  const end = editor.selectionEnd || start;
-  let selStart = start;
-  let selEnd = end;
-  let selected = text.slice(start, end);
-  if (!selected || !/[A-Za-z0-9]/.test(selected)) {
-    const left = text.slice(0, start);
-    const right = text.slice(start);
-    const leftMatch = left.match(/[A-Za-z0-9]+(?:['’\-][A-Za-z0-9]+)*$/);
-    const rightMatch = right.match(/^[A-Za-z0-9]+(?:['’\-][A-Za-z0-9]+)*/);
+  const rawStart = editor.selectionStart || 0;
+  const rawEnd = editor.selectionEnd || rawStart;
+  let token = null;
+  if (rawEnd > rawStart) {
+    token = phraseTokenInRange(text, rawStart, rawEnd) || bestWordTokenInRange(text, rawStart, rawEnd, (rawStart + rawEnd) / 2);
+  }
+  if (!token) {
+    const left = text.slice(0, rawStart);
+    const right = text.slice(rawStart);
+    const leftMatch = left.match(new RegExp(`${WORD_TOKEN_RE_SOURCE}$`));
+    const rightMatch = right.match(new RegExp(`^${WORD_TOKEN_RE_SOURCE}`));
     const leftPart = leftMatch ? leftMatch[0] : '';
     const rightPart = rightMatch ? rightMatch[0] : '';
-    selected = `${leftPart}${rightPart}`;
-    selStart = start - leftPart.length;
-    selEnd = start + rightPart.length;
+    const combined = `${leftPart}${rightPart}`;
+    if (combined) token = { word: combined, start: rawStart - leftPart.length, end: rawStart + rightPart.length, distance: 0, phrase: false, tokenCount: 1 };
   }
-  const wordMatch = String(selected || '').match(/[A-Za-z0-9]+(?:['’\-][A-Za-z0-9]+)*/);
-  const word = wordMatch ? wordMatch[0] : '';
+  const selStart = token ? token.start : rawStart;
+  const selEnd = token ? token.end : rawEnd;
+  const word = token ? token.word : '';
   const lineNumber = text.slice(0, selStart).split(/\r?\n/).length;
   const lineText = (text.split(/\r?\n/)[lineNumber - 1] || '').trim();
-  return { word, lineNumber, lineText, start: selStart, end: selEnd, selectedText: text.slice(selStart, selEnd) };
+  return {
+    word,
+    lineNumber,
+    lineText,
+    start: selStart,
+    end: selEnd,
+    phrase: Boolean(token && token.phrase),
+    tokenCount: token?.tokenCount || (word ? 1 : 0),
+    selectedText: text.slice(selStart, selEnd),
+    rawSelection: { start: rawStart, end: rawEnd, text: text.slice(rawStart, rawEnd) },
+  };
+}
+
+function findWordRangeInEditorLine(word, lineNumber, preferredLineText = '') {
+  const target = String(word || '').toLowerCase();
+  if (!target) return null;
+  const lines = (editor.value || '').split(/\r?\n/);
+  const idx = Math.max(0, Math.min(lines.length - 1, Number(lineNumber || activeLineNumber()) - 1));
+  const line = lines[idx] || '';
+  const offset = lineStartOffset(idx + 1);
+  const localRe = new RegExp(WORD_TOKEN_RE_SOURCE, 'g');
+  const matches = [];
+  let match;
+  while ((match = localRe.exec(line))) {
+    if (match[0].toLowerCase() === target) {
+      matches.push({ word: match[0], start: offset + match.index, end: offset + match.index + match[0].length, lineNumber: idx + 1, lineText: line });
+    }
+  }
+  if (matches.length) return matches[0];
+  if (preferredLineText) {
+    const pref = String(preferredLineText).toLowerCase();
+    const pos = pref.indexOf(target);
+    if (pos >= 0 && pos < line.length) {
+      return { word, start: offset + pos, end: offset + pos + String(word).length, lineNumber: idx + 1, lineText: line };
+    }
+  }
+  return null;
 }
 
 function renderHighlightedWordReport(report = {}) {
@@ -789,65 +908,97 @@ function renderHighlightedWordReport(report = {}) {
   state.selectedWordReport = report;
   if (!report || !report.available) {
     highlightedWordPanelEl.className = 'highlighted-word-panel empty-state compact-empty';
-    highlightedWordPanelEl.textContent = report?.error || 'Highlight or double-click a word in the editor to fetch similar rhymes asynchronously.';
+    highlightedWordPanelEl.textContent = report?.error || 'Highlight or double-click a word or phrase in the editor to fetch similar rhymes asynchronously.';
     return;
   }
   const summary = report.summary || {};
   const ranked = report.ranked || [];
   const ladder = report.rhyme_ladder || [];
   const wordLists = report.word_lists || {};
-  const chips = (items = [], cls = '') => items.slice(0, 12).map((item) => {
-    const word = typeof item === 'string' ? item : (item.word || item.phrase || '');
+  const isPhrase = Boolean(report.phrase_mode || report.selected_phrase);
+  const displayTarget = report.selected_phrase || report.target_word || report.selected_word || '';
+  const chips = (items = [], cls = '') => items.slice(0, 14).map((item) => {
+    const word = typeof item === 'string' ? item : (item.word || item.phrase || item.display || '');
     if (!word) return '';
-    return `<button type="button" class="selected-rhyme-chip ${cls}" data-word="${escapeHtml(word)}">${escapeHtml(word)}</button>`;
+    const kind = typeof item === 'string' ? '' : (item.kind || item.category || '');
+    const score = typeof item === 'string' ? '' : (item.score ?? '');
+    const label = kind || score !== '' ? `<small>${escapeHtml(kind)}${score !== '' ? ` · ${escapeHtml(score)}` : ''}</small>` : '';
+    return `<button type="button" class="selected-rhyme-chip ${cls} ${escapeHtml(String(kind).replace(/\s+/g, '-'))}" data-word="${escapeHtml(word)}"><span>${escapeHtml(word)}</span>${label}</button>`;
   }).join('');
   highlightedWordPanelEl.className = 'highlighted-word-panel live-rhyme-card';
   highlightedWordPanelEl.innerHTML = `
     <div class="highlighted-word-head">
-      <div><p class="eyebrow">Highlighted word</p><h3>${escapeHtml(report.target_word || report.selected_word || '—')}</h3></div>
+      <div>
+        <p class="eyebrow">${isPhrase ? 'Highlighted phrase' : 'Highlighted word'}</p>
+        <h3>${escapeHtml(displayTarget || '—')}</h3>
+        ${isPhrase ? `<p class="muted tiny-text">phrase landing: <b>${escapeHtml(report.target_word || '—')}</b></p>` : ''}
+      </div>
       <div class="live-rhyme-score-badge ${liveRhymeScoreClass(summary.best_score || 0)}"><strong>${escapeHtml(summary.best_score || 0)}</strong><small>${escapeHtml(summary.best_kind || 'rhyme')}</small></div>
     </div>
-    <p class="muted tiny-text">/${escapeHtml(summary.rhyme_key || '—')}/ · ${escapeHtml(summary.syllables || 0)} syll · stress ${escapeHtml(summary.stress_signature || '—')} · ${escapeHtml(report.generated_at || '')}</p>
+    <p class="muted tiny-text">/${escapeHtml(summary.rhyme_key || '—')}/ · ${escapeHtml(summary.phones || '')} · ${escapeHtml(summary.syllables || 0)} syll · ${report.broad_family_mode ? 'broad family mode' : report.strict_filtering ? 'strict phonetic filter on' : `stress ${escapeHtml(summary.stress_signature || '—')}`} · ${escapeHtml(report.generated_at || '')}</p>
+    ${report.instruction ? `<div class="fit-callout tiny-text">${escapeHtml(report.instruction)}</div>` : ''}
     <div class="highlighted-word-actions">
       <button type="button" class="ghost tiny" id="replaceHighlightedWithBest">Replace with best</button>
-      <button type="button" class="ghost tiny" id="copyHighlightedWordJson">Copy word JSON</button>
+      <button type="button" class="ghost tiny" id="copyHighlightedWordJson">Copy rhyme JSON</button>
     </div>
-    <section class="selected-word-bank"><h4>Best similar rhymes</h4><div class="chip-row">${chips(ranked, 'ranked')}</div></section>
-    <section class="selected-word-bank"><h4>Family / end rhymes</h4><div class="chip-row">${chips(wordLists.end_rhymes || [])}</div></section>
+    <section class="selected-word-bank"><h4>${isPhrase ? 'Best phrase rhymes' : 'Best similar rhymes'}</h4><div class="chip-row">${chips(ranked, isPhrase ? 'ranked phrase' : 'ranked')}</div></section>
+    ${isPhrase && (wordLists.pattern_preserving_phrases || []).length ? `<section class="selected-word-bank"><h4>Preserve phrase frame</h4><div class="chip-row">${chips(wordLists.pattern_preserving_phrases || [], 'phrase-preserve')}</div></section>` : ''}
+    ${isPhrase && (wordLists.suggestive_phrase_families || []).length ? `<section class="selected-word-bank"><h4>Suggestive phrase families</h4><div class="chip-row">${chips(wordLists.suggestive_phrase_families || [], 'phrase-family')}</div></section>` : ''}
+    <section class="selected-word-bank"><h4>Clean family / end rhymes</h4><div class="chip-row">${chips(wordLists.end_rhymes || [])}</div></section>
+    ${(wordLists.style_slants || []).length ? `<section class="selected-word-bank"><h4>Corpus style slants</h4><div class="chip-row">${chips(wordLists.style_slants || [], 'style-slant')}</div></section>` : ''}
+    ${(wordLists.broad_family || []).length ? `<section class="selected-word-bank"><h4>Broad rap family</h4><div class="chip-row">${chips(wordLists.broad_family || [], 'broad-family')}</div></section>` : ''}
     <section class="selected-word-bank"><h4>Slant + near rhymes</h4><div class="chip-row">${chips([...(wordLists.slant_rhymes || []), ...(wordLists.near_rhymes || [])], 'slant')}</div></section>
     <section class="selected-word-bank"><h4>Multi-syllable landings</h4><div class="chip-row">${chips(wordLists.multi_syllable_endings || [], 'phrase')}</div></section>
-    ${ladder.length ? `<details><summary>Rhyme pattern ladder</summary>${ladder.slice(0,4).map((row) => `<div class="rhyme-ladder-step"><strong>${escapeHtml(row.stage || '')}</strong><small>${escapeHtml(row.use_when || '')}</small><div class="chip-row">${chips(row.options || [])}</div></div>`).join('')}</details>` : ''}
+    ${report.classification_legend ? `<details><summary>Rhyme classification guide</summary><ul>${(report.classification_legend || []).map((row) => `<li><b>${escapeHtml(row.kind || '')}</b>: ${escapeHtml(row.meaning || '')}</li>`).join('')}</ul></details>` : ''}
+    ${ladder.length ? `<details><summary>Rhyme pattern ladder</summary>${ladder.slice(0,5).map((row) => `<div class="rhyme-ladder-step"><strong>${escapeHtml(row.stage || '')}</strong><small>${escapeHtml(row.use_when || '')}</small><div class="chip-row">${chips(row.options || [])}</div></div>`).join('')}</details>` : ''}
   `;
 }
 
-function selectedWordPayload() {
-  const info = wordAtEditorCursor();
-  state.selectedWordRange = { start: info.start, end: info.end, word: info.word, line_number: info.lineNumber };
+function selectedWordPayload(infoOverride = null) {
+  const info = infoOverride || wordAtEditorCursor();
+  state.selectedWordRange = {
+    start: info.start,
+    end: info.end,
+    word: info.word,
+    line_number: info.lineNumber,
+    line_text: info.lineText,
+    selected_text: info.selectedText,
+    phrase: Boolean(info.phrase),
+    token_count: info.tokenCount || 1,
+  };
   const context = liveRhymeContextPayload(false);
   return {
     word: info.word,
-    lyrics: context.lyrics,
+    selected_word: info.word,
+    highlighted_word: info.word,
+    selected_text: info.selectedText,
+    selected_phrase: info.phrase ? info.word : '',
+    phrase: info.phrase ? info.word : '',
+    phrase_mode: Boolean(info.phrase),
+    lyrics: editor.value,
+    context_lyrics: context.lyrics,
     line_text: info.lineText,
     active_line: info.lineNumber,
     coach_mode: coachMode.value,
     selection_start: info.start,
     selection_end: info.end,
     selection_range: state.selectedWordRange,
+    raw_selection: info.rawSelection || null,
     source_active_line: info.lineNumber,
     context_offset_lines: context.context_offset_lines || 0,
     total_source_lines: context.total_source_lines || countLines(editor.value),
   };
 }
 
-async function runSelectedWordRhymeSync(token, reason = '') {
-  const payloadBody = selectedWordPayload();
+async function runSelectedWordRhymeSync(token, reason = '', explicitInfo = null) {
+  const payloadBody = selectedWordPayload(explicitInfo);
   if (!payloadBody.word || payloadBody.word.length < 2) {
-    renderHighlightedWordReport({ available: false, error: 'Highlight or place the cursor inside a word first.' });
+    renderHighlightedWordReport({ available: false, error: 'Highlight a word or phrase, or place the cursor inside a word first.' });
     return;
   }
   highlightedWordPanelEl.className = 'highlighted-word-panel live-rhyme-card loading';
   try {
-    const response = await fetch('/api/rhyme-word/sync', {
+    const response = await fetch('/api/live-writer/word', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...payloadBody, request_id: token, reason }),
@@ -885,23 +1036,23 @@ async function pollSelectedWordRhymeJob(jobId, token, attempt = 0) {
   }
 }
 
-async function queueSelectedWordRhyme(force = false) {
+async function queueSelectedWordRhyme(force = false, explicitInfo = null) {
   if (!highlightedWordPanelEl) return;
-  const payloadBody = selectedWordPayload();
+  const payloadBody = selectedWordPayload(explicitInfo);
   if (!payloadBody.word || payloadBody.word.length < 2) {
-    if (force) renderHighlightedWordReport({ available: false, error: 'Highlight or place the cursor inside a word first.' });
+    if (force) renderHighlightedWordReport({ available: false, error: 'Highlight a word or phrase, or place the cursor inside a word first.' });
     return;
   }
-  const contextKey = `${payloadBody.word}|${payloadBody.active_line}|${payloadBody.line_text}`;
+  const contextKey = `${payloadBody.word}|${payloadBody.active_line}|${payloadBody.selection_start}|${payloadBody.selection_end}|${payloadBody.line_text}`;
   if (!force && contextKey === state.selectedWordContextKey) return;
   state.selectedWordContextKey = contextKey;
   state.selectedWordSequence += 1;
   const token = state.selectedWordSequence;
   if (state.selectedWordPollTimer) clearTimeout(state.selectedWordPollTimer);
   highlightedWordPanelEl.className = 'highlighted-word-panel live-rhyme-card loading';
-  highlightedWordPanelEl.innerHTML = `<p class="eyebrow">Highlighted word</p><h3>${escapeHtml(payloadBody.word)}</h3><p class="muted tiny-text">Analyzing similar rhymes live…</p>`;
+  highlightedWordPanelEl.innerHTML = `<p class="eyebrow">Highlighted word</p><h3>${escapeHtml(payloadBody.word)}</h3><p class="muted tiny-text">${payloadBody.phrase_mode ? 'Analyzing phrase rhymes' : 'Analyzing similar rhymes'} for line ${escapeHtml(payloadBody.active_line)}…</p>`;
   try {
-    const response = await fetch('/api/rhyme-word/sync', {
+    const response = await fetch('/api/live-writer/word', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...payloadBody, request_id: token, direct_live: true }),
@@ -913,8 +1064,30 @@ async function queueSelectedWordRhyme(force = false) {
     if (!result) throw new Error(payload.error || `Selected-word rhyme returned ${payload.status || 'no result'}.`);
     renderHighlightedWordReport(result);
   } catch (error) {
-    await runSelectedWordRhymeSync(token, error.message);
+    await runSelectedWordRhymeSync(token, error.message, explicitInfo);
   }
+}
+
+function analyzeExplicitHighlightedWord(word, lineNumber = null, lineText = '') {
+  const clean = String(word || '').match(new RegExp(WORD_TOKEN_RE_SOURCE));
+  const target = clean ? clean[0] : '';
+  if (!target) return;
+  const located = findWordRangeInEditorLine(target, lineNumber || activeLineNumber(), lineText);
+  const info = located || {
+    word: target,
+    lineNumber: Number(lineNumber || activeLineNumber()),
+    lineText: lineText || (editor.value.split(/\r?\n/)[activeLineNumber() - 1] || ''),
+    start: editor.selectionStart || 0,
+    end: editor.selectionEnd || editor.selectionStart || 0,
+    selectedText: target,
+    rawSelection: null,
+  };
+  if (located) {
+    editor.focus();
+    editor.selectionStart = located.start;
+    editor.selectionEnd = located.end;
+  }
+  queueSelectedWordRhyme(true, info);
 }
 
 function scheduleSelectedWordRhyme(force = false) {
@@ -926,9 +1099,19 @@ function scheduleSelectedWordRhyme(force = false) {
 function replaceSelectedWord(newWord) {
   const word = String(newWord || '').trim();
   if (!word) return;
-  const range = state.selectedWordRange || wordAtEditorCursor();
-  const start = Math.max(0, Number(range.start || 0));
-  const end = Math.max(start, Number(range.end || start));
+  let range = state.selectedWordRange || wordAtEditorCursor();
+  let start = Math.max(0, Number(range.start || 0));
+  let end = Math.max(start, Number(range.end || start));
+  const current = editor.value.slice(start, end);
+  const isPhraseRange = Boolean(range.phrase || /\s/.test(String(range.word || range.selected_text || '')));
+  if (!isPhraseRange && (!current || (range.word && current.toLowerCase() !== String(range.word).toLowerCase()))) {
+    const found = findWordRangeInEditorLine(range.word || current || word, range.line_number || activeLineNumber(), range.line_text || '');
+    if (found) {
+      range = found;
+      start = found.start;
+      end = found.end;
+    }
+  }
   const before = editor.value.slice(0, start);
   const after = editor.value.slice(end);
   const needsLeft = before && /[A-Za-z0-9]$/.test(before) ? ' ' : '';
@@ -936,7 +1119,9 @@ function replaceSelectedWord(newWord) {
   editor.value = `${before}${needsLeft}${word}${needsRight}${after}`;
   const pos = before.length + needsLeft.length + word.length;
   editor.focus();
-  editor.selectionStart = editor.selectionEnd = pos;
+  editor.selectionStart = Math.max(0, before.length + needsLeft.length);
+  editor.selectionEnd = pos;
+  state.selectedWordRange = { start: editor.selectionStart, end: editor.selectionEnd, word, line_number: range.line_number || activeLineNumber(), line_text: (editor.value.split(/\r?\n/)[(range.line_number || activeLineNumber()) - 1] || '') };
   handleEditorActivity();
   scheduleSelectedWordRhyme(true);
 }
@@ -982,7 +1167,7 @@ function rhymeHighlightedLineHtml(highlight, fallbackText = '') {
     const cls = Number(token.rhyme_class || highlight.line_rhyme_class || 0);
     const role = String(token.role || 'rhyme').replace(/[^a-z0-9-]/gi, '').toLowerCase() || 'rhyme';
     const title = token.title || `${token.rhyme_key || highlight.line_rhyme_key || ''} rhyme family`;
-    return `<span class="rh-token rh-fam-${cls || 1} rh-role-${role}" title="${escapeHtml(title)}" data-rhyme-key="${escapeHtml(token.rhyme_key || '')}">${text}</span>`;
+    return `<span class="rh-token rh-fam-${cls || 1} rh-role-${role}" title="${escapeHtml(title)}" data-rhyme-key="${escapeHtml(token.rhyme_key || '')}" data-word="${escapeHtml(token.text || '')}" data-line="${escapeHtml(highlight.line_number || token.line_number || '')}">${text}</span>`;
   }).join('');
 }
 
@@ -2408,7 +2593,7 @@ function renderStaticReport(report) {
   staticLineBreakdownEl.innerHTML = rows.map(staticLineCardHtml).join('');
 }
 
-async function generateStaticBreakdown() {
+async function generateStaticBreakdown(full = false) {
   const lyrics = editor.value;
   updateLocalStats();
   if (countWords(lyrics) < 3) {
@@ -2418,24 +2603,35 @@ async function generateStaticBreakdown() {
     return;
   }
   staticStatusEl.className = 'fit-callout';
-  staticStatusEl.textContent = 'Generating static line-by-line report...';
+  staticStatusEl.textContent = full ? 'Generating full deep snapshot. This can take longer on hosted apps...' : 'Generating fast hosted-safe snapshot...';
   switchTab('snapshot');
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), full ? 90000 : 25000);
   try {
-    const response = await fetch('/api/snapshot', {
+    const response = await fetch(full ? '/api/snapshot/full' : '/api/snapshot', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         lyrics,
         coach_mode: coachMode.value,
         beat_id: state.beatId,
+        full,
       }),
     });
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || 'Static breakdown failed.');
+    const payload = await safeJsonResponse(response, full ? 'Full snapshot' : 'Fast snapshot');
     renderStaticReport(payload);
+    if (payload.fast_snapshot || payload.truncated) {
+      staticStatusEl.className = 'fit-callout';
+      staticStatusEl.textContent = `${payload.overview?.headline || 'Fast snapshot loaded.'} ${payload.truncation_note || ''}`;
+    }
   } catch (error) {
     staticStatusEl.className = 'fit-callout muted';
-    staticStatusEl.textContent = error.message;
+    staticStatusEl.textContent = error.name === 'AbortError'
+      ? 'Snapshot request timed out. Use Refresh fast snapshot, or reduce the draft length before running Full deep snapshot.'
+      : error.message;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -4356,6 +4552,571 @@ scoreEditedInputEl?.addEventListener('input', () => {
   if (state.editCompareReport?.available) renderLyricDiff(scoreBaselineInputEl?.value || '', scoreEditedInputEl.value, state.editCompareReport);
 });
 
+
+// Account + saved rap library
+function accountSetStatus(message, kind = 'muted') {
+  if (!accountStatusEl) return;
+  accountStatusEl.className = kind === 'ok' ? 'fit-callout' : 'fit-callout muted';
+  accountStatusEl.textContent = message || '';
+}
+
+function updateAccountChrome() {
+  const user = state.currentUser;
+  if (accountStateMetricEl) accountStateMetricEl.textContent = user ? 'Saved' : 'Guest';
+  if (accountStateSmallEl) accountStateSmallEl.textContent = user ? `${user.display_name || user.email}` : 'login to save raps';
+  if (authFormsEl) authFormsEl.classList.toggle('hidden', Boolean(user));
+  if (accountWorkspaceEl) accountWorkspaceEl.classList.toggle('hidden', !user);
+  if (user) {
+    accountSetStatus(`Logged in as ${user.display_name || user.email}. You can save and load raps from this server.`, 'ok');
+  } else {
+    accountSetStatus('Guest mode: local browser autosave is available, but server saves require login.', 'muted');
+  }
+}
+
+function guessRapTitle() {
+  if (rapTitleInputEl && rapTitleInputEl.value.trim()) return rapTitleInputEl.value.trim();
+  const firstLine = (editor.value || '').split(/\r?\n/).map((line) => line.trim()).find((line) => line && !line.startsWith('//')) || '';
+  return firstLine.slice(0, 70) || 'Untitled rap';
+}
+
+async function accountFetch(url, options = {}) {
+  const response = await fetch(url, {
+    credentials: 'same-origin',
+    ...options,
+    headers: {
+      ...(options.body && !(options.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
+      ...(options.headers || {}),
+    },
+  });
+  let data = null;
+  try { data = await response.json(); } catch (_error) { data = { error: await response.text() }; }
+  if (!response.ok) throw new Error(data?.error || `Request failed: ${response.status}`);
+  return data;
+}
+
+async function loadAccountState() {
+  if (!accountStatusEl && !accountStateMetricEl) return;
+  try {
+    const data = await accountFetch('/api/auth/me');
+    state.currentUser = data.user || null;
+    state.accountLoaded = true;
+    updateAccountChrome();
+    if (state.currentUser) await loadSavedRaps(false);
+  } catch (error) {
+    state.currentUser = null;
+    updateAccountChrome();
+    accountSetStatus(error.message || 'Could not check account state.', 'muted');
+  }
+}
+
+
+function getRapTagsInput() { return $('#rapTagsInput'); }
+function getRapNotesInput() { return $('#rapNotesInput'); }
+function getRapPinnedInput() { return $('#rapPinnedInput'); }
+function getRapArchivedInput() { return $('#rapArchivedInput'); }
+function getSavedRapSort() { return $('#savedRapSort'); }
+function getSavedRapIncludeArchived() { return $('#savedRapIncludeArchived'); }
+function getSavedRapStatsEl() { return $('#savedRapStats'); }
+function getSavedRapVersionsEl() { return $('#savedRapVersions'); }
+
+function parseTagInput(value) {
+  return String(value || '')
+    .split(/[,#\n]+/)
+    .map((item) => item.trim().toLowerCase().replace(/[^a-z0-9_\- ]+/g, '').replace(/\s+/g, '-').replace(/^-+|-+$/g, ''))
+    .filter(Boolean)
+    .filter((item, index, arr) => arr.indexOf(item) === index)
+    .slice(0, 12);
+}
+
+function formatTagInput(tags = []) {
+  return (Array.isArray(tags) ? tags : []).join(', ');
+}
+
+function savedRapStatsHtml(stats = {}) {
+  const tags = (stats.top_tags || []).slice(0, 10);
+  return `
+    <div class="saved-suite-grid">
+      <article class="metric-card score"><span>Saved raps</span><strong>${escapeHtml(stats.rap_count ?? 0)}</strong><small>${escapeHtml(stats.active_count ?? 0)} active · ${escapeHtml(stats.archived_count ?? 0)} archived</small></article>
+      <article class="metric-card"><span>Versions</span><strong>${escapeHtml(stats.version_count ?? 0)}</strong><small>restore points</small></article>
+      <article class="metric-card"><span>Total words</span><strong>${escapeHtml(stats.total_words ?? 0)}</strong><small>${escapeHtml(stats.total_lines ?? 0)} lines</small></article>
+      <article class="metric-card"><span>Avg length</span><strong>${escapeHtml(stats.avg_words ?? 0)}</strong><small>words per rap</small></article>
+    </div>
+    ${tags.length ? `<div class="saved-tag-cloud">${tags.map((row) => `<button type="button" class="chip saved-tag-filter" data-tag="${escapeHtml(row.tag)}">#${escapeHtml(row.tag)} <small>${escapeHtml(row.count)}</small></button>`).join('')}</div>` : ''}
+  `;
+}
+
+async function loadSavedRapStats() {
+  if (!state.currentUser) return;
+  const statsEl = getSavedRapStatsEl();
+  if (!statsEl) return;
+  try {
+    const data = await accountFetch('/api/raps/stats');
+    statsEl.className = 'saved-suite-stats';
+    statsEl.innerHTML = savedRapStatsHtml(data.stats || {});
+  } catch (error) {
+    statsEl.className = 'saved-suite-stats empty-state';
+    statsEl.textContent = error.message || 'Could not load library stats.';
+  }
+}
+
+function savedRapCardHtml(rap = {}) {
+  const selected = state.selectedRapId === rap.id;
+  const tags = (rap.tags || []).slice(0, 4).map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('');
+  const score = rap.last_score !== null && rap.last_score !== undefined ? `${escapeHtml(fmt(rap.last_score))}%` : '—';
+  return `
+    <button type="button" class="saved-rap-card enhanced ${selected ? 'active' : ''} ${rap.archived ? 'archived' : ''}" data-rap-id="${escapeHtml(rap.id)}">
+      <div class="saved-card-head">
+        <strong>${rap.pinned ? '📌 ' : ''}${escapeHtml(rap.title || 'Untitled rap')}</strong>
+        <b>${score}</b>
+      </div>
+      <span>${escapeHtml(rap.word_count ?? 0)} words · ${escapeHtml(rap.line_count ?? 0)} lines · ${escapeHtml(rap.version_count ?? 0)} versions</span>
+      <small>Updated ${escapeHtml(rap.updated_at || '')}${rap.archived ? ' · archived' : ''}</small>
+      <em>${escapeHtml(rap.preview || 'No preview yet.')}</em>
+      ${tags ? `<div class="saved-card-tags">${tags}</div>` : ''}
+    </button>
+  `;
+}
+
+function renderSavedRaps() {
+  if (!savedRapsListEl) return;
+  if (!state.currentUser) {
+    savedRapsListEl.className = 'saved-raps-list empty-state';
+    savedRapsListEl.textContent = 'Login to see saved raps.';
+    return;
+  }
+  const rows = state.savedRaps || [];
+  if (!rows.length) {
+    savedRapsListEl.className = 'saved-raps-list empty-state';
+    savedRapsListEl.textContent = 'No saved raps match this view. Clear the search/filter or save the current draft.';
+    return;
+  }
+  savedRapsListEl.className = 'saved-raps-list';
+  savedRapsListEl.innerHTML = rows.map(savedRapCardHtml).join('');
+}
+
+function populateRapForm(rap = {}) {
+  if (rapTitleInputEl) rapTitleInputEl.value = rap.title || '';
+  const tagsEl = getRapTagsInput();
+  if (tagsEl) tagsEl.value = formatTagInput(rap.tags || []);
+  const notesEl = getRapNotesInput();
+  if (notesEl) notesEl.value = rap.notes || '';
+  const pinnedEl = getRapPinnedInput();
+  if (pinnedEl) pinnedEl.checked = Boolean(rap.pinned);
+  const archivedEl = getRapArchivedInput();
+  if (archivedEl) archivedEl.checked = Boolean(rap.archived);
+}
+
+function selectedRapBadges(rap = {}) {
+  const tags = (rap.tags || []).map((tag) => `<span class="badge">#${escapeHtml(tag)}</span>`).join('');
+  const flags = `${rap.pinned ? '<span class="badge">Pinned</span>' : ''}${rap.archived ? '<span class="badge">Archived</span>' : ''}`;
+  return `<div class="badges">${flags}${tags}</div>`;
+}
+
+function renderSelectedRapInfo(rap = null) {
+  if (!selectedRapInfoEl) return;
+  if (!rap) {
+    selectedRapInfoEl.className = 'empty-state';
+    selectedRapInfoEl.textContent = 'Select a saved rap to load, update, duplicate, compare, archive, or restore an older version.';
+    return;
+  }
+  state.selectedRap = rap;
+  selectedRapInfoEl.className = 'selected-rap-info enhanced';
+  selectedRapInfoEl.innerHTML = `
+    <h3>${escapeHtml(rap.title || 'Untitled rap')}</h3>
+    ${selectedRapBadges(rap)}
+    <p class="muted">${escapeHtml(rap.word_count ?? 0)} words · ${escapeHtml(rap.line_count ?? 0)} lines · score ${escapeHtml(rap.last_score ?? '—')} · mode ${escapeHtml(rap.coach_mode || 'match')}</p>
+    <p class="muted tiny-text">Created ${escapeHtml(rap.created_at || '')}<br>Updated ${escapeHtml(rap.updated_at || '')}<br>Versions ${escapeHtml(rap.version_count ?? 0)}</p>
+    ${rap.notes ? `<div class="fit-callout muted"><strong>Notes</strong><p>${escapeHtml(rap.notes)}</p></div>` : ''}
+    <pre>${escapeHtml(rap.preview || '')}</pre>
+  `;
+}
+
+function renderSavedRapVersions(versions = []) {
+  const versionsEl = getSavedRapVersionsEl();
+  if (!versionsEl) return;
+  if (!state.selectedRapId) {
+    versionsEl.className = 'saved-versions-panel empty-state';
+    versionsEl.textContent = 'Version history will appear after selecting a rap.';
+    return;
+  }
+  if (!versions.length) {
+    versionsEl.className = 'saved-versions-panel empty-state';
+    versionsEl.textContent = 'No versions yet. Save a checkpoint to create a restore point.';
+    return;
+  }
+  versionsEl.className = 'saved-versions-panel';
+  versionsEl.innerHTML = `
+    <div class="section-head compact mini-head">
+      <div><p class="eyebrow">Version history</p><h2>Restore points</h2></div>
+      <button type="button" class="ghost" id="reloadSavedRapVersions">Reload versions</button>
+    </div>
+    <div class="version-list">
+      ${versions.map((version) => `
+        <article class="version-card" data-version-id="${escapeHtml(version.id)}">
+          <div>
+            <strong>v${escapeHtml(version.version_number)} · ${escapeHtml(version.title || 'Untitled rap')}</strong>
+            <small>${escapeHtml(version.created_at || '')} · ${escapeHtml(version.word_count ?? 0)} words · ${escapeHtml(version.line_count ?? 0)} lines</small>
+            <p>${escapeHtml(version.change_note || 'Saved checkpoint')}</p>
+          </div>
+          <div class="version-actions">
+            <button type="button" class="tiny ghost load-version" data-version-id="${escapeHtml(version.id)}">Preview/load</button>
+            <button type="button" class="tiny restore-version" data-version-id="${escapeHtml(version.id)}">Restore</button>
+          </div>
+        </article>
+      `).join('')}
+    </div>
+  `;
+}
+
+async function loadSavedRapVersions(showStatus = false) {
+  if (!state.currentUser || !state.selectedRapId) return;
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}/versions`);
+    state.selectedRapVersions = data.versions || [];
+    renderSavedRapVersions(state.selectedRapVersions);
+    if (showStatus) accountSetStatus(`Loaded ${state.selectedRapVersions.length} versions.`, 'ok');
+  } catch (error) {
+    const versionsEl = getSavedRapVersionsEl();
+    if (versionsEl) {
+      versionsEl.className = 'saved-versions-panel empty-state';
+      versionsEl.textContent = error.message || 'Could not load versions.';
+    }
+  }
+}
+
+async function loadSavedRaps(showStatus = true) {
+  if (!state.currentUser) return;
+  if (showStatus) accountSetStatus('Loading saved raps...', 'muted');
+  const q = savedRapSearchEl?.value || '';
+  const sort = getSavedRapSort()?.value || 'updated_desc';
+  const includeArchived = getSavedRapIncludeArchived()?.checked ? '1' : '0';
+  const data = await accountFetch(`/api/raps?q=${encodeURIComponent(q)}&limit=150&sort=${encodeURIComponent(sort)}&include_archived=${includeArchived}`);
+  state.savedRaps = data.raps || [];
+  renderSavedRaps();
+  await loadSavedRapStats();
+  if (showStatus) accountSetStatus(`Loaded ${state.savedRaps.length} saved rap${state.savedRaps.length === 1 ? '' : 's'}.`, 'ok');
+}
+
+async function loginAccount(event) {
+  event.preventDefault();
+  try {
+    accountSetStatus('Logging in...', 'muted');
+    const data = await accountFetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: loginEmailEl?.value || '', password: loginPasswordEl?.value || '' }),
+    });
+    state.currentUser = data.user || null;
+    updateAccountChrome();
+    await loadSavedRaps(false);
+    accountSetStatus('Login successful. Your saved rap library is ready.', 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function registerAccount(event) {
+  event.preventDefault();
+  try {
+    accountSetStatus('Creating account...', 'muted');
+    const data = await accountFetch('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        display_name: registerNameEl?.value || '',
+        email: registerEmailEl?.value || '',
+        password: registerPasswordEl?.value || '',
+      }),
+    });
+    state.currentUser = data.user || null;
+    updateAccountChrome();
+    await loadSavedRaps(false);
+    accountSetStatus('Account created. You can save this rap now.', 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function logoutAccount() {
+  try { await accountFetch('/api/auth/logout', { method: 'POST', body: JSON.stringify({}) }); } catch (_error) {}
+  state.currentUser = null;
+  state.savedRaps = [];
+  state.selectedRapId = null;
+  state.currentRapId = null;
+  state.selectedRap = null;
+  state.selectedRapVersions = [];
+  updateAccountChrome();
+  renderSavedRaps();
+  renderSelectedRapInfo(null);
+  renderSavedRapVersions([]);
+}
+
+function savePayloadFromEditor({ checkpoint = false } = {}) {
+  const snapshotScore = state.scoreReport?.overall ?? state.staticReport?.score_report?.overall ?? null;
+  const compactSnapshot = state.staticReport ? {
+    generated_at: new Date().toISOString(),
+    summary: state.staticReport.overview?.headline || state.staticReport.summary || '',
+    score: state.staticReport.score_report?.overall ?? null,
+    actions: (state.staticReport.overview?.actions || []).slice(0, 6),
+  } : null;
+  return {
+    title: guessRapTitle(),
+    lyrics: editor.value || '',
+    coach_mode: coachMode?.value || 'match',
+    tags: parseTagInput(getRapTagsInput()?.value || ''),
+    notes: getRapNotesInput()?.value || '',
+    pinned: Boolean(getRapPinnedInput()?.checked),
+    archived: Boolean(getRapArchivedInput()?.checked),
+    last_score: snapshotScore,
+    last_snapshot: compactSnapshot,
+    save_version: true,
+    change_note: checkpoint ? 'Manual checkpoint' : 'Saved from editor',
+    metadata: {
+      saved_from: 'full_lab_editor',
+      beat_id: state.beatId || null,
+      app_version: window.NMC_BOOTSTRAP?.version || '',
+      word_count: countWords(editor.value || ''),
+      line_count: countLines(editor.value || ''),
+    },
+  };
+}
+
+async function saveRap({ updateExisting = false } = {}) {
+  if (!state.currentUser) {
+    switchTab('account');
+    accountSetStatus('Login or create an account before saving raps to the server.', 'muted');
+    return;
+  }
+  const payload = savePayloadFromEditor();
+  try {
+    accountSetStatus(updateExisting ? 'Updating saved rap...' : 'Saving rap...', 'muted');
+    const existingId = state.currentRapId || state.selectedRapId;
+    const url = updateExisting && existingId ? `/api/raps/${encodeURIComponent(existingId)}` : '/api/raps';
+    const method = updateExisting && existingId ? 'PATCH' : 'POST';
+    const data = await accountFetch(url, { method, body: JSON.stringify(payload) });
+    const rap = data.rap;
+    state.currentRapId = rap.id;
+    state.selectedRapId = rap.id;
+    populateRapForm(rap);
+    await loadSavedRaps(false);
+    renderSelectedRapInfo(rap);
+    await loadSavedRapVersions(false);
+    accountSetStatus(`${method === 'POST' ? 'Saved' : 'Updated'} “${rap.title}”. Version history updated.`, 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function saveVersionCheckpoint() {
+  if (!state.currentUser) {
+    switchTab('account');
+    accountSetStatus('Login first, then save a checkpoint.', 'muted');
+    return;
+  }
+  const existingId = state.currentRapId || state.selectedRapId;
+  if (!existingId) {
+    await saveRap({ updateExisting: false });
+    return;
+  }
+  try {
+    accountSetStatus('Saving checkpoint...', 'muted');
+    const payload = savePayloadFromEditor({ checkpoint: true });
+    payload.change_note = 'Manual checkpoint before next revision';
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(existingId)}`, { method: 'PATCH', body: JSON.stringify(payload) });
+    renderSelectedRapInfo(data.rap);
+    await loadSavedRaps(false);
+    await loadSavedRapVersions(false);
+    accountSetStatus('Checkpoint saved. You can restore it later from Version history.', 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function selectSavedRap(rapId, loadFull = false) {
+  if (!rapId || !state.currentUser) return;
+  state.selectedRapId = rapId;
+  renderSavedRaps();
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(rapId)}`);
+    const rap = data.rap;
+    populateRapForm(rap);
+    renderSelectedRapInfo(rap);
+    await loadSavedRapVersions(false);
+    if (loadFull) loadRapIntoEditor(rap);
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+function loadRapIntoEditor(rap) {
+  if (!rap) return;
+  editor.value = rap.lyrics || '';
+  state.currentRapId = rap.id;
+  state.selectedRapId = rap.id;
+  state.selectedRap = rap;
+  populateRapForm(rap);
+  if (coachMode && rap.coach_mode && Array.from(coachMode.options).some((opt) => opt.value === rap.coach_mode)) coachMode.value = rap.coach_mode;
+  try { localStorage.setItem('nmc_editing_lab_draft', editor.value); } catch (_error) {}
+  updateLocalStats();
+  updateGutter();
+  switchTab('editor');
+  setStatus('complete', 'Loaded', `loaded ${rap.title || 'saved rap'}`);
+  queueLiveRhymeJob(true);
+}
+
+async function loadSelectedRapIntoEditor() {
+  if (!state.selectedRapId) {
+    accountSetStatus('Select a saved rap first.', 'muted');
+    return;
+  }
+  const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}`);
+  loadRapIntoEditor(data.rap);
+}
+
+async function duplicateSelectedRap() {
+  if (!state.selectedRapId) {
+    accountSetStatus('Select a saved rap first.', 'muted');
+    return;
+  }
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}/duplicate`, { method: 'POST', body: JSON.stringify({}) });
+    state.selectedRapId = data.rap.id;
+    state.currentRapId = data.rap.id;
+    await loadSavedRaps(false);
+    populateRapForm(data.rap);
+    renderSelectedRapInfo(data.rap);
+    await loadSavedRapVersions(false);
+    accountSetStatus(`Duplicated “${data.rap.title}”.`, 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function togglePinSelectedRap() {
+  if (!state.selectedRapId) return accountSetStatus('Select a saved rap first.', 'muted');
+  const current = state.selectedRap || state.savedRaps.find((row) => row.id === state.selectedRapId) || {};
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}/pin`, { method: 'POST', body: JSON.stringify({ pinned: !current.pinned }) });
+    populateRapForm(data.rap);
+    renderSelectedRapInfo(data.rap);
+    await loadSavedRaps(false);
+    accountSetStatus(data.rap.pinned ? 'Pinned rap.' : 'Unpinned rap.', 'ok');
+  } catch (error) { accountSetStatus(error.message, 'muted'); }
+}
+
+async function toggleArchiveSelectedRap() {
+  if (!state.selectedRapId) return accountSetStatus('Select a saved rap first.', 'muted');
+  const current = state.selectedRap || state.savedRaps.find((row) => row.id === state.selectedRapId) || {};
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}/archive`, { method: 'POST', body: JSON.stringify({ archived: !current.archived }) });
+    populateRapForm(data.rap);
+    renderSelectedRapInfo(data.rap);
+    await loadSavedRaps(false);
+    accountSetStatus(data.rap.archived ? 'Archived rap. Enable “include archived” to show it in the list.' : 'Unarchived rap.', 'ok');
+  } catch (error) { accountSetStatus(error.message, 'muted'); }
+}
+
+async function deleteSelectedRap() {
+  if (!state.selectedRapId) {
+    accountSetStatus('Select a saved rap first.', 'muted');
+    return;
+  }
+  const rap = state.savedRaps.find((row) => row.id === state.selectedRapId) || state.selectedRap;
+  if (!confirm(`Delete “${rap?.title || 'this saved rap'}”? This removes it from the library.`)) return;
+  try {
+    await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}`, { method: 'DELETE' });
+    if (state.currentRapId === state.selectedRapId) state.currentRapId = null;
+    state.selectedRapId = null;
+    state.selectedRap = null;
+    await loadSavedRaps(false);
+    renderSelectedRapInfo(null);
+    renderSavedRapVersions([]);
+    accountSetStatus('Saved rap deleted.', 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function loadVersionIntoEditor(versionId) {
+  if (!state.selectedRapId || !versionId) return;
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}/versions/${encodeURIComponent(versionId)}`);
+    const version = data.version;
+    editor.value = version.lyrics || '';
+    if (rapTitleInputEl) rapTitleInputEl.value = version.title || '';
+    if (coachMode && version.coach_mode && Array.from(coachMode.options).some((opt) => opt.value === version.coach_mode)) coachMode.value = version.coach_mode;
+    updateLocalStats();
+    switchTab('editor');
+    accountSetStatus(`Loaded version ${version.version_number} into the editor. Press Update selected to restore permanently.`, 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function restoreVersion(versionId) {
+  if (!state.selectedRapId || !versionId) return;
+  if (!confirm('Restore this version as the current saved rap? A new checkpoint will be created.')) return;
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}/versions/${encodeURIComponent(versionId)}/restore`, { method: 'POST', body: JSON.stringify({}) });
+    populateRapForm(data.rap);
+    renderSelectedRapInfo(data.rap);
+    loadRapIntoEditor(data.rap);
+    await loadSavedRaps(false);
+    await loadSavedRapVersions(false);
+    accountSetStatus('Version restored and loaded into the editor.', 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function compareSelectedRapToEditor() {
+  if (!state.selectedRapId) return accountSetStatus('Select a saved rap first.', 'muted');
+  try {
+    const data = await accountFetch(`/api/raps/${encodeURIComponent(state.selectedRapId)}`);
+    if (scoreBaselineInputEl) scoreBaselineInputEl.value = data.rap.lyrics || '';
+    if (scoreEditedInputEl) scoreEditedInputEl.value = editor.value || '';
+    switchTab('score');
+    await compareEdits(false);
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
+async function exportRapsJson() {
+  try {
+    const data = await accountFetch('/api/raps/export');
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `nmc-saved-raps-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 500);
+    accountSetStatus('Exported saved rap library JSON.', 'ok');
+  } catch (error) { accountSetStatus(error.message, 'muted'); }
+}
+
+async function importRapsJson(file) {
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const payload = JSON.parse(text);
+    const data = await accountFetch('/api/raps/import', { method: 'POST', body: JSON.stringify(payload) });
+    await loadSavedRaps(false);
+    accountSetStatus(`Imported ${data.created_count || 0} raps. Skipped ${data.skipped_count || 0}.`, 'ok');
+  } catch (error) {
+    accountSetStatus(error.message || 'Import failed.', 'muted');
+  }
+}
+
+async function accountDiagnostics() {
+  try {
+    const data = await accountFetch('/api/account/diagnostics');
+    accountSetStatus(`Account DB ready. Users: ${data.database?.users ?? 0}. Saved raps: ${data.database?.raps ?? 0}. Versions: ${data.database?.versions ?? 0}. DB: ${data.database?.path || 'default'}`, 'ok');
+  } catch (error) {
+    accountSetStatus(error.message, 'muted');
+  }
+}
+
 // Tabs
 $$('.tab').forEach((tab) => {
   tab.addEventListener('click', () => {
@@ -4374,14 +5135,15 @@ document.addEventListener('selectionchange', () => {
   if (document.activeElement === editor && editor.selectionStart !== editor.selectionEnd) scheduleSelectedWordRhyme(false);
 });
 editor.addEventListener('scroll', () => { gutter.scrollTop = editor.scrollTop; });
-coachMode.addEventListener('change', () => { queueSuggestion(true); queueLiveRhymeJob(true); });
-$('#analyzeNow').addEventListener('click', () => { queueSuggestion(true); queueLiveRhymeJob(true); });
-$('#staticBreakdownNow').addEventListener('click', generateStaticBreakdown);
-$('#generateStaticBreakdown').addEventListener('click', generateStaticBreakdown);
-$('#refreshLine').addEventListener('click', () => queueSuggestion(true));
+coachMode.addEventListener('change', () => { queueLiveRhymeJob(true); });
+$('#analyzeNow').addEventListener('click', () => { queueLiveRhymeJob(true); });
+$('#staticBreakdownNow').addEventListener('click', () => generateStaticBreakdown(false));
+$('#generateStaticBreakdown').addEventListener('click', () => generateStaticBreakdown(false));
+$('#generateFullSnapshot')?.addEventListener('click', () => generateStaticBreakdown(true));
+$('#refreshLine').addEventListener('click', () => queueLiveRhymeJob(true));
 $('#downloadDraft').addEventListener('click', downloadDraft);
 $('#loadSampleTop').addEventListener('click', loadSample);
-$('#snapshotNowTop')?.addEventListener('click', generateStaticBreakdown);
+$('#snapshotNowTop')?.addEventListener('click', () => generateStaticBreakdown(false));
 $('#openEditorTop')?.addEventListener('click', () => switchTab('editor'));
 $('#runLiveRhymeNow')?.addEventListener('click', () => queueLiveRhymeJob(true));
 $('#runLiveRhymeSync')?.addEventListener('click', () => {
@@ -4400,8 +5162,8 @@ $('#openSentencePatternsTop')?.addEventListener('click', () => { switchTab('sent
 $('#openPhysicsTop')?.addEventListener('click', () => switchTab('physics'));
 $('#openLiveTop')?.addEventListener('click', () => switchTab('live'));
 $('#openSongTop')?.addEventListener('click', () => switchTab('song'));
-$('#refreshTheorySnapshot')?.addEventListener('click', generateStaticBreakdown);
-$('#refreshComparisonSnapshot')?.addEventListener('click', generateStaticBreakdown);
+$('#refreshTheorySnapshot')?.addEventListener('click', () => generateStaticBreakdown(false));
+$('#refreshComparisonSnapshot')?.addEventListener('click', () => generateStaticBreakdown(false));
 $('#physicsRefreshSnapshot')?.addEventListener('click', runScansionPhysics);
 $('#copyPhysicsJson')?.addEventListener('click', async () => {
   try {
@@ -4634,6 +5396,16 @@ document.addEventListener('click', (event) => {
     return;
   }
 
+  const rhymeToken = event.target.closest('.rh-token, .rhyme-word');
+  if (rhymeToken && !event.target.closest('.rhyme-family-chip, .rhyme-legend-item')) {
+    const word = rhymeToken.dataset.word || rhymeToken.textContent.trim();
+    const lineNumber = Number(rhymeToken.dataset.line || rhymeToken.closest('[data-line]')?.dataset.line || activeLineNumber());
+    const lineText = rhymeToken.closest('.rhyme-line, blockquote, h3, .highlight-line')?.textContent || '';
+    analyzeExplicitHighlightedWord(word, lineNumber, lineText);
+    switchTab('editor');
+    return;
+  }
+
   const patchButton = event.target.closest('.apply-patch');
   if (patchButton) {
     const fix = findFix(patchButton.dataset.line);
@@ -4725,7 +5497,7 @@ document.addEventListener('click', (event) => {
   if (copyWordJson) {
     navigator.clipboard?.writeText(JSON.stringify(state.selectedWordReport || {}, null, 2));
     copyWordJson.textContent = 'Copied';
-    setTimeout(() => { copyWordJson.textContent = 'Copy word JSON'; }, 900);
+    setTimeout(() => { copyWordJson.textContent = 'Copy rhyme JSON'; }, 900);
     return;
   }
 
@@ -4817,6 +5589,69 @@ $('#downloadScoreCsv')?.addEventListener('click', () => downloadServerReport('sc
 $('#downloadComparePdf')?.addEventListener('click', () => downloadServerReport('compare', 'pdf'));
 $('#downloadCompareCsv')?.addEventListener('click', () => downloadServerReport('compare', 'csv'));
 
+
+$('#openAccountTop')?.addEventListener('click', () => switchTab('account'));
+$('#openSavedRapsFromEditor')?.addEventListener('click', () => switchTab('account'));
+$('#quickSaveRap')?.addEventListener('click', () => saveRap({ updateExisting: Boolean(state.currentRapId) }));
+$('#refreshAccountState')?.addEventListener('click', loadAccountState);
+$('#accountDiagnostics')?.addEventListener('click', accountDiagnostics);
+loginFormEl?.addEventListener('submit', loginAccount);
+registerFormEl?.addEventListener('submit', registerAccount);
+$('#logoutAccount')?.addEventListener('click', logoutAccount);
+$('#saveRapAsNew')?.addEventListener('click', () => saveRap({ updateExisting: false }));
+$('#updateSavedRap')?.addEventListener('click', () => saveRap({ updateExisting: true }));
+$('#saveVersionCheckpoint')?.addEventListener('click', saveVersionCheckpoint);
+$('#reloadSavedRaps')?.addEventListener('click', () => loadSavedRaps(true));
+$('#loadSelectedRap')?.addEventListener('click', loadSelectedRapIntoEditor);
+$('#compareSelectedRap')?.addEventListener('click', compareSelectedRapToEditor);
+$('#duplicateSelectedRap')?.addEventListener('click', duplicateSelectedRap);
+$('#togglePinSelectedRap')?.addEventListener('click', togglePinSelectedRap);
+$('#toggleArchiveSelectedRap')?.addEventListener('click', toggleArchiveSelectedRap);
+$('#deleteSelectedRap')?.addEventListener('click', deleteSelectedRap);
+$('#exportRapsJson')?.addEventListener('click', exportRapsJson);
+$('#importRapsJson')?.addEventListener('change', (event) => importRapsJson(event.target.files?.[0]));
+$('#savedRapSort')?.addEventListener('change', () => loadSavedRaps(false));
+$('#savedRapIncludeArchived')?.addEventListener('change', () => loadSavedRaps(false));
+savedRapSearchEl?.addEventListener('input', () => {
+  clearTimeout(state.savedRapSearchTimer);
+  state.savedRapSearchTimer = setTimeout(() => loadSavedRaps(false), 250);
+});
+savedRapsListEl?.addEventListener('click', (event) => {
+  const tag = event.target.closest('.saved-tag-filter');
+  if (tag && savedRapSearchEl) {
+    savedRapSearchEl.value = tag.dataset.tag || '';
+    loadSavedRaps(false);
+    return;
+  }
+  const card = event.target.closest('.saved-rap-card');
+  if (!card) return;
+  selectSavedRap(card.dataset.rapId, false);
+});
+savedRapsListEl?.addEventListener('dblclick', (event) => {
+  const card = event.target.closest('.saved-rap-card');
+  if (!card) return;
+  selectSavedRap(card.dataset.rapId, true);
+});
+getSavedRapStatsEl()?.addEventListener('click', (event) => {
+  const tag = event.target.closest('.saved-tag-filter');
+  if (!tag || !savedRapSearchEl) return;
+  savedRapSearchEl.value = tag.dataset.tag || '';
+  loadSavedRaps(false);
+});
+getSavedRapVersionsEl()?.addEventListener('click', (event) => {
+  if (event.target.closest('#reloadSavedRapVersions')) {
+    loadSavedRapVersions(true);
+    return;
+  }
+  const loadButton = event.target.closest('.load-version');
+  if (loadButton) {
+    loadVersionIntoEditor(loadButton.dataset.versionId);
+    return;
+  }
+  const restoreButton = event.target.closest('.restore-version');
+  if (restoreButton) restoreVersion(restoreButton.dataset.versionId);
+});
+
 // Bootstrap
 try {
   const saved = localStorage.getItem('nmc_editing_lab_draft') || '';
@@ -4830,6 +5665,7 @@ loadScoreBaselineFromStorage();
 updateLocalStats();
 renderTtsStatus(window.NMC_BOOTSTRAP?.tts || {});
 renderEmpty();
+loadAccountState();
 renderSentenceReport({ available: false, error: 'Sentence-level feedback will appear here.' });
 renderHighlightedWordReport({ available: false, error: 'Highlight or double-click a word in the editor to fetch similar rhymes asynchronously.' });
 renderLiveRhymeReport({ available: false, error: 'Start writing and place the cursor on a line. Active-line rhyme suggestions will appear here.' });
@@ -4839,6 +5675,5 @@ setLiveRhymeDiagnostics('ready · highlight a word or keep typing');
 if (/pythonanywhere\.com$/i.test(location.hostname)) { setTimeout(testPythonAnywhereDiagnostics, 700); }
 if (countWords(editor.value) >= 3) {
   generateStaticBreakdown();
-  queueSuggestion(true);
   queueLiveRhymeJob(true);
 }
