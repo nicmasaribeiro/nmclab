@@ -766,3 +766,149 @@ GET  /api/rhyme-word/job/<job_id>
 ```
 
 Every compatibility POST returns `status: complete`, `poll_required: false`, and `no_poll_required: true` when applicable.
+
+## User accounts and saved raps
+
+This build includes built-in login, registration, and saved rap storage.
+
+Routes:
+
+```http
+GET  /login
+POST /login
+GET  /register
+POST /register
+POST /logout
+GET  /api/auth/me
+POST /api/auth/login
+POST /api/auth/register
+POST /api/auth/logout
+GET  /api/raps
+POST /api/raps
+GET  /api/raps/<rap_id>
+PATCH /api/raps/<rap_id>
+DELETE /api/raps/<rap_id>
+POST /api/raps/<rap_id>/duplicate
+GET  /api/account/diagnostics
+```
+
+The account system uses SQLite through `user_store.py`. By default the database is created at:
+
+```text
+runtime_data/user_raps.sqlite
+```
+
+Set this environment variable to move it:
+
+```bash
+export RAP_DB_PATH=/home/YOURUSERNAME/rap_score_compare_lab/runtime_data/user_raps.sqlite
+```
+
+For production hosting, set a stable `SECRET_KEY`. Changing `SECRET_KEY` logs users out because Flask session cookies can no longer be verified.
+
+```bash
+export SECRET_KEY="replace-with-a-long-random-secret"
+```
+
+The UI has an **Account / Saved Raps** tab. Users can create an account, save the current editor draft, update a selected saved rap, load a saved rap back into the editor, duplicate a saved rap, and delete a saved rap.
+
+## 2026.07 highlighted-word rhyme fix
+
+This build fixes the highlighted-word rhyme workflow in the main editor and the standalone `/live-writer` page.
+
+- The selected/highlighted word range is now the source of truth for the rhyme request.
+- If the user accidentally highlights punctuation or multiple words, the app chooses the best word token inside the selection.
+- Clicking a highlighted rhyme token in the Static Snapshot or Live Rhyme sidecar now opens the same highlighted-word suggestion panel.
+- Clicking a suggested rhyme now replaces the highlighted word, not the whole line ending, in the standalone live writer.
+- The selected-word endpoints return a helpful JSON message instead of a hard HTTP error when no word is selected.
+- The rhyme key logic now uses corpus/profile suffix neighborhoods, improving suggestions for families like surface/service/purpose/universe, diction/friction/direction, and music/lyric.
+
+
+## Saved Rap Suite v12
+
+The account system now supports a full saved-rap library:
+
+- User registration, login, and logout.
+- Save as new, update selected rap, and manual checkpoints.
+- Automatic version history for each saved rap.
+- Restore any saved version back into the editor.
+- Tags, notes, pinned raps, and archived raps.
+- Library stats: total saved raps, versions, words, lines, and top tags.
+- Search and sorting by recent update, creation date, title, score, or length.
+- JSON export/import of the user's library.
+- Compare a saved rap against the current editor draft.
+
+Important routes:
+
+```http
+GET  /api/raps
+POST /api/raps
+GET  /api/raps/stats
+GET  /api/raps/export
+POST /api/raps/import
+GET  /api/raps/<rap_id>/versions
+POST /api/raps/<rap_id>/versions
+GET  /api/raps/<rap_id>/versions/<version_id>
+POST /api/raps/<rap_id>/versions/<version_id>/restore
+POST /api/raps/<rap_id>/pin
+POST /api/raps/<rap_id>/archive
+```
+
+On PythonAnywhere, keep `RAP_DB_PATH` pointed at a persistent path, for example:
+
+```bash
+export RAP_DB_PATH=/home/YOURUSERNAME/rap_score_compare_lab/runtime_data/user_raps.sqlite
+mkdir -p /home/YOURUSERNAME/rap_score_compare_lab/runtime_data
+```
+
+## Highlighted-word rhyme fix
+
+This build includes a stricter highlighted-word rhyme engine (`highlighted_rhyme_engine.py`). The selected-word panel no longer treats a loose spelling suffix as a rhyme. It now scores the highlighted word against candidate words by phonetic tail, final vowel, final consonant, syllable fit, and corpus-style slant families.
+
+The highlighted-word panel separates:
+
+- clean family / end rhymes
+- corpus style slants
+- near / slant rhymes
+- multi-syllable landings
+- internal echoes
+
+The main route is still:
+
+```http
+POST /api/live-writer/word
+```
+
+Compatibility routes also use the strict engine:
+
+```http
+POST /api/rhyme-word/sync
+POST /api/live-rhyme/word
+POST /api/rhyme-word-job
+```
+
+
+## Broad rhyme families and highlighted phrase rhymes
+
+The Live Rhyme Writer now supports both highlighted words and highlighted phrases.
+
+New/updated routes:
+
+```http
+POST /api/live-writer/word
+POST /api/live-writer/phrase
+POST /api/rhyme-phrase/sync
+POST /api/live-rhyme/phrase
+```
+
+The rhyme classifier separates suggestions into:
+
+- perfect / clean family rhymes
+- corpus style slants
+- broad rap families
+- near/slant rhymes
+- assonance and consonance
+- phrase-preserving replacements
+- suggestive phrase-family rewrites
+
+Highlighting a phrase such as `core to surface` returns phrase-level replacements like frame-preserving landings and broader phrase-family responses, while still showing the target landing word and its phonetic rhyme classification.

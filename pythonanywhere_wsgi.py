@@ -25,6 +25,8 @@ os.environ.setdefault("MAX_LYRICS_CHARS", "30000")
 os.environ.setdefault("RATE_LIMIT_PER_MINUTE", "0")
 # Optional: set a private beta code. Leave blank for no gate.
 # os.environ.setdefault("BETA_ACCESS_CODE", "your-beta-code")
+# Keep SECRET_KEY stable so login sessions remain valid.
+os.environ.setdefault("RAP_DB_PATH", f"/home/{USERNAME}/rap_score_compare_lab/runtime_data/user_raps.sqlite")
 # os.environ.setdefault("SECRET_KEY", "replace-with-a-long-random-string")
 
 if PROJECT_DIR not in sys.path:

@@ -71,7 +71,8 @@ def build_live_writer_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         beat_id=str(payload.get("beat_id") or "") or None,
     )
     result.update({
-        "engine": "live_writer_engine_v8_core",
+        "wrapper_engine": "live_writer_engine_v8_core",
+        "engine": result.get("engine") or "live_writer_engine_v8_core",
         "direct_complete": True,
         "poll_required": False,
         "no_poll_required": True,
@@ -80,23 +81,49 @@ def build_live_writer_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return result
 
 
+def _best_text_from_fragment(fragment: str, prefer_last: bool = False, allow_phrase: bool = True) -> str:
+    text = str(fragment or "")
+    matches = list(WORD_RE.finditer(text))
+    if not matches:
+        return ""
+    # If the user truly highlighted a phrase, keep the phrase. The broad rhyme
+    # engine can analyze the final landing while preserving/replacing the whole
+    # selected phrase in the editor.
+    if allow_phrase and len(matches) >= 2:
+        start = matches[0].start()
+        end = matches[-1].end()
+        phrase = re.sub(r"\s+", " ", text[start:end]).strip()
+        if phrase and len(phrase) <= 140:
+            return phrase
+    matches.sort(key=lambda m: (len(m.group(0)), m.start()), reverse=True)
+    if prefer_last:
+        matches.sort(key=lambda m: (m.end(), len(m.group(0))), reverse=True)
+    return matches[0].group(0)
+
+
 def _word_from_payload(payload: Dict[str, Any]) -> str:
+    lyrics = _payload_text(payload)
+    start = _int(payload.get("selection_start"), -1)
+    end = _int(payload.get("selection_end"), -1)
+    # Prefer the actual editor selection range, because the visible highlighted
+    # word/phrase should be the source of truth for replacements and suggestions.
+    if 0 <= start < end <= len(lyrics):
+        ranged = _best_text_from_fragment(lyrics[start:end], allow_phrase=True)
+        if ranged:
+            return ranged
     word = str(
-        payload.get("word")
+        payload.get("phrase")
+        or payload.get("selected_phrase")
+        or payload.get("selected_text")
+        or payload.get("raw_selection")
+        or payload.get("word")
         or payload.get("selected_word")
         or payload.get("target")
         or payload.get("highlighted_word")
         or payload.get("selection")
         or ""
     ).strip()
-    if not word:
-        lyrics = _payload_text(payload)
-        start = _int(payload.get("selection_start"), -1)
-        end = _int(payload.get("selection_end"), -1)
-        if 0 <= start < end <= len(lyrics):
-            word = lyrics[start:end]
-    match = WORD_RE.search(word)
-    return match.group(0) if match else ""
+    return _best_text_from_fragment(word, prefer_last=False, allow_phrase=True)
 
 
 def build_selected_word_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -122,7 +149,8 @@ def build_selected_word_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         job_id=payload.get("job_id"),
     )
     result.update({
-        "engine": "live_writer_engine_v8_core",
+        "wrapper_engine": "live_writer_engine_v8_core",
+        "engine": result.get("engine") or "live_writer_engine_v8_core",
         "direct_complete": True,
         "poll_required": False,
         "no_poll_required": True,

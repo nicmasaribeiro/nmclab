@@ -171,3 +171,53 @@ Quick tests after reload:
 ```
 
 If the old full lab still shows a queued state, it is usually the browser serving cached static files. The `/live-writer` page avoids that problem.
+
+## Login and saved raps on PythonAnywhere
+
+This build stores accounts and saved raps in SQLite, so no external database is required for beta use.
+
+Recommended environment variables in the PythonAnywhere Web tab or WSGI file:
+
+```python
+import os
+os.environ.setdefault("SECRET_KEY", "replace-with-a-long-random-secret")
+os.environ.setdefault("RAP_DB_PATH", "/home/YOURUSERNAME/rap_score_compare_lab/runtime_data/user_raps.sqlite")
+os.environ.setdefault("LOGIN_REQUIRED_TO_SAVE", "1")
+```
+
+Make sure the directory exists and is writable:
+
+```bash
+mkdir -p /home/YOURUSERNAME/rap_score_compare_lab/runtime_data
+```
+
+After reload, open the app, go to **Account / Saved Raps**, create an account, then test:
+
+```text
+/api/account/diagnostics
+/api/auth/me
+```
+
+Keep `SECRET_KEY` stable. If you change it, existing login sessions are invalidated, but saved raps remain in the SQLite database.
+
+
+## Saved rap database
+
+The saved-rap suite stores accounts, saved raps, tags, notes, pins, archives, and version history in SQLite. Use a persistent path:
+
+```python
+os.environ.setdefault("RAP_DB_PATH", "/home/YOURUSERNAME/rap_score_compare_lab/runtime_data/user_raps.sqlite")
+os.environ.setdefault("SECRET_KEY", "replace-with-a-long-random-secret")
+```
+
+Create the folder from a PythonAnywhere Bash console:
+
+```bash
+mkdir -p /home/YOURUSERNAME/rap_score_compare_lab/runtime_data
+```
+
+After upload, reload the Web app and check:
+
+```text
+/api/account/diagnostics
+```

@@ -10,6 +10,7 @@ import sys
 import threading
 import time
 import uuid
+from functools import wraps
 from collections import defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -20,6 +21,8 @@ from typing import Any, Dict, Tuple
 from flask import Flask, Response, jsonify, redirect, render_template, request, send_file, send_from_directory, session, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.utils import secure_filename
+
+from user_store import UserStore, clean_title
 
 from beat_engine import ALLOWED_AUDIO_EXTENSIONS, analyze_beat, attach_beat_guidance, beat_backend_status
 from song_engine import SUPPORTED_TTS_BACKENDS, VOICE_PRESETS, INTENSITY_PRESETS, available_tts_engines, build_timing_plan, render_song, render_voice_sample
@@ -69,7 +72,7 @@ def _env_int(name: str, default: int, low: int | None = None, high: int | None =
 
 
 APP_NAME = os.getenv("APP_NAME", "NMC Live Rhyme Writer Lab")
-APP_VERSION = os.getenv("APP_VERSION", "2026.07-snapshot-fast-v9")
+APP_VERSION = os.getenv("APP_VERSION", "2026.07-broad-rhyme-phrase-v13")
 APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
 IS_PRODUCTION = APP_ENV in {"prod", "production"}
 
@@ -151,6 +154,12 @@ MAX_RENDERS = _env_int("MAX_RENDERS", 40, low=1, high=500)
 MAX_RENDER_SECONDS = _env_int("MAX_RENDER_SECONDS", 240, low=10, high=900)
 MAX_SONG_RENDER_LINES = _env_int("MAX_SONG_RENDER_LINES", 96, low=1, high=240)
 FEEDBACK_PATH = DATA_DIR / os.getenv("FEEDBACK_FILENAME", "beta_feedback.jsonl")
+RAP_DB_PATH = Path(os.getenv("RAP_DB_PATH", str(DATA_DIR / "user_raps.sqlite"))).expanduser()
+if not RAP_DB_PATH.is_absolute():
+    RAP_DB_PATH = BASE_DIR / RAP_DB_PATH
+USER_STORE = UserStore(RAP_DB_PATH)
+USER_STORE.init_db()
+LOGIN_REQUIRED_TO_SAVE = _env_bool("LOGIN_REQUIRED_TO_SAVE", True)
 
 ASYNC_WORKERS = _env_int("ASYNC_WORKERS", 2, low=1, high=8)
 EXECUTOR = None if (INLINE_GENERAL_ASYNC and LIVE_RHYME_INLINE_JOBS) else ThreadPoolExecutor(max_workers=ASYNC_WORKERS)
@@ -161,7 +170,7 @@ RATE_BUCKETS: Dict[str, deque[float]] = defaultdict(deque)
 STATE_LOCK = threading.Lock()
 MAX_JOBS = _env_int("MAX_JOBS", 80, low=10, high=1000)
 MAX_BEATS = _env_int("MAX_BEATS", 12, low=1, high=200)
-PUBLIC_ENDPOINTS = {"beta_login", "beta_logout", "healthz", "readyz", "robots_txt", "privacy", "terms", "static"}
+PUBLIC_ENDPOINTS = {"beta_login", "beta_logout", "user_login", "user_register", "user_logout", "api_auth_me", "api_auth_login", "api_auth_register", "api_auth_logout", "api_account_diagnostics", "healthz", "readyz", "robots_txt", "privacy", "terms", "static"}
 
 
 def _now() -> float:
@@ -250,6 +259,14 @@ def _int_payload(value: Any, default: int = 0) -> int:
         return default
 
 
+def _boolish(value: Any, default: bool = False) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() in {"1", "true", "yes", "on", "y"}
+
+
 def _live_route_exempt() -> bool:
     """Live-rhyme routes poll frequently while a user types.
 
@@ -262,7 +279,9 @@ def _live_route_exempt() -> bool:
         "/api/live-rhyme",
         "/api/rhyme/live",
         "/api/rhyme-word",
+        "/api/rhyme-phrase",
         "/api/rhyme/word-job",
+        "/api/rhyme/phrase-job",
         "/api/rhyme/similar",
     )
     return any(path.startswith(prefix) for prefix in prefixes)
@@ -1063,13 +1082,58 @@ def _job_public_payload(job_id: str, include_complete_result: bool = True) -> Di
     return payload
 
 
+
+
+def _current_user() -> Dict[str, Any] | None:
+    user_id = session.get("user_id")
+    if not user_id:
+        return None
+    user = USER_STORE.get_user(str(user_id))
+    if not user:
+        session.pop("user_id", None)
+        return None
+    return user
+
+
+def _login_user(user: Dict[str, Any]) -> None:
+    session["user_id"] = user.get("id")
+    session["beta_ok"] = True
+    session.permanent = True
+
+
+def _logout_user() -> None:
+    session.pop("user_id", None)
+
+
+def _auth_payload() -> Dict[str, Any]:
+    if request.is_json:
+        return _json_payload()
+    return dict(request.form.items())
+
+
+def _require_user_api() -> tuple[Dict[str, Any] | None, Any | None]:
+    user = _current_user()
+    if not user:
+        return None, (jsonify({"error": "Login required.", "login_url": url_for("user_login"), "authenticated": False}), 401)
+    return user, None
+
+
+def login_required_api(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        user, error = _require_user_api()
+        if error:
+            return error
+        return func(user, *args, **kwargs)
+    return wrapper
+
 @app.before_request
 def beta_gate_and_rate_limit():
     if _rate_limited():
         return jsonify({"error": "Too many beta requests from this browser. Pause briefly, then try again."}), 429
     if not BETA_ACCESS_CODE or _is_public_endpoint():
         return None
-    if session.get("beta_ok") is True:
+    if session.get("beta_ok") is True or session.get("user_id"):
         return None
     if _wants_json():
         return jsonify({"error": "Beta access code required.", "login_url": url_for("beta_login")}), 401
@@ -1090,6 +1154,301 @@ def add_security_headers(response):
     response.headers.setdefault("X-Robots-Tag", "noindex, nofollow")
     return response
 
+
+
+@app.context_processor
+def inject_account_context():
+    return {"current_user": _current_user(), "login_required_to_save": LOGIN_REQUIRED_TO_SAVE}
+
+
+@app.route("/login", methods=["GET", "POST"])
+def user_login():
+    next_url = _safe_next_url(request.values.get("next"))
+    if request.method == "GET":
+        return render_template("account_login.html", app_name=APP_NAME, app_version=APP_VERSION, mode="login", error=None, next_url=next_url)
+    payload = _auth_payload()
+    email = str(payload.get("email") or "").strip()
+    password = str(payload.get("password") or "")
+    user = USER_STORE.authenticate(email, password)
+    if not user:
+        if _wants_json():
+            return jsonify({"error": "Invalid email or password.", "authenticated": False}), 401
+        return render_template("account_login.html", app_name=APP_NAME, app_version=APP_VERSION, mode="login", error="Invalid email or password.", next_url=next_url), 401
+    _login_user(user)
+    if _wants_json():
+        return jsonify({"ok": True, "authenticated": True, "user": user})
+    return redirect(next_url)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def user_register():
+    next_url = _safe_next_url(request.values.get("next"))
+    if request.method == "GET":
+        return render_template("account_login.html", app_name=APP_NAME, app_version=APP_VERSION, mode="register", error=None, next_url=next_url)
+    payload = _auth_payload()
+    try:
+        user = USER_STORE.create_user(
+            email=str(payload.get("email") or ""),
+            password=str(payload.get("password") or ""),
+            display_name=str(payload.get("display_name") or ""),
+        )
+    except ValueError as exc:
+        if _wants_json():
+            return jsonify({"error": str(exc), "authenticated": False}), 400
+        return render_template("account_login.html", app_name=APP_NAME, app_version=APP_VERSION, mode="register", error=str(exc), next_url=next_url), 400
+    _login_user(user)
+    if _wants_json():
+        return jsonify({"ok": True, "authenticated": True, "user": user}), 201
+    return redirect(next_url)
+
+
+@app.route("/logout", methods=["GET", "POST"])
+def user_logout():
+    _logout_user()
+    if _wants_json():
+        return jsonify({"ok": True, "authenticated": False})
+    return redirect(url_for("index"))
+
+
+@app.route("/api/auth/me", methods=["GET"])
+def api_auth_me():
+    user = _current_user()
+    return jsonify({
+        "authenticated": bool(user),
+        "user": user,
+        "save_enabled": bool(user),
+        "db_ready": True,
+        "app_version": APP_VERSION,
+    })
+
+
+@app.route("/api/auth/login", methods=["POST"])
+def api_auth_login():
+    payload = _auth_payload()
+    user = USER_STORE.authenticate(str(payload.get("email") or ""), str(payload.get("password") or ""))
+    if not user:
+        return jsonify({"error": "Invalid email or password.", "authenticated": False}), 401
+    _login_user(user)
+    return jsonify({"ok": True, "authenticated": True, "user": user})
+
+
+@app.route("/api/auth/register", methods=["POST"])
+def api_auth_register():
+    payload = _auth_payload()
+    try:
+        user = USER_STORE.create_user(
+            email=str(payload.get("email") or ""),
+            password=str(payload.get("password") or ""),
+            display_name=str(payload.get("display_name") or ""),
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc), "authenticated": False}), 400
+    _login_user(user)
+    return jsonify({"ok": True, "authenticated": True, "user": user}), 201
+
+
+@app.route("/api/auth/logout", methods=["POST"])
+def api_auth_logout():
+    _logout_user()
+    return jsonify({"ok": True, "authenticated": False})
+
+
+@app.route("/api/raps", methods=["GET"])
+@login_required_api
+def api_list_raps(user: Dict[str, Any]):
+    query = str(request.args.get("q") or "")
+    limit = _int_payload(request.args.get("limit"), 100)
+    include_archived = _boolish(request.args.get("include_archived"), False)
+    archived_only = _boolish(request.args.get("archived_only"), False)
+    tag = str(request.args.get("tag") or "")
+    sort = str(request.args.get("sort") or "updated_desc")
+    return jsonify({
+        "ok": True,
+        "raps": USER_STORE.list_raps(
+            user["id"],
+            query=query,
+            limit=limit,
+            include_archived=include_archived,
+            archived_only=archived_only,
+            tag=tag,
+            sort=sort,
+        ),
+    })
+
+@app.route("/api/raps", methods=["POST"])
+@login_required_api
+def api_create_rap(user: Dict[str, Any]):
+    payload = _json_payload()
+    lyrics = str(payload.get("lyrics") or payload.get("text") or "")
+    if len(lyrics) > MAX_LYRICS_CHARS:
+        return jsonify({"error": f"Lyrics are too long. Keep drafts under {MAX_LYRICS_CHARS:,} characters."}), 400
+    rap = USER_STORE.create_rap(
+        user["id"],
+        title=clean_title(str(payload.get("title") or ""), lyrics),
+        lyrics=lyrics,
+        coach_mode=_mode(payload.get("coach_mode") or payload.get("mode") or "match"),
+        metadata=payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {},
+        tags=payload.get("tags", []),
+        notes=str(payload.get("notes") or ""),
+        pinned=_boolish(payload.get("pinned"), False),
+        archived=_boolish(payload.get("archived"), False),
+        last_score=payload.get("last_score"),
+        last_snapshot=payload.get("last_snapshot") if isinstance(payload.get("last_snapshot"), dict) else None,
+    )
+    return jsonify({"ok": True, "rap": rap}), 201
+
+@app.route("/api/raps/<rap_id>", methods=["GET"])
+@login_required_api
+def api_get_rap(user: Dict[str, Any], rap_id: str):
+    rap = USER_STORE.get_rap(user["id"], rap_id)
+    if not rap:
+        return jsonify({"error": "Saved rap not found."}), 404
+    return jsonify({"ok": True, "rap": rap})
+
+
+@app.route("/api/raps/<rap_id>", methods=["PUT", "PATCH"])
+@login_required_api
+def api_update_rap(user: Dict[str, Any], rap_id: str):
+    payload = _json_payload()
+    lyrics = payload.get("lyrics") if "lyrics" in payload else payload.get("text")
+    if lyrics is not None and len(str(lyrics)) > MAX_LYRICS_CHARS:
+        return jsonify({"error": f"Lyrics are too long. Keep drafts under {MAX_LYRICS_CHARS:,} characters."}), 400
+    last_snapshot = payload.get("last_snapshot") if isinstance(payload.get("last_snapshot"), dict) else None
+    last_score = payload.get("last_score") if "last_score" in payload else None
+    rap = USER_STORE.update_rap(
+        user["id"],
+        rap_id,
+        title=str(payload.get("title")) if "title" in payload else None,
+        lyrics=str(lyrics) if lyrics is not None else None,
+        coach_mode=_mode(payload.get("coach_mode") or payload.get("mode"), default="match") if ("coach_mode" in payload or "mode" in payload) else None,
+        metadata=payload.get("metadata") if isinstance(payload.get("metadata"), dict) else None,
+        tags=payload.get("tags") if "tags" in payload else None,
+        notes=str(payload.get("notes")) if "notes" in payload else None,
+        pinned=_boolish(payload.get("pinned"), False) if "pinned" in payload else None,
+        archived=_boolish(payload.get("archived"), False) if "archived" in payload else None,
+        last_score=last_score,
+        last_snapshot=last_snapshot,
+        create_version=_boolish(payload.get("save_version"), True),
+        change_note=str(payload.get("change_note") or "Saved revision"),
+    )
+    if not rap:
+        return jsonify({"error": "Saved rap not found."}), 404
+    return jsonify({"ok": True, "rap": rap})
+
+@app.route("/api/raps/<rap_id>", methods=["DELETE"])
+@login_required_api
+def api_delete_rap(user: Dict[str, Any], rap_id: str):
+    deleted = USER_STORE.delete_rap(user["id"], rap_id)
+    if not deleted:
+        return jsonify({"error": "Saved rap not found."}), 404
+    return jsonify({"ok": True, "deleted": True, "rap_id": rap_id})
+
+
+@app.route("/api/raps/<rap_id>/duplicate", methods=["POST"])
+@login_required_api
+def api_duplicate_rap(user: Dict[str, Any], rap_id: str):
+    rap = USER_STORE.duplicate_rap(user["id"], rap_id)
+    if not rap:
+        return jsonify({"error": "Saved rap not found."}), 404
+    return jsonify({"ok": True, "rap": rap}), 201
+
+
+@app.route("/api/raps/stats", methods=["GET"])
+@login_required_api
+def api_rap_library_stats(user: Dict[str, Any]):
+    return jsonify({"ok": True, "stats": USER_STORE.library_stats(user["id"])})
+
+
+@app.route("/api/raps/export", methods=["GET"])
+@login_required_api
+def api_export_raps(user: Dict[str, Any]):
+    payload = USER_STORE.export_library(user["id"])
+    payload["user"] = {"id": user.get("id"), "email": user.get("email"), "display_name": user.get("display_name")}
+    return jsonify(payload)
+
+
+@app.route("/api/raps/import", methods=["POST"])
+@login_required_api
+def api_import_raps(user: Dict[str, Any]):
+    payload = _json_payload()
+    try:
+        result = USER_STORE.import_library(user["id"], payload)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    return jsonify({"ok": True, **result}), 201
+
+
+@app.route("/api/raps/<rap_id>/versions", methods=["GET"])
+@login_required_api
+def api_list_rap_versions(user: Dict[str, Any], rap_id: str):
+    if not USER_STORE.get_rap(user["id"], rap_id):
+        return jsonify({"error": "Saved rap not found."}), 404
+    limit = _int_payload(request.args.get("limit"), 80)
+    return jsonify({"ok": True, "versions": USER_STORE.list_versions(user["id"], rap_id, limit=limit)})
+
+
+@app.route("/api/raps/<rap_id>/versions", methods=["POST"])
+@login_required_api
+def api_create_rap_version(user: Dict[str, Any], rap_id: str):
+    payload = _json_payload()
+    version = USER_STORE.create_version(user["id"], rap_id, change_note=str(payload.get("change_note") or "Manual checkpoint"))
+    if not version:
+        return jsonify({"error": "Saved rap not found."}), 404
+    return jsonify({"ok": True, "version": version}), 201
+
+
+@app.route("/api/raps/<rap_id>/versions/<version_id>", methods=["GET"])
+@login_required_api
+def api_get_rap_version(user: Dict[str, Any], rap_id: str, version_id: str):
+    version = USER_STORE.get_version(user["id"], rap_id, version_id)
+    if not version:
+        return jsonify({"error": "Saved rap version not found."}), 404
+    return jsonify({"ok": True, "version": version})
+
+
+@app.route("/api/raps/<rap_id>/versions/<version_id>/restore", methods=["POST"])
+@login_required_api
+def api_restore_rap_version(user: Dict[str, Any], rap_id: str, version_id: str):
+    rap = USER_STORE.restore_version(user["id"], rap_id, version_id)
+    if not rap:
+        return jsonify({"error": "Saved rap version not found."}), 404
+    return jsonify({"ok": True, "rap": rap})
+
+
+@app.route("/api/raps/<rap_id>/pin", methods=["POST"])
+@login_required_api
+def api_pin_rap(user: Dict[str, Any], rap_id: str):
+    payload = _json_payload()
+    pinned = _boolish(payload.get("pinned"), True)
+    rap = USER_STORE.update_rap(user["id"], rap_id, pinned=pinned, create_version=False)
+    if not rap:
+        return jsonify({"error": "Saved rap not found."}), 404
+    return jsonify({"ok": True, "rap": rap})
+
+
+@app.route("/api/raps/<rap_id>/archive", methods=["POST"])
+@login_required_api
+def api_archive_rap(user: Dict[str, Any], rap_id: str):
+    payload = _json_payload()
+    archived = _boolish(payload.get("archived"), True)
+    rap = USER_STORE.update_rap(user["id"], rap_id, archived=archived, create_version=False)
+    if not rap:
+        return jsonify({"error": "Saved rap not found."}), 404
+    return jsonify({"ok": True, "rap": rap})
+
+
+@app.route("/api/account/diagnostics", methods=["GET"])
+def api_account_diagnostics():
+    user = _current_user()
+    stats = USER_STORE.stats()
+    return jsonify({
+        "ok": True,
+        "authenticated": bool(user),
+        "user": user,
+        "database": {"ready": True, "path": stats.get("db_path"), "users": stats.get("users"), "raps": stats.get("raps"), "versions": stats.get("versions")},
+        "session_cookie_secure": app.config.get("SESSION_COOKIE_SECURE"),
+        "app_version": APP_VERSION,
+    })
 
 @app.route("/beta/login", methods=["GET", "POST"])
 def beta_login():
@@ -1131,6 +1490,7 @@ def readyz():
         "jobs_in_memory": len(JOBS),
         "beats_in_memory": len(BEATS),
         "renders_in_memory": len(RENDERS),
+        "account_store": USER_STORE.stats(),
         "tts": available_tts_engines(),
         "beat_audio": beat_backend_status(),
         "deployment": {
@@ -1180,7 +1540,7 @@ def pythonanywhere_diagnostics():
             "GET /api/live-rhyme/health",
             "GET /live-writer",
             "POST /api/live-writer/analyze",
-            "POST /api/live-writer/word",
+            "POST /api/live-writer/word", "POST /api/live-writer/phrase",
             "POST /api/live-rhyme-job",
             "GET /api/live-rhyme/job/<job_id>",
             "POST /api/rhyme-word-job",
@@ -1239,6 +1599,7 @@ def index():
         selected_mode="match",
         audio_extensions=", ".join(ALLOWED_AUDIO_EXTENSIONS),
         sample_lyrics=sample_lyrics,
+        current_user=_current_user(),
     )
 
 
@@ -1483,13 +1844,17 @@ def api_live_writer_analyze():
         }), 500
 
 
+@app.route("/api/live-writer/phrase", methods=["POST"])
+@app.route("/api/rhyme-phrase/sync", methods=["POST"])
+@app.route("/api/live-rhyme/phrase", methods=["POST"])
 @app.route("/api/live-writer/word", methods=["POST"])
 def api_live_writer_word():
     payload = _json_payload()
     try:
         result = build_live_writer_word_payload(payload)
-        status = 200 if result.get("available") else 400
-        return jsonify(result), status
+        # Return 200 even for an empty/no-selection payload so the UI can render
+        # a helpful highlighted-word message instead of flashing a hard error.
+        return jsonify(result), 200
     except Exception as exc:
         return jsonify({
             "available": False,
@@ -1612,10 +1977,16 @@ def api_live_rhyme_sync():
 
 @app.route("/api/rhyme-word-job", methods=["POST"])
 @app.route("/api/rhyme-word-job/", methods=["POST"])
+@app.route("/api/rhyme-phrase-job", methods=["POST"])
+@app.route("/api/rhyme-phrase-job/", methods=["POST"])
 @app.route("/api/rhyme/word-job", methods=["POST"])
 @app.route("/api/rhyme/word-job/", methods=["POST"])
+@app.route("/api/rhyme/phrase-job", methods=["POST"])
+@app.route("/api/rhyme/phrase-job/", methods=["POST"])
 @app.route("/api/live-rhyme/word-job", methods=["POST"])
 @app.route("/api/live-rhyme/word-job/", methods=["POST"])
+@app.route("/api/live-rhyme/phrase-job", methods=["POST"])
+@app.route("/api/live-rhyme/phrase-job/", methods=["POST"])
 @app.route("/api/rhyme/similar-job", methods=["POST"])
 def api_selected_word_rhyme_job():
     """Compatibility alias for queue-free highlighted-word suggestions."""
@@ -1646,7 +2017,7 @@ def api_selected_word_rhyme_job():
         "poll_required": False,
         "no_poll_required": True,
         "poll_url": url_for("api_selected_word_rhyme_job_lookup", job_id=job_id),
-    }), (200 if result.get("available") else 400)
+    }), 200
 
 
 @app.route("/api/rhyme-word/sync", methods=["POST"])
@@ -1661,12 +2032,16 @@ def api_selected_word_rhyme_sync():
     result["direct_complete"] = True
     result["poll_required"] = False
     result["no_poll_required"] = True
-    return jsonify(result), (200 if result.get("available") else 400)
+    return jsonify(result), 200
 
 @app.route("/api/rhyme-word/job/<job_id>", methods=["GET"])
+@app.route("/api/rhyme-phrase/job/<job_id>", methods=["GET"])
 @app.route("/api/rhyme/word-job/<job_id>", methods=["GET"])
+@app.route("/api/rhyme/phrase-job/<job_id>", methods=["GET"])
 @app.route("/api/live-rhyme/word-job/<job_id>", methods=["GET"])
+@app.route("/api/live-rhyme/phrase-job/<job_id>", methods=["GET"])
 @app.route("/api/live-rhyme/word/status/<job_id>", methods=["GET"])
+@app.route("/api/live-rhyme/phrase/status/<job_id>", methods=["GET"])
 @app.route("/api/rhyme/similar/status/<job_id>", methods=["GET"])
 def api_selected_word_rhyme_job_lookup(job_id: str):
     return api_job(job_id)
@@ -1680,10 +2055,10 @@ def api_selected_word_rhyme_routes():
     return jsonify({
         "available": True,
         "job_type": "selected_word_rhyme",
-        "start_async": ["POST /api/rhyme-word-job", "POST /api/rhyme/word-job", "POST /api/live-rhyme/word-job"],
-        "poll_async": ["not required in direct mode", "GET /api/rhyme-word/job/<job_id> still works for completed jobs"],
-        "sync_fallback": ["POST /api/rhyme-word/sync", "POST /api/live-rhyme/word"],
-        "payload_aliases": {"word": ["word", "target", "selected_word", "highlighted_word", "selection"], "context": ["line_text", "context", "active_line_text"]},
+        "start_async": ["POST /api/rhyme-word-job", "POST /api/rhyme-phrase-job", "POST /api/rhyme/word-job", "POST /api/rhyme/phrase-job", "POST /api/live-rhyme/word-job", "POST /api/live-rhyme/phrase-job"],
+        "poll_async": ["not required in direct mode", "GET /api/rhyme-word/job/<job_id> and GET /api/rhyme-phrase/job/<job_id> still work for completed jobs"],
+        "sync_fallback": ["POST /api/rhyme-word/sync", "POST /api/rhyme-phrase/sync", "POST /api/live-rhyme/word"],
+        "payload_aliases": {"word_or_phrase": ["word", "phrase", "selected_phrase", "selected_text", "target", "selected_word", "highlighted_word", "selection"], "context": ["line_text", "context", "active_line_text"]},
         "jobs_in_memory": word_jobs,
         "now": _iso_now(),
     })
@@ -1736,8 +2111,8 @@ def api_live_rhyme_routes():
         "sync_fallback": ["POST /api/live-rhyme", "POST /api/live-rhyme/sync", "POST /api/rhyme/live"],
         "health": ["GET /api/live-rhyme/health", "GET /api/live-writer/health"],
         "direct_refactor_page": "GET /live-writer",
-        "direct_refactor_api": ["POST /api/live-writer/analyze", "POST /api/live-writer/word"],
-        "highlighted_word_async": ["POST /api/rhyme-word-job", "GET /api/rhyme-word/job/<job_id>", "POST /api/rhyme-word/sync"],
+        "direct_refactor_api": ["POST /api/live-writer/analyze", "POST /api/live-writer/word", "POST /api/live-writer/phrase"],
+        "highlighted_word_async": ["POST /api/rhyme-word-job", "GET /api/rhyme-word/job/<job_id>", "POST /api/rhyme-word/sync", "POST /api/rhyme-phrase/sync"],
         "payload_aliases": {"lyrics": ["lyrics", "text", "draft", "content"], "active_line": ["active_line", "line_number", "line", "cursor_line"]},
         "jobs_in_memory": live_jobs,
         "pythonanywhere_diagnostics": "GET /api/pythonanywhere/diagnostics",

@@ -18,6 +18,23 @@ DEFAULT_BANK = {
     "punch": ["impact", "static", "signal", "switch", "spark", "script", "proof", "weight", "edge", "shift", "thread", "cipher"],
 }
 
+# Hand-tuned corpus neighborhoods for motif rhymes the profile splits into
+# different spelling keys. These keep highlighted-word suggestions useful for the
+# user's recurring structure: surface/service/purpose/universe,
+# sentence/presence/resonance, diction/friction/direction, and music/lyric.
+FAMILY_HINTS = {
+    "rface": ["service", "purpose", "purchase", "verse", "universe", "reverse", "rehearse", "curse", "surface", "substance"],
+    "rvice": ["surface", "purpose", "purchase", "verse", "universe", "reverse", "rehearse", "curse", "service", "surplus"],
+    "rpose": ["surface", "service", "purchase", "verse", "universe", "reverse", "rehearse", "curse", "purpose", "surplus"],
+    "chase": ["purchase", "purpose", "surface", "service", "verse", "universe", "reverse", "rehearse", "curse"],
+    "erse": ["verse", "universe", "reverse", "rehearse", "curse", "purpose", "surface", "service"],
+    "verse": ["verse", "universe", "reverse", "rehearse", "curse", "purpose", "surface", "service"],
+    "usic": ["music", "lyric", "lyrics", "acoustics", "physics", "critics", "civic", "clinic", "logic", "rhythmic"],
+    "yric": ["lyric", "lyrics", "music", "rhythmic", "clinic", "physics", "critics", "specific"],
+    "oron": ["moron", "oxymoron", "foregone", "authors", "bothers", "father", "dollars", "scholars"],
+    "moron": ["oxymoron", "foregone", "authors", "bothers", "father", "dollars", "scholars"],
+}
+
 COMMON_SUFFIX_KEYS = [
     ("tion", "shun"), ("sion", "shun"), ("cion", "shun"), ("xion", "shun"),
     ("tious", "shus"), ("cious", "shus"), ("ence", "ence"), ("ance", "ance"),
@@ -51,6 +68,10 @@ CORPUS_WORDS = {str(w).lower() for w in (PROFILE.get("corpus_words_set") or [])}
 SIGNATURE_WORDS = [str(row.get("word")) for row in (PROFILE.get("signature_words") or []) if isinstance(row, dict) and row.get("word")][:80]
 TOP_RHYME_ROWS = [row for row in (PROFILE.get("top_rhymes") or []) if isinstance(row, dict)]
 TOP_RHYME_KEYS = [str(row.get("key")) for row in TOP_RHYME_ROWS if row.get("key")]
+KNOWN_RHYME_KEYS = sorted(
+    {str(k) for k in list(RHYME_BANK.keys()) + list(ECHO_BANK.keys()) + TOP_RHYME_KEYS if str(k)},
+    key=lambda key: (-len(key), key),
+)
 
 
 def tokenize(text: str) -> List[str]:
@@ -67,20 +88,45 @@ def clean_word(word: str) -> str:
     return match.group(0) if match else ""
 
 
+def _profile_suffix_key(w: str) -> str:
+    """Return the strongest corpus/profile suffix key for a word.
+
+    The older live writer used only the final vowel nucleus. That made words like
+    ``surface`` collapse to ``e`` and produced weak suggestions. The profile built
+    from the user's rap corpus already contains useful endings such as ``rface``,
+    ``rvice``, ``rpose``, ``usic``, and ``oron``; prefer those when possible.
+    """
+    if not w:
+        return ""
+    for key in KNOWN_RHYME_KEYS:
+        if len(key) >= 3 and w.endswith(key):
+            return key
+    return ""
+
+
 def rhyme_key(word: str) -> str:
     w = clean_word(word).lower().strip("'’-")
     if not w:
         return ""
+    # Keep common phonetic endings grouped even when spellings differ.
     for suffix, key in COMMON_SUFFIX_KEYS:
         if w.endswith(suffix) and len(w) > len(suffix) + 1:
             return key
-    # Use the final vowel nucleus through the end. This is crude but very stable.
-    for i in range(len(w) - 1, -1, -1):
-        if w[i] in VOWELS:
+    profile_key = _profile_suffix_key(w)
+    if profile_key:
+        return profile_key
+    # Strip a likely silent final e before finding the tail; this prevents
+    # ``surface``/``service``-like words from degenerating to the key ``e``.
+    tail_source = w
+    if len(tail_source) > 4 and tail_source.endswith("e") and not tail_source.endswith(("le", "ye", "ee")):
+        tail_source = tail_source[:-1]
+    for i in range(len(tail_source) - 1, -1, -1):
+        if tail_source[i] in VOWELS:
             start = i
-            while start > 0 and w[start - 1] in VOWELS:
+            while start > 0 and tail_source[start - 1] in VOWELS:
                 start -= 1
-            key = w[start:]
+            onset = max(0, start - 1)
+            key = tail_source[onset:]
             return key[-6:]
     return w[-4:]
 
@@ -149,17 +195,20 @@ def unique_keep(items: Iterable[Any], limit: int = 24, exclude: str | None = Non
 def words_for_key(key: str, target: str = "", limit: int = 24) -> List[str]:
     key = str(key or "")
     exact = RHYME_BANK.get(key, []) + ECHO_BANK.get(key, [])
-    if exact:
-        return unique_keep(exact, limit, exclude=target)
+    kept_exact = unique_keep(exact, limit, exclude=target)
+    if kept_exact:
+        return kept_exact
     scored: List[Tuple[int, str]] = []
-    for bank_key, words in RHYME_BANK.items():
+    for bank_key, words in list(RHYME_BANK.items()) + list(ECHO_BANK.items()):
         score = overlap_score(key, bank_key)
-        if score >= 34:
-            for word in words[:8]:
+        # If there is only one exact corpus word and it is the target, fall back to
+        # neighboring endings instead of returning an empty list.
+        if score >= 28 or (key and bank_key and (key[-2:] == bank_key[-2:])):
+            for word in words[:10]:
                 scored.append((score, word))
     if not scored:
-        for row in TOP_RHYME_ROWS[:6]:
-            for word in row.get("words", [])[:5]:
+        for row in TOP_RHYME_ROWS[:8]:
+            for word in row.get("words", [])[:6]:
                 scored.append((20, word))
     scored.sort(key=lambda x: (-x[0], x[1]))
     return unique_keep([w for _, w in scored], limit, exclude=target)
@@ -167,11 +216,12 @@ def words_for_key(key: str, target: str = "", limit: int = 24) -> List[str]:
 
 def near_words_for_key(key: str, target: str = "", limit: int = 24) -> List[str]:
     scored: List[Tuple[int, str]] = []
-    for bank_key, words in RHYME_BANK.items():
+    for bank_key, words in list(RHYME_BANK.items()) + list(ECHO_BANK.items()):
         score = overlap_score(key, bank_key)
-        if 18 <= score < 100:
-            for word in words[:6]:
-                scored.append((score, word))
+        tail_bonus = 12 if key and bank_key and key[-2:] == bank_key[-2:] else 0
+        if 16 <= score < 100 or tail_bonus:
+            for word in words[:8]:
+                scored.append((score + tail_bonus, word))
     if not scored:
         scored = [(10, word) for word in DEFAULT_BANK["signature"]]
     scored.sort(key=lambda x: (-x[0], x[1]))
@@ -190,8 +240,9 @@ def phrase_landings(target_key: str, target_word: str, candidates: List[str]) ->
 
 def word_lists_for(word: str) -> Dict[str, List[str]]:
     key = rhyme_key(word)
-    exact = words_for_key(key, word, 24)
-    near = near_words_for_key(key, word, 24)
+    hinted = FAMILY_HINTS.get(key, [])
+    exact = unique_keep(hinted + words_for_key(key, word, 24), 24, exclude=word)
+    near = unique_keep(near_words_for_key(key, word, 24) + hinted, 24, exclude=word)
     signature = unique_keep(SIGNATURE_WORDS + DEFAULT_BANK["signature"], 16, exclude=word)
     images = unique_keep((WORD_BANKS.get("images") or []) + DEFAULT_BANK["images"], 16, exclude=word)
     actions = unique_keep((WORD_BANKS.get("actions") or []) + DEFAULT_BANK["actions"], 16, exclude=word)
@@ -600,62 +651,81 @@ def build_selected_word_payload(
     selection_end: int | None = None,
     job_id: str | None = None,
 ) -> Dict[str, Any]:
-    target = clean_word(word)
+    raw_target = str(word or "").strip()
+    phrase_tokens = tokenize(raw_target)
+    target = raw_target if len(phrase_tokens) > 1 else clean_word(raw_target)
     if not target:
-        raise ValueError("Highlight or select a word before requesting similar rhymes.")
-    key = rhyme_key(target)
-    banks = word_lists_for(target)
-    ranked = ranked_options_for(target, 24)
-    patches = []
-    for option in ranked[:12]:
-        candidate = option.get("display") or option.get("word")
-        patches.append({
-            "type": "replace_selection",
-            "label": f"Replace highlighted word → {candidate}",
-            "replacement": str(candidate).split()[-1],
-            "score": option.get("score"),
-            "kind": option.get("kind"),
-            "why": "; ".join(option.get("reasons") or []),
-        })
-    similar = []
-    for category, words in banks.items():
-        for item in words[:10]:
-            similar.append({"word": item, "category": category.replace("_", " ")})
-    return {
-        "available": True,
-        "job_id": job_id,
-        "job_type": "selected_word_rhyme",
-        "report_type": "highlighted_word_rhyme_fast_core",
-        "engine": "live_rhyme_core_v1",
-        "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "selected_word": target,
-        "target_word": target,
-        "mode": mode,
-        "line_text": line_text,
-        "active_line": active_line,
-        "selection": {"start": selection_start, "end": selection_end},
-        "selection_range": {"start": selection_start, "end": selection_end},
-        "lyrics_chars": len(lyrics or ""),
-        "summary": {
-            "rhyme_key": key,
-            "syllables": syllables(target),
-            "stress_signature": "rap-heuristic",
-            "best_score": ranked[0].get("score") if ranked else 0,
-            "best_kind": ranked[0].get("kind") if ranked else "none",
-        },
-        "word_lists": banks,
-        "ranked": ranked,
-        "rhyme_ladder": [
-            {"stage": "perfect/family", "use_when": "You want a clean landing.", "options": banks.get("end_rhymes", [])[:8]},
-            {"stage": "slant turn", "use_when": "You want surprise without breaking the pocket.", "options": banks.get("slant_rhymes", [])[:8]},
-            {"stage": "internal echo", "use_when": "You want more motion before the end rhyme.", "options": banks.get("internal_echoes", [])[:8]},
-        ],
-        "similar_rhymes": similar[:60],
-        "applyable_patches": patches,
-        "instruction": "Click a similar rhyme to replace the highlighted word, or use it as a landing option.",
-        "fallback_used": False,
-        "live_writer": {"available": True, "trigger": "highlighted_word", "instruction": "Highlight a word to fetch compact direct rhyme suggestions."},
-    }
+        raise ValueError("Highlight or select a word or phrase before requesting similar rhymes.")
+    # Use the highlighted-word/phrase rhyme engine here. It separates clean
+    # rhymes from style slants and now supports broader rap-family classes plus
+    # multi-word highlighted phrase suggestions.
+    try:
+        from highlighted_rhyme_engine import build_highlighted_word_report
+
+        return build_highlighted_word_report(
+            target,
+            mode=mode,
+            line_text=line_text,
+            lyrics=lyrics,
+            active_line=active_line,
+            selection_start=selection_start,
+            selection_end=selection_end,
+            job_id=job_id,
+        )
+    except Exception as strict_error:
+        key = rhyme_key(target)
+        banks = word_lists_for(target)
+        ranked = ranked_options_for(target, 24)
+        patches = []
+        for option in ranked[:12]:
+            candidate = option.get("display") or option.get("word")
+            patches.append({
+                "type": "replace_selection",
+                "label": f"Replace highlighted word → {candidate}",
+                "replacement": str(candidate).split()[-1],
+                "score": option.get("score"),
+                "kind": option.get("kind"),
+                "why": "; ".join(option.get("reasons") or []),
+            })
+        similar = []
+        for category, words in banks.items():
+            for item in words[:10]:
+                similar.append({"word": item, "category": category.replace("_", " "), "score": None})
+        return {
+            "available": True,
+            "job_id": job_id,
+            "job_type": "selected_word_rhyme",
+            "report_type": "highlighted_word_rhyme_legacy_fallback",
+            "engine": "live_rhyme_core_v1_fallback",
+            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "selected_word": target,
+            "target_word": target,
+            "mode": mode,
+            "line_text": line_text,
+            "active_line": active_line,
+            "selection": {"start": selection_start, "end": selection_end},
+            "selection_range": {"start": selection_start, "end": selection_end},
+            "lyrics_chars": len(lyrics or ""),
+            "summary": {
+                "rhyme_key": key,
+                "syllables": syllables(target),
+                "stress_signature": "rap-heuristic",
+                "best_score": ranked[0].get("score") if ranked else 0,
+                "best_kind": ranked[0].get("kind") if ranked else "none",
+                "strict_error": str(strict_error),
+            },
+            "word_lists": banks,
+            "ranked": ranked,
+            "rhyme_ladder": [
+                {"stage": "fallback family", "use_when": "Strict phonetic engine failed; using legacy corpus suffixes.", "options": banks.get("end_rhymes", [])[:8]},
+                {"stage": "fallback slant", "use_when": "Loose suggestions only.", "options": banks.get("slant_rhymes", [])[:8]},
+            ],
+            "similar_rhymes": similar[:60],
+            "applyable_patches": patches,
+            "instruction": "Strict rhyme engine failed; these fallback suggestions are looser.",
+            "fallback_used": True,
+            "live_writer": {"available": True, "trigger": "highlighted_word", "instruction": "Highlight a word to fetch compact direct rhyme suggestions."},
+        }
 
 
 def smoke_test() -> Dict[str, Any]:
